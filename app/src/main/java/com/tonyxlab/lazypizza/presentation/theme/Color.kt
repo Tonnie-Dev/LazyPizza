@@ -1,4 +1,4 @@
-package com.tonyxlab.lazypizza.ui.theme
+package com.tonyxlab.lazypizza.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
