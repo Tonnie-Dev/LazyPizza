@@ -1,4 +1,4 @@
-package com.tonyxlab.lazypizza.presentation.theme
+ package com.tonyxlab.lazypizza.presentation.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
@@ -12,7 +12,8 @@ import com.tonyxlab.lazypizza.R
 val InstrumentSansFamily = FontFamily(
         Font(R.font.instrument_sans_regular),
         Font(R.font.instrument_sans_medium),
-        Font(R.font.instrument_sans_semi_bold)
+        Font(R.font.instrument_sans_semi_bold),
+        Font(R.font.instrument_sans_bold)
 )
 
 val Typography = Typography(
