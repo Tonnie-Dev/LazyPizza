@@ -52,6 +52,7 @@ android {
 }
 
 dependencies {
+
     // Core Libs
     implementation(AndroidX.core.ktx)
     implementation(AndroidX.lifecycle.runtime.ktx)
@@ -60,7 +61,12 @@ dependencies {
     implementation(AndroidX.compose.ui)
     implementation(AndroidX.compose.ui.graphics)
     implementation(AndroidX.compose.ui.toolingPreview)
-    implementation(AndroidX.navigation.compose)
+    //implementation(AndroidX.navigation.compose)
+
+    // Navigation 3
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.navigation3.lifecycle.viewmodel)
 
     // Material 3
     implementation(AndroidX.compose.material3)

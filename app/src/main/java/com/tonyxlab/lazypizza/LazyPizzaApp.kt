@@ -13,7 +13,6 @@ class LazyPizzaApp: Application() {
         if (BuildConfig.DEBUG){
             Timber.plant(Timber.DebugTree())
         }
-
         startKoin {
 
             androidContext(androidContext = this@LazyPizzaApp)
