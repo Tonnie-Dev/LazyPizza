@@ -2,7 +2,6 @@
 
 package com.tonyxlab.lazypizza.presentation.screens.home
 
-import android.R.attr.text
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.viewModelScope
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
@@ -10,7 +9,6 @@ import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiState
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
@@ -42,9 +40,25 @@ class HomeViewModel : HomeBaseViewModel() {
                 .distinctUntilChanged()
                 .onEach { text ->
                     updateState { it.copy(isTextEmpty = text.isEmpty()) }
-                    Timber.tag("HomeVW").i("text is: $text")
+                    onSearchQueryChange(text.toString())
+                    Timber.tag("HomeVW")
+                            .i("text is: $text")
                 }
                 .launchIn(viewModelScope)
+    }
+
+    private fun onSearchQueryChange(newQuery: String) {
+
+        updateState {
+            val filteredPizzaItems = if (newQuery.isBlank()) {
+                currentState.allPizzaItems
+            } else {
+                currentState.allPizzaItems.filter { item ->
+                    item.name.contains(other = newQuery, ignoreCase = true)
+                }
+            }
+            it.copy(filteredPizzaItems = filteredPizzaItems)
+        }
     }
 
 }

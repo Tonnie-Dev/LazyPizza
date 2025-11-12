@@ -12,7 +12,7 @@
     <string name="header_text_your_notes">Your Own Collection of Notes</string>
 
     <!--Caption Texts-->
-    <string name="cap_text_point_camera">Point your Camera at a QR Code</string>
+    <string name="cap_text_no_results">No results found for your query</string>
 
     <!--Label Texts-->
     <string name="lab_text_text">Text</string>
