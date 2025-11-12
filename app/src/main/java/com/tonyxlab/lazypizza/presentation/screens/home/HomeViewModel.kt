@@ -31,6 +31,9 @@ class HomeViewModel : HomeBaseViewModel() {
             HomeUiEvent.PlaceCall -> {
                 sendActionEvent(HomeActionEvent.NavigateToWhereSunNeverShines)
             }
+            is HomeUiEvent.SelectCategoryTab -> {
+                updateState { it.copy(selectedCategoryPosition =event.position ) }
+            }
         }
     }
 
@@ -60,5 +63,4 @@ class HomeViewModel : HomeBaseViewModel() {
             it.copy(filteredPizzaItems = filteredPizzaItems)
         }
     }
-
 }

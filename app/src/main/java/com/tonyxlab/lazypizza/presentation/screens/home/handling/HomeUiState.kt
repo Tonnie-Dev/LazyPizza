@@ -12,5 +12,6 @@ data class HomeUiState(
     val textFieldState: TextFieldState = TextFieldState(),
     val isTextEmpty: Boolean = false,
     val allPizzaItems: List<Pizza> = mockPizzas, //emptyList(),
-    val filteredPizzaItems: List<Pizza> = emptyList()
+    val filteredPizzaItems: List<Pizza> = emptyList(),
+        val selectedCategoryPosition: Int = 0
 ) : UiState {}

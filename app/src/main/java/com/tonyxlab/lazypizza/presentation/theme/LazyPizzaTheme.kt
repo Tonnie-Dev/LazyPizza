@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val AppColorScheme = lightColorScheme(
-
         primary = Primary,
         onPrimary = TextOnPrimary,
         primaryContainer = PrimaryGradientStart,
@@ -38,7 +37,6 @@ private val AppColorScheme = lightColorScheme(
         inverseSurface = SurfaceHighest,
         inverseOnSurface = TextPrimary,
         inversePrimary = Primary
-
 )
 
 @Composable

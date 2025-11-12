@@ -1,6 +1,10 @@
 package com.tonyxlab.lazypizza.presentation.screens.home
 
 import android.content.Intent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -21,9 +25,11 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.tonyxlab.lazypizza.R
+import com.tonyxlab.lazypizza.domain.model.Category
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBar
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
+import com.tonyxlab.lazypizza.presentation.screens.home.components.CategoryTabs
 import com.tonyxlab.lazypizza.presentation.screens.home.components.SearchComponent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiEvent
@@ -85,6 +91,12 @@ private fun HomeScreenContent(
             modifier = modifier
                     .fillMaxSize()
                     .padding(horizontal = MaterialTheme.spacing.spaceMedium)
+                    .animateContentSize(
+                            animationSpec = spring(
+                                    dampingRatio = Spring.DampingRatioNoBouncy,
+                                    stiffness = Spring.StiffnessLow
+                            )
+                    )
     ) {
 
         Image(
@@ -100,6 +112,17 @@ private fun HomeScreenContent(
                 modifier = Modifier.padding(top = 0.dp),
                 uiState = uiState
         )
+
+        AnimatedVisibility(visible = !uiState.textFieldState.text.isNotBlank()) {
+
+            CategoryTabs(
+                    modifier = Modifier,
+                    categories = Category.entries,
+                    selectedIndex = uiState.selectedCategoryPosition,
+                    onEvent = onEvent
+            )
+
+        }
     }
 }
 
