@@ -27,6 +27,7 @@
     <string name="cds_text_pizza_logo">Pizza Logo</string>
     <string name="cds_text_phone">Phone</string>
     <string name="cds_text_banner">Pizza Image Banner</string>
+    <string name="cds_text_search_icon">Search Icon</string>
 
     <!--Snackbar Texts-->
     <string name="snack_text_camera_perm_granted">Camera Permission Granted</string>
@@ -44,7 +45,7 @@
     <string name="settings_sync_interval">Sync Interval</string>
 
     <!--Placeholder Texts-->
-    <string name="placeholder_text_email">john.doe@example.com</string>
+    <string name="placeholder_text_search">Search for delicious food…</string>
 
     <!--Meta Data Texts-->
     <string name="meta_text_created_on">Date Created</string>

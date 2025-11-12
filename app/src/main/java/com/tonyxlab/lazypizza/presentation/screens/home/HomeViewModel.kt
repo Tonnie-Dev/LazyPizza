@@ -1,22 +1,50 @@
+@file:OptIn(FlowPreview::class)
+
 package com.tonyxlab.lazypizza.presentation.screens.home
 
+import android.R.attr.text
+import androidx.compose.runtime.snapshotFlow
+import androidx.lifecycle.viewModelScope
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiState
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import timber.log.Timber
 
 typealias HomeBaseViewModel = BaseViewModel<HomeUiState, HomeUiEvent, HomeActionEvent>
-class HomeViewModel: HomeBaseViewModel() {
+
+class HomeViewModel : HomeBaseViewModel() {
+
+    init {
+        observeSearchBarState()
+    }
 
     override val initialState: HomeUiState
         get() = HomeUiState()
 
     override fun onEvent(event: HomeUiEvent) {
-        when(event){
-
+        when (event) {
             HomeUiEvent.PlaceCall -> {
-sendActionEvent(HomeActionEvent.NavigateToWhereSunNeverShines)
+                sendActionEvent(HomeActionEvent.NavigateToWhereSunNeverShines)
             }
         }
     }
+
+    private fun observeSearchBarState() {
+        val textFlow = snapshotFlow { currentState.textFieldState.text }
+        textFlow.debounce(300)
+                .distinctUntilChanged()
+                .onEach { text ->
+                    updateState { it.copy(isTextEmpty = text.isEmpty()) }
+                    Timber.tag("HomeVW").i("text is: $text")
+                }
+                .launchIn(viewModelScope)
+    }
+
 }

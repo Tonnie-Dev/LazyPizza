@@ -10,7 +10,7 @@ kotlin-serializer-plugin = { id = "org.jetbrains.kotlin.plugin.serialization", v
 
 
 [versions]
-agp = "8.13.0"
+agp = "8.13.1"
 kotlin = "2.2.21"
 ksp = "2.2.20-2.0.3"
 adaptive = "1.2.0"
@@ -31,8 +31,8 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 kotlinTest = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 material3-adaptive = { group = "androidx.compose.material3.adaptive", name = "adaptive", version.ref = "adaptive" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
-androidx-navigation3-runtime = {group = "androidx.navigation3", name ="navigation3-runtime", version.ref ="navigation3"}
-androidx-navigation3-ui = {group = "androidx.navigation3", name ="navigation3-ui", version.ref ="navigation3"}
-androidx-navigation3-lifecycle-viewmodel = {group = "androidx.lifecycle", name ="lifecycle-viewmodel-navigation3", version.ref ="navigation3-lifecycle-viewmodel"}
+androidx-navigation3-runtime = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "navigation3" }
+androidx-navigation3-ui = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = "navigation3" }
+androidx-navigation3-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-navigation3", version.ref = "navigation3-lifecycle-viewmodel" }
 
 

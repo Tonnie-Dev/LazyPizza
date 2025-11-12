@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -23,6 +24,7 @@ import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBar
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
+import com.tonyxlab.lazypizza.presentation.screens.home.components.SearchComponent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiState
@@ -83,7 +85,7 @@ private fun HomeScreenContent(
                     .padding(horizontal = MaterialTheme.spacing.spaceMedium)
     ) {
 
-       // AppTopBar(phoneNumber = "+254 723 445 818", onCallClick = { onEvent(HomeUiEvent.PlaceCall)})
+
         Image(
                 modifier = Modifier
                         .clip(MaterialTheme.shapes.small)
@@ -91,6 +93,14 @@ private fun HomeScreenContent(
                 painter = painterResource(R.drawable.banner_small),
                 contentDescription = stringResource(R.string.cds_text_banner),
                 contentScale = ContentScale.Crop
+        )
+
+
+        SearchComponent(
+                modifier = Modifier.padding(top = MaterialTheme.spacing.spaceMedium),
+                isEmpty = uiState.isTextEmpty,
+                textFieldState = uiState.textFieldState,
+                expanded = false
         )
 
     }
