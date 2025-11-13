@@ -14,21 +14,24 @@ val customMaterialShapes = Shapes(
 
         // Extra-Large Override
         extraLarge = RoundedCornerShape(20.dp)
-
 )
 
 object ExtendedShapes {
-
     val RoundedCornerShape100 = RoundedCornerShape(100.dp)
 
     val HorizontalRoundedCornerShape16 = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+
+    val VerticalRoundedCornerShape12 = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
 }
 
 val Shapes.RoundedCornerShape100
     @Composable
     get() = ExtendedShapes.RoundedCornerShape100
 
-
 val Shapes.HorizontalRoundedCornerShape16
     @Composable
     get() = ExtendedShapes.HorizontalRoundedCornerShape16
+
+val Shapes.VerticalRoundedCornerShape12
+    @Composable
+    get() = ExtendedShapes.VerticalRoundedCornerShape12

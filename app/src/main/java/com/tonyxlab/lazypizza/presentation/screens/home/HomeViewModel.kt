@@ -31,6 +31,9 @@ class HomeViewModel : HomeBaseViewModel() {
             HomeUiEvent.PlaceCall -> {
                 sendActionEvent(HomeActionEvent.NavigateToWhereSunNeverShines)
             }
+
+            HomeUiEvent.ClickPizza ->{}
+
             is HomeUiEvent.SelectCategoryTab -> {
                 updateState { it.copy(selectedCategoryPosition =event.position ) }
             }
