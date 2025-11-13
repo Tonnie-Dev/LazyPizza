@@ -1,5 +1,6 @@
 package com.tonyxlab.lazypizza.presentation.screens.home.components
 
+import android.R.attr.category
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,7 +25,7 @@ import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 @Composable
 fun CategoryTabs(
     categories: List<Category>,
-    selectedIndex: Int,
+    selectedCategory: Category,
     modifier: Modifier = Modifier,
     onEvent: (HomeUiEvent) -> Unit
 ) {
@@ -34,9 +36,10 @@ fun CategoryTabs(
             verticalAlignment = Alignment.CenterVertically
     ) {
 
-        categories.forEachIndexed { i, category ->
+        categories.forEach {category ->
             FilterChip(
-                    selected = i == selectedIndex,
+                    selected = selectedCategory == category,
+                    colors = FilterChipDefaults.filterChipColors(selectedContainerColor = MaterialTheme.colorScheme.primary, selectedLabelColor = MaterialTheme.colorScheme.onPrimary),
                     label = {
                         Text(
                                 text = category.categoryName,
@@ -45,7 +48,7 @@ fun CategoryTabs(
                                 )
                         )
                     },
-                    onClick = { onEvent(HomeUiEvent.SelectCategoryTab(position = i)) }
+                    onClick = { onEvent(HomeUiEvent.SelectCategoryTab(category = category)) }
             )
         }
     }
@@ -65,7 +68,7 @@ private fun CategoryTabs_Preview() {
             CategoryTabs(
                     modifier = Modifier.fillMaxWidth(),
                     categories = Category.entries,
-                    selectedIndex = 0
+                    selectedCategory = Category.PIZZA
             ) { }
         }
     }

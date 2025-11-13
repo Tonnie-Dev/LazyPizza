@@ -41,9 +41,7 @@ import com.tonyxlab.lazypizza.utils.mockPizzas
 
 @Composable
 fun PizzaCard(
-    pizza: Pizza,
-    onEvent: (HomeUiEvent) -> Unit,
-    modifier: Modifier = Modifier
+    pizza: Pizza, onEvent: (HomeUiEvent) -> Unit, modifier: Modifier = Modifier
 ) {
     Card(
             modifier = modifier
@@ -96,29 +94,25 @@ fun PizzaCard(
             ) {
                 Column {
                     Text(
-                            text = pizza.name,
-                            style = MaterialTheme.typography.Body1Medium
-                                    .copy(
-                                            color = MaterialTheme.colorScheme.onSurface,
-                                            fontWeight = FontWeight.W600
-                                    )
+                            text = pizza.name, style = MaterialTheme.typography.Body1Medium
+                            .copy(
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    fontWeight = FontWeight.W600
+                            )
                     )
 
                     Text(
                             text = pizza.ingredients.joinToString(),
-                            style = MaterialTheme.typography.Body3Regular
-                                    .copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
+                            style = MaterialTheme.typography.Body3Regular.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
                             maxLines = 2
                     )
                 }
 
                 Text(
                         text = stringResource(
-                                id = R.string.dollar_price_tag,
-                                pizza.price
+                                id = R.string.dollar_price_tag, pizza.price
                         ),
-                        style = MaterialTheme.typography.Title1SemiBold
-                                .copy(color = MaterialTheme.colorScheme.onSurface),
+                        style = MaterialTheme.typography.Title1SemiBold.copy(color = MaterialTheme.colorScheme.onSurface),
                 )
             }
         }
@@ -129,6 +123,7 @@ fun PizzaCard(
 @Composable
 private fun PizzaCard_Preview() {
 
+    val pizzas = mockPizzas
     val pizza = mockPizzas.random()
 
     LazyPizzaTheme {
@@ -139,11 +134,18 @@ private fun PizzaCard_Preview() {
                         .background(MaterialTheme.colorScheme.background)
                         .padding(MaterialTheme.spacing.spaceMedium)
         ) {
-            PizzaCard(
-                    modifier = Modifier,
-                    pizza = pizza,
-                    onEvent = {}
-            )
+
+            LazyCategoryList(
+                    header = "Pizza", items = pizzas,
+                    key = { it.id }
+            ) { item ->
+
+                PizzaCard(
+                        modifier = Modifier,
+                        pizza = item,
+                        onEvent = {}
+                )
+            }
         }
     }
 }

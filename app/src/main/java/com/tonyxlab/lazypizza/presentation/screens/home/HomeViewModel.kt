@@ -35,7 +35,7 @@ class HomeViewModel : HomeBaseViewModel() {
             HomeUiEvent.ClickPizza ->{}
 
             is HomeUiEvent.SelectCategoryTab -> {
-                updateState { it.copy(selectedCategoryPosition =event.position ) }
+                updateState { it.copy(selectedCategory =event.category) }
             }
         }
     }

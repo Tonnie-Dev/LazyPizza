@@ -30,6 +30,8 @@ import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBar
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.home.components.CategoryTabs
+import com.tonyxlab.lazypizza.presentation.screens.home.components.LazyCategoryList
+import com.tonyxlab.lazypizza.presentation.screens.home.components.PizzaCard
 import com.tonyxlab.lazypizza.presentation.screens.home.components.SearchComponent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiEvent
@@ -75,6 +77,7 @@ fun HomeScreen(
             containerColor = MaterialTheme.colorScheme.background
     ) { uiState ->
         HomeScreenContent(
+                modifier = modifier,
                 uiState = uiState,
                 onEvent = viewModel::onEvent
         )
@@ -89,14 +92,15 @@ private fun HomeScreenContent(
 ) {
     Column(
             modifier = modifier
+
                     .fillMaxSize()
-                    .padding(horizontal = MaterialTheme.spacing.spaceMedium)
+                   .padding(horizontal = MaterialTheme.spacing.spaceMedium)
                     .animateContentSize(
                             animationSpec = spring(
                                     dampingRatio = Spring.DampingRatioNoBouncy,
                                     stiffness = Spring.StiffnessLow
                             )
-                    )
+                    )   .background(MaterialTheme.colorScheme.background)
     ) {
 
         Image(
@@ -115,13 +119,21 @@ private fun HomeScreenContent(
 
         AnimatedVisibility(visible = !uiState.textFieldState.text.isNotBlank()) {
 
-            CategoryTabs(
-                    modifier = Modifier,
-                    categories = Category.entries,
-                    selectedIndex = uiState.selectedCategoryPosition,
-                    onEvent = onEvent
-            )
+            Column {
+                CategoryTabs(
+                        modifier = Modifier,
+                        categories = Category.entries,
+                        selectedCategory = uiState.selectedCategory,
+                        onEvent = onEvent
+                )
 
+                LazyCategoryList(
+                        header = uiState.selectedCategory.categoryName,
+                        items = uiState.allPizzaItems,
+                        key = { item -> item.id }) { pizzaItem ->
+                    PizzaCard(pizza = pizzaItem, onEvent = onEvent)
+                }
+            }
         }
     }
 }
