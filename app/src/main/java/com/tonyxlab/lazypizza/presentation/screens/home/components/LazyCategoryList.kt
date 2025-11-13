@@ -56,7 +56,6 @@ fun <T> LazyCategoryList(
         }
 
         items(items = items, key = { item -> key(item) }) { item ->
-
             content(item)
         }
     }

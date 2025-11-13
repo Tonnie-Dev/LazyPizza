@@ -41,7 +41,9 @@ import com.tonyxlab.lazypizza.utils.mockPizzas
 
 @Composable
 fun PizzaCard(
-    pizza: Pizza, onEvent: (HomeUiEvent) -> Unit, modifier: Modifier = Modifier
+    pizza: Pizza,
+    onEvent: (HomeUiEvent) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Card(
             modifier = modifier
