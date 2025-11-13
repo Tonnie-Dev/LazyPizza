@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,17 +18,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.Pizza
+import com.tonyxlab.lazypizza.presentation.core.components.DisplayImage
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiEvent
 import com.tonyxlab.lazypizza.presentation.theme.Body1Medium
@@ -71,18 +66,7 @@ fun PizzaCard(
                             .size(MaterialTheme.spacing.spaceTwelve * 10),
                     contentAlignment = Alignment.Center
             ) {
-                AsyncImage(
-                        modifier = Modifier
-                                .fillMaxWidth()
-                                .aspectRatio(1f),
-                        model = ImageRequest.Builder(LocalContext.current)
-                                .data(getDrawableResId(pizza.imageUrl))
-                                .crossfade(true)
-                                .build(),
-                        contentDescription = pizza.name.plus("Pizza Image"),
-                        contentScale = ContentScale.Crop,
-                        placeholder = painterResource(R.drawable.pizza_pepperoni)
-                )
+                DisplayImage(pizza.imageUrl)
             }
 
             Column(
@@ -94,7 +78,9 @@ fun PizzaCard(
                             space = MaterialTheme.spacing.spaceTen
                     )
             ) {
+
                 Column {
+
                     Text(
                             text = pizza.name, style = MaterialTheme.typography.Body1Medium
                             .copy(
@@ -126,7 +112,6 @@ fun PizzaCard(
 private fun PizzaCard_Preview() {
 
     val pizzas = mockPizzas
-    val pizza = mockPizzas.random()
 
     LazyPizzaTheme {
 
@@ -150,15 +135,6 @@ private fun PizzaCard_Preview() {
             }
         }
     }
-}
-
-@Composable
-fun getDrawableResId(imageName: String): Int {
-    val context = LocalContext.current
-    val cleanName = imageName.substringBeforeLast('.') // remove .png or .jpg
-    return context.resources.getIdentifier(
-            "pizza_$cleanName", "drawable", context.packageName
-    )
 }
 
 
