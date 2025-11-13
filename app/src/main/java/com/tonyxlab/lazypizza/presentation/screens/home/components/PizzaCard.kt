@@ -3,13 +3,11 @@ package com.tonyxlab.lazypizza.presentation.screens.home.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -17,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -59,15 +56,12 @@ fun PizzaCard(
                 verticalAlignment = Alignment.CenterVertically
         ) {
 
-            Box(
-                    modifier = Modifier
-                            .clip(shape = MaterialTheme.shapes.VerticalRoundedCornerShape12)
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
-                            .size(MaterialTheme.spacing.spaceTwelve * 10),
-                    contentAlignment = Alignment.Center
-            ) {
-                DisplayImage(pizza.imageUrl)
-            }
+            DisplayImage(
+                    imageUrl = pizza.imageUrl,
+                    size = MaterialTheme.spacing.spaceTwelve * 10,
+                    shape = MaterialTheme.shapes.VerticalRoundedCornerShape12,
+                    backgroundColor = MaterialTheme.colorScheme.surfaceVariant
+            )
 
             Column(
                     modifier = Modifier
@@ -85,13 +79,15 @@ fun PizzaCard(
                             text = pizza.name, style = MaterialTheme.typography.Body1Medium
                             .copy(
                                     color = MaterialTheme.colorScheme.onSurface,
-                                    fontWeight = FontWeight.W600
+                                     fontWeight = FontWeight.W600
                             )
                     )
 
                     Text(
                             text = pizza.ingredients.joinToString(),
-                            style = MaterialTheme.typography.Body3Regular.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
+                            style = MaterialTheme.typography.Body3Regular.copy(
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                            ),
                             maxLines = 2
                     )
                 }
@@ -100,7 +96,9 @@ fun PizzaCard(
                         text = stringResource(
                                 id = R.string.dollar_price_tag, pizza.price
                         ),
-                        style = MaterialTheme.typography.Title1SemiBold.copy(color = MaterialTheme.colorScheme.onSurface),
+                        style = MaterialTheme.typography.Title1SemiBold.copy(
+                                color = MaterialTheme.colorScheme.onSurface
+                        ),
                 )
             }
         }

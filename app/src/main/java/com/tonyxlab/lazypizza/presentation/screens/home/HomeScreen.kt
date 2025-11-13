@@ -27,7 +27,7 @@ import androidx.core.net.toUri
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.Category
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
-import com.tonyxlab.lazypizza.presentation.core.components.AppTopBar
+import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarOne
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.home.components.CategoryTabs
 import com.tonyxlab.lazypizza.presentation.screens.home.components.LazyCategoryList
@@ -53,7 +53,7 @@ fun HomeScreen(
             modifier = modifier,
             viewModel = viewModel,
             topBar = {
-                AppTopBar(
+                AppTopBarOne(
                         modifier = Modifier.padding(horizontal = MaterialTheme.spacing.spaceMedium),
                         phoneNumber = uiState.phoneNumber, onCallClick = {
                     viewModel.onEvent(HomeUiEvent.PlaceCall)

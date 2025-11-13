@@ -1,36 +1,67 @@
 package com.tonyxlab.lazypizza.presentation.core.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.tonyxlab.lazypizza.R
+import com.tonyxlab.lazypizza.presentation.core.utils.spacing
+import com.tonyxlab.lazypizza.utils.ifThen
 
 @Composable
 fun DisplayImage(
     imageUrl: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    size: Dp = MaterialTheme.spacing.spaceDefault,
+    shape: Shape = MaterialTheme.shapes.medium,
+    backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    contentDescription: String = stringResource(id = R.string.cds_text_image)
 ) {
 
     val context = LocalContext.current
-    
-    AsyncImage(
+
+    Box(
             modifier = modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f),
-            model = ImageRequest.Builder(context = context)
-                    .data(getDrawableResId(imageUrl))
-                    .crossfade(true)
-                    .build(),
-            contentDescription = "image",
-            contentScale = ContentScale.Crop,
-            placeholder = painterResource(R.drawable.pizza_pepperoni)
-    )
+                    .clip(shape = shape)
+                    .background(color = backgroundColor)
+                    .ifThen(size > 0.dp){
+                        size(size = size)
+                    }
+                    .ifThen(size <=0.dp){
+                        fillMaxWidth()
+                    },
+            contentAlignment = Alignment.Center
+    ) {
+
+        AsyncImage(
+                modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f),
+                model = ImageRequest.Builder(context = context)
+                        .data(getDrawableResId(imageUrl))
+                        .crossfade(true)
+                        .build(),
+                contentDescription = contentDescription,
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(R.drawable.pizza_pepperoni)
+        )
+    }
 }
 
 @Composable

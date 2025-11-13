@@ -28,6 +28,8 @@
     <string name="cds_text_phone">Phone</string>
     <string name="cds_text_banner">Pizza Image Banner</string>
     <string name="cds_text_search_icon">Search Icon</string>
+    <string name="cds_text_image">Image</string>
+    <string name="cds_text_back">Back</string>
 
     <!--Snackbar Texts-->
     <string name="snack_text_camera_perm_granted">Camera Permission Granted</string>
