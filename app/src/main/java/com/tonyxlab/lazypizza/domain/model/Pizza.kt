@@ -10,4 +10,11 @@ data class Pizza(
     val category: Category
 )
 
+data class Topping(
+    val toppingName: String,
+    val toppingPrice: Double,
+    val imageUrl: String,
+    val counter: Int
+)
+
 

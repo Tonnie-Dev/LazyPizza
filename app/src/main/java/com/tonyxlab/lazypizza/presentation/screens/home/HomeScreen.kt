@@ -92,15 +92,15 @@ private fun HomeScreenContent(
 ) {
     Column(
             modifier = modifier
-
                     .fillMaxSize()
-                   .padding(horizontal = MaterialTheme.spacing.spaceMedium)
+                    .padding(horizontal = MaterialTheme.spacing.spaceMedium)
                     .animateContentSize(
                             animationSpec = spring(
                                     dampingRatio = Spring.DampingRatioNoBouncy,
                                     stiffness = Spring.StiffnessLow
                             )
-                    )   .background(MaterialTheme.colorScheme.background)
+                    )
+                    .background(MaterialTheme.colorScheme.background)
     ) {
 
         Image(

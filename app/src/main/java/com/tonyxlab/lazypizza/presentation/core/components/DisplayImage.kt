@@ -2,8 +2,10 @@ package com.tonyxlab.lazypizza.presentation.core.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -31,7 +33,8 @@ fun DisplayImage(
     size: Dp = MaterialTheme.spacing.spaceDefault,
     shape: Shape = MaterialTheme.shapes.medium,
     backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
-    contentDescription: String = stringResource(id = R.string.cds_text_image)
+    contentDescription: String = stringResource(id = R.string.cds_text_image),
+    padding: PaddingValues = PaddingValues(0.dp)
 ) {
 
     val context = LocalContext.current
@@ -45,7 +48,8 @@ fun DisplayImage(
                     }
                     .ifThen(size <=0.dp){
                         fillMaxWidth()
-                    },
+                    }.
+            padding(padding),
             contentAlignment = Alignment.Center
     ) {
 
@@ -54,7 +58,7 @@ fun DisplayImage(
                         .fillMaxWidth()
                         .aspectRatio(1f),
                 model = ImageRequest.Builder(context = context)
-                        .data(getDrawableResId(imageUrl))
+                        .data(getDrawableResId(imageName = imageUrl))
                         .crossfade(true)
                         .build(),
                 contentDescription = contentDescription,
@@ -65,11 +69,11 @@ fun DisplayImage(
 }
 
 @Composable
-fun getDrawableResId(imageName: String): Int {
+fun getDrawableResId(prefix:String = "pizza_",imageName: String): Int {
     val context = LocalContext.current
     val cleanName = imageName.substringBeforeLast('.') // remove .png or .jpg
     return context.resources.getIdentifier(
-            "pizza_$cleanName", "drawable", context.packageName
+            "$prefix$cleanName", "drawable", context.packageName
     )
 }
 

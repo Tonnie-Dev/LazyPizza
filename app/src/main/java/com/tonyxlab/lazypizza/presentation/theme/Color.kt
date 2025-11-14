@@ -21,3 +21,6 @@ val Outline50 = Color(0x80E6E7ED) // 50% opacity
 
 val PrimaryGradientStart = Color(0xFFF9966F)
 val PrimaryGradientEnd = Color(0xFFF36B50)
+
+val ToppingCircleBackground = Color(0xFFFEF4F1)
+
