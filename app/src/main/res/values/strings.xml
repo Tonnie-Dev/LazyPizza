@@ -9,7 +9,7 @@
     <string name="topbar_text_lazy_pizza">LazyPizza</string>
 
     <!--Header Texts-->
-    <string name="header_text_your_notes">Your Own Collection of Notes</string>
+    <string name="header_text_add_toppings">ADD EXTRA TOPPINGS</string>
 
     <!--Caption Texts-->
     <string name="cap_text_no_results">No results found for your query</string>
