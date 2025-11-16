@@ -8,16 +8,26 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarTwo
+import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.DisplayImage
-import com.tonyxlab.lazypizza.presentation.screens.details.components.PizzaMetaData
+import com.tonyxlab.lazypizza.presentation.screens.details.components.ToppingsCardContent
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiState
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun DetailsScreen(modifier: Modifier = Modifier) {
+fun DetailsScreen(modifier: Modifier = Modifier, viewModel:
+DetailsViewModel = koinViewModel()) {
 
+    BaseContentLayout(viewModel = viewModel) { uiState ->
+
+        DetailsScreenContent(
+                modifier = Modifier,
+                uiState = uiState,
+                onEvent = viewModel::onEvent
+        )
+    }
 }
 
 @Composable
@@ -33,18 +43,17 @@ private fun DetailsScreenContent(
 
     ) {
 
-        AppTopBarTwo()
         DisplayImage(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().weight(.4f),
                 imageUrl = uiState.pizzaItem.imageUrl,
         )
 
-        PizzaMetaData(
-                pizzaName = uiState.pizzaItem.name,
-                ingredients = uiState.pizzaItem.ingredients
+        ToppingsCardContent(
+                modifier = Modifier.weight(.6f),
+                uiState = uiState,
+                onEvent = onEvent
         )
     }
-
 }
 
 @PreviewLightDark

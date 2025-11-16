@@ -7,57 +7,130 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.Topping
 import com.tonyxlab.lazypizza.presentation.core.components.DisplayImage
-import com.tonyxlab.lazypizza.presentation.core.components.getDrawableResId
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiEvent
+import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiState
 import com.tonyxlab.lazypizza.presentation.theme.Body3Regular
+import com.tonyxlab.lazypizza.presentation.theme.Label2SemiBold
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.presentation.theme.Title1SemiBold
 import com.tonyxlab.lazypizza.presentation.theme.Title2
+import com.tonyxlab.lazypizza.presentation.theme.TopLeftShape16
 import com.tonyxlab.lazypizza.presentation.theme.ToppingCircleBackground
-import com.tonyxlab.lazypizza.presentation.theme.VerticalRoundedCornerShape12
+import com.tonyxlab.lazypizza.utils.toPrice
 
 @Composable
-fun ToppingsCard(
+fun ToppingsCardContent(
+    uiState: DetailsUiState,
+    onEvent: (DetailsUiEvent) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+            modifier = modifier
+                    .fillMaxWidth(),
+            color = MaterialTheme.colorScheme.surface,
+            shape = MaterialTheme.shapes.TopLeftShape16,
+            shadowElevation = 2.dp
+    ) {
+        Column(
+                modifier = Modifier
+                        .padding(horizontal = MaterialTheme.spacing.spaceMedium)
+                        .padding(top = MaterialTheme.spacing.spaceTen * 2),
+                verticalArrangement = Arrangement.spacedBy(
+                        space = MaterialTheme.spacing.spaceMedium
+                )
+        ) {
+            PizzaMetaData(
+                    modifier = Modifier,
+                    pizzaName = uiState.pizzaItem.name,
+                    ingredients = uiState.pizzaItem.ingredients
+            )
+
+            ToppingsGrid(
+                    modifier = Modifier,
+                    uiState = uiState,
+                    onEvent = onEvent
+            )
+        }
+    }
+}
+
+@Composable
+private fun ToppingsGrid(
+    uiState: DetailsUiState,
+    onEvent: (DetailsUiEvent) -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+    LazyVerticalGrid(
+            modifier = modifier.fillMaxWidth(),
+            columns = GridCells.Fixed(3),
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceSmall),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceSmall),
+    ) {
+
+        stickyHeader {
+
+            Box(
+                    modifier = Modifier
+                            .background(MaterialTheme.colorScheme.background)
+                            .fillMaxWidth()
+                            .padding(bottom = MaterialTheme.spacing.spaceSmall)
+
+            ) {
+                Text(
+                        text = stringResource(id = R.string.header_text_add_toppings),
+                        style = MaterialTheme.typography.Label2SemiBold.copy(
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                )
+            }
+        }
+
+        items(items = uiState.toppings, key = { it.id }) { item ->
+            ToppingsCard(
+                    topping = item,
+                    selected = uiState.selectedToppings.contains(item),
+                    onEvent = { onEvent(DetailsUiEvent.SelectToppings) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun ToppingsCard(
     topping: Topping,
     selected: Boolean,
     onEvent: (DetailsUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    val context = LocalContext.current
     Card(
             modifier = modifier.border(
                     width = MaterialTheme.spacing.spaceSingleDp,
@@ -78,44 +151,24 @@ fun ToppingsCard(
                         .fillMaxWidth()
                         .padding(MaterialTheme.spacing.spaceTwelve),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(
-                        MaterialTheme.spacing.spaceLarge
-                )
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceSmall)
         ) {
 
-            Column( horizontalAlignment = Alignment.CenterHorizontally,) {
-                DisplayImage(
-                        imageUrl = topping.imageUrl,
-                        size = MaterialTheme.spacing.spaceSmall * 8,
-                        shape = CircleShape,
-                        backgroundColor = ToppingCircleBackground,
-                        padding = PaddingValues(MaterialTheme.spacing.spaceExtraSmall)
-                )
-               /* DisplayImage(
-                        imageUrl = "",
-                        modifier =,
-                        size = Dp(),
-                        shape =,
-                        backgroundColor = Color(),
-                        contentDescription = ""
-                )
-                AsyncImage(
-                        modifier = Modifier
-                                .size(56.dp),
-                        model = ImageRequest.Builder(context = context)
-                                .data(
-                                        getDrawableResId(
-                                                prefix = "topping_",
-                                                imageName = topping.imageUrl
-                                        )
-                                )
-                                .crossfade(true)
-                                .build(),
-                        contentDescription = topping.toppingName.plus("Image"),
-                        contentScale = ContentScale.Crop,
-                        placeholder = painterResource(R.drawable.topping_cheese)
-                )
-*/
+            DisplayImage(
+                    imageUrl = topping.imageUrl,
+                    size = MaterialTheme.spacing.spaceSmall * 8,
+                    shape = CircleShape,
+                    backgroundColor = ToppingCircleBackground,
+                    padding = PaddingValues(MaterialTheme.spacing.spaceExtraSmall)
+            )
+
+            Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(
+                            MaterialTheme.spacing.spaceSmall
+                    )
+            ) {
+
                 Text(
                         text = topping.toppingName,
                         style = MaterialTheme.typography.Body3Regular.copy(
@@ -124,9 +177,10 @@ fun ToppingsCard(
                 )
 
                 if (selected) {
-
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-
+                    Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
                         Box(
                                 modifier = Modifier
                                         .clip(shape = MaterialTheme.shapes.small)
@@ -137,7 +191,6 @@ fun ToppingsCard(
                                         ),
                                 contentAlignment = Alignment.Center
                         ) {
-
                             Icon(
                                     imageVector = Icons.Default.Remove,
                                     contentDescription = stringResource(id = R.string.cds_text_back),
@@ -165,7 +218,7 @@ fun ToppingsCard(
                         ) {
 
                             Icon(
-                                    imageVector = Icons.Default.Remove,
+                                    imageVector = Icons.Default.Add,
                                     contentDescription = stringResource(id = R.string.cds_text_back),
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -176,12 +229,8 @@ fun ToppingsCard(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center
                     ) {
-
                         Text(
-                                text = stringResource(
-                                        id = R.string.dollar_price_tag,
-                                        topping.toppingPrice
-                                ),
+                                text = topping.toppingPrice.toPrice(),
                                 style = MaterialTheme.typography.Title2.copy(
                                         color = MaterialTheme.colorScheme.onSurface,
                                         textAlign = TextAlign.Center,
@@ -195,24 +244,24 @@ fun ToppingsCard(
 }
 
 @Composable
-fun PizzaMetaData(
+private fun PizzaMetaData(
     pizzaName: String,
-    ingredients: List<String>
+    ingredients: List<String>,
+    modifier: Modifier = Modifier,
 ) {
-
     Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(
                     space = MaterialTheme.spacing.spaceExtraSmall
             )
     ) {
-
         Text(
                 text = pizzaName,
                 style = MaterialTheme.typography.Title1SemiBold.copy(
                         color = MaterialTheme.colorScheme.onSurface
                 )
         )
+
         Text(
                 text = ingredients.joinToString(),
                 style = MaterialTheme.typography.Body3Regular.copy(
@@ -226,16 +275,26 @@ fun PizzaMetaData(
 @Composable
 private fun ToppingsCard_Preview() {
 
-    val topping = Topping(
+    val toppingOne = Topping(
+            id = 1L,
             toppingName = "Bacon",
             toppingPrice = 1.0,
             imageUrl = "",
             counter = 1
     )
 
+    val toppingTwo = Topping(
+
+            id = 2L,
+            toppingName = "Bacon",
+            toppingPrice = .5,
+            imageUrl = "",
+            counter = 1
+    )
+
     LazyPizzaTheme {
 
-        Row (
+        Row(
                 modifier = Modifier
                         .background(MaterialTheme.colorScheme.background)
                         .padding(MaterialTheme.spacing.spaceMedium)
@@ -245,21 +304,21 @@ private fun ToppingsCard_Preview() {
 
             ToppingsCard(
                     modifier = Modifier.weight(1f),
-                    topping = topping,
+                    topping = toppingOne,
                     selected = false,
                     onEvent = {}
             )
 
             ToppingsCard(
                     modifier = Modifier.weight(1f),
-                    topping = topping,
+                    topping = toppingOne,
                     selected = true,
                     onEvent = {}
             )
 
             ToppingsCard(
                     modifier = Modifier.weight(1f),
-                    topping = topping,
+                    topping = toppingTwo,
                     selected = false,
                     onEvent = {}
             )
