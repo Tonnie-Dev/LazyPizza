@@ -29,13 +29,15 @@ class HomeViewModel : HomeBaseViewModel() {
     override fun onEvent(event: HomeUiEvent) {
         when (event) {
             HomeUiEvent.PlaceCall -> {
-                sendActionEvent(HomeActionEvent.NavigateToWhereSunNeverShines)
+                sendActionEvent(HomeActionEvent.LaunchDialingPad)
             }
 
-            HomeUiEvent.ClickPizza ->{}
+            is HomeUiEvent.ClickPizza -> {
+                sendActionEvent(HomeActionEvent.NavigateToDetailsScreen(event.id))
+            }
 
             is HomeUiEvent.SelectCategoryTab -> {
-                updateState { it.copy(selectedCategory =event.category) }
+                updateState { it.copy(selectedCategory = event.category) }
             }
         }
     }

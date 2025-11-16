@@ -141,7 +141,7 @@ private fun ToppingsCard(
                         MaterialTheme.colorScheme.outline
             ),
             shape = MaterialTheme.shapes.medium,
-            onClick = { onEvent(DetailsUiEvent.ClickToppingCard) },
+            onClick = { onEvent(DetailsUiEvent.ClickToppingCard(topping)) },
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {

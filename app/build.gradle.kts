@@ -61,13 +61,15 @@ dependencies {
     implementation(AndroidX.compose.ui)
     implementation(AndroidX.compose.ui.graphics)
     implementation(AndroidX.compose.ui.toolingPreview)
+
+    //Navigation 2
     //implementation(AndroidX.navigation.compose)
 
     // Navigation 3
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
-    implementation(libs.androidx.navigation3.lifecycle.viewmodel)
 
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     // Material 3
     implementation(AndroidX.compose.material3)
 
@@ -80,7 +82,6 @@ dependencies {
 
     // Splash Screen
     implementation(AndroidX.core.splashscreen)
-
 
     // Room
     implementation(AndroidX.room.ktx)

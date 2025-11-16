@@ -45,7 +45,7 @@ fun PizzaCard(
                             color = MaterialTheme.colorScheme.surface,
                             shape = MaterialTheme.shapes.medium
                     ),
-            onClick = { onEvent(HomeUiEvent.ClickPizza) },
+            onClick = { onEvent(HomeUiEvent.ClickPizza(pizza.id)) },
             shape = MaterialTheme.shapes.medium,
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)

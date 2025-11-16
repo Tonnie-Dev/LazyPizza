@@ -4,5 +4,6 @@ import com.tonyxlab.lazypizza.presentation.core.base.handling.ActionEvent
 
 sealed interface HomeActionEvent: ActionEvent{
 
-    data object NavigateToWhereSunNeverShines: HomeActionEvent
+    data object LaunchDialingPad: HomeActionEvent
+    data class NavigateToDetailsScreen(val id: Long): HomeActionEvent
 }

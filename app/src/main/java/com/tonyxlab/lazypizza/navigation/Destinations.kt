@@ -10,5 +10,5 @@ sealed class Destinations: NavKey{
     data object HomeScreenDestination: Destinations()
 
     @Serializable
-    data class DetailScreenDestination(val id: String): Destinations()
+    data class DetailScreenDestination(val id: Long): Destinations()
 }

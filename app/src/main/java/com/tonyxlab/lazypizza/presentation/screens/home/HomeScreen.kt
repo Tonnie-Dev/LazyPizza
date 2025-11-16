@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.Category
+import com.tonyxlab.lazypizza.navigation.NavOperations
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarOne
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
@@ -42,8 +43,10 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
+    navOperations: NavOperations,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = koinViewModel()
+
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -61,16 +64,17 @@ fun HomeScreen(
                 )
             },
             actionEventHandler = { _, action ->
-
                 when (action) {
 
-                    HomeActionEvent.NavigateToWhereSunNeverShines -> {
+                    HomeActionEvent.LaunchDialingPad -> {
                         val dialIntent = Intent(Intent.ACTION_DIAL).apply {
-
                             data = "tel:${uiState.phoneNumber}".toUri()
-
                         }
                         context.startActivity(dialIntent)
+                    }
+
+                    is HomeActionEvent.NavigateToDetailsScreen -> {
+                        navOperations.navigateToDetailsScreen(id = action.id)
                     }
                 }
             },
