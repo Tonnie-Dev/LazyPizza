@@ -1,21 +1,23 @@
 package com.tonyxlab.lazypizza.presentation.screens.details
 
-import androidx.lifecycle.SavedStateHandle
 import com.tonyxlab.lazypizza.domain.model.Topping
-import com.tonyxlab.lazypizza.navigation.Destinations
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiState
-import timber.log.Timber
+import com.tonyxlab.lazypizza.utils.mockPizzas
 
 typealias DetailsBaseViewModel = BaseViewModel<DetailsUiState, DetailsUiEvent, DetailsActionEvent>
 
 class DetailsViewModel(private val id: Long) : DetailsBaseViewModel() {
 
     init {
-        Timber.tag("DetailsVW").i("Transported Id is: $id ")
+        updateState {
+            val pizzaItem = mockPizzas.first { pizza -> pizza.id == this.id }
+            it.copy(pizzaStateItem = pizzaItem)
+        }
     }
+
     override val initialState: DetailsUiState
         get() = DetailsUiState()
 

@@ -32,7 +32,7 @@ fun NavRoot(modifier: Modifier = Modifier) {
                 }
 
                 entry<Destinations.DetailScreenDestination> {
-                    DetailsScreen(id = it.id)
+                    DetailsScreen(id = it.id, navOperations = navOperations)
                 }
             }
     )

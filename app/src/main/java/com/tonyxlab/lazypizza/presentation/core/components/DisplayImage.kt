@@ -31,7 +31,8 @@ import com.tonyxlab.lazypizza.utils.ifThen
 fun DisplayImage(
     imageUrl: String,
     modifier: Modifier = Modifier,
-    size: Dp = MaterialTheme.spacing.spaceDefault,
+    imageSize: Dp = MaterialTheme.spacing.spaceDefault,
+    containerSize: Dp = MaterialTheme.spacing.spaceDefault,
     shape: Shape = MaterialTheme.shapes.medium,
     backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     contentDescription: String = stringResource(id = R.string.cds_text_image),
@@ -49,10 +50,10 @@ fun DisplayImage(
             modifier = modifier
                     .clip(shape = shape)
                     .background(color = backgroundColor)
-                    .ifThen(size > 0.dp) {
-                        size(size = size)
+                    .ifThen(containerSize > 0.dp) {
+                        size(size = containerSize)
                     }
-                    .ifThen(size <= 0.dp) {
+                    .ifThen(containerSize <= 0.dp) {
                         fillMaxWidth()
                     }
                     .padding(padding),
@@ -61,10 +62,15 @@ fun DisplayImage(
 
         AsyncImage(
                 modifier = Modifier
-                        .fillMaxWidth()
+                        .ifThen(imageSize > 0.dp) {
+                            size(size = imageSize)
+                        }
+                        .ifThen(imageSize <= 0.dp) {
+                            fillMaxWidth()
+                        }
                         .aspectRatio(1f),
                 model = ImageRequest.Builder(context = context)
-                        .data(getDrawableResId(imageName = imageUrl, prefix =  prefix))
+                        .data(getDrawableResId(imageName = imageUrl, prefix = prefix))
                         .crossfade(true)
                         .fallback(fallbackDrawableRes)
                         .error(errorDrawableRes)

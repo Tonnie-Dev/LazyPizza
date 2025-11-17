@@ -69,8 +69,8 @@ fun ToppingsCardContent(
         ) {
             PizzaMetaData(
                     modifier = Modifier,
-                    pizzaName = uiState.pizzaItem.name,
-                    ingredients = uiState.pizzaItem.ingredients
+                    pizzaName = uiState.pizzaStateItem?.name ?: "",
+                    ingredients = uiState.pizzaStateItem?.ingredients ?: emptyList()
             )
 
             ToppingsGrid(
@@ -155,11 +155,14 @@ private fun ToppingsCard(
         ) {
 
             DisplayImage(
-                    imageUrl = topping.imageUrl,
-                    size = MaterialTheme.spacing.spaceSmall * 8,
+                    imageUrl =topping.imageUrl,
+                    containerSize = MaterialTheme.spacing.spaceSmall * 8,
                     shape = CircleShape,
                     backgroundColor = ToppingCircleBackground,
-                    padding = PaddingValues(MaterialTheme.spacing.spaceExtraSmall)
+                    padding = PaddingValues(MaterialTheme.spacing.spaceExtraSmall),
+                    prefix = "topping_",
+                    fallbackDrawableRes = R.drawable.topping_cheese,
+                    errorDrawableRes = R.drawable.topping_bacon
             )
 
             Column(

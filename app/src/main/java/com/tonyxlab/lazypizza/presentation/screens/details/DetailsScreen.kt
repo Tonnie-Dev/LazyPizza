@@ -5,43 +5,40 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
+import com.tonyxlab.lazypizza.navigation.NavOperations
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
+import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarTwo
 import com.tonyxlab.lazypizza.presentation.core.components.DisplayImage
 import com.tonyxlab.lazypizza.presentation.screens.details.components.ToppingsCardContent
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiState
-import com.tonyxlab.lazypizza.presentation.theme.Label2SemiBold
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
-import com.tonyxlab.lazypizza.presentation.theme.Title2
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun DetailsScreen(
     id: Long,
+    navOperations: NavOperations,
     modifier: Modifier = Modifier,
     viewModel: DetailsViewModel = koinViewModel(parameters = { parametersOf(id) })
 ) {
 
     BaseContentLayout(
-           modifier = modifier.fillMaxSize(),
-            viewModel = viewModel) { uiState ->
-
-        Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = "id is: $id",
-                style = MaterialTheme.typography.Title2
+            modifier = modifier.fillMaxSize(),
+            viewModel = viewModel,
+            topBar = { AppTopBarTwo(onClick = { navOperations.navigateToHomeScreen() }) },
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+    ) { uiState ->
+        DetailsScreenContent(
+                modifier = modifier,
+                uiState = uiState,
+                onEvent = viewModel::onEvent
         )
-        /* DetailsScreenContent(
-                 modifier = modifier,
-                 uiState = uiState,
-                 onEvent = viewModel::onEvent
-         )*/
     }
 }
 
@@ -58,15 +55,19 @@ private fun DetailsScreenContent(
 
     ) {
 
-        DisplayImage(
-                modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(.4f),
-                imageUrl = uiState.pizzaItem.imageUrl,
-        )
+        uiState.pizzaStateItem?.let {
 
+            DisplayImage(
+                    modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(.35f),
+                    imageSize = 300.dp,
+                    imageUrl = it.imageUrl,
+            )
+
+        }
         ToppingsCardContent(
-                modifier = Modifier.weight(.6f),
+                modifier = Modifier.weight(.65f),
                 uiState = uiState,
                 onEvent = onEvent
         )

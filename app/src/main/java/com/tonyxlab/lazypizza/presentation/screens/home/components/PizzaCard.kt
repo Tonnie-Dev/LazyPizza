@@ -58,9 +58,9 @@ fun PizzaCard(
 
             DisplayImage(
                     imageUrl = pizza.imageUrl,
-                    size = MaterialTheme.spacing.spaceTwelve * 10,
+                    containerSize = MaterialTheme.spacing.spaceTwelve * 10,
                     shape = MaterialTheme.shapes.VerticalRoundedCornerShape12,
-                    backgroundColor = MaterialTheme.colorScheme.surfaceVariant
+                    backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
             )
 
             Column(
