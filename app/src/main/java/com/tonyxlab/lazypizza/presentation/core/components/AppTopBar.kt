@@ -1,5 +1,6 @@
 package com.tonyxlab.lazypizza.presentation.core.components
 
+import android.R.attr.onClick
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -99,15 +100,19 @@ fun AppTopBarOne(
 }
 
 @Composable
-fun AppTopBarTwo(modifier: Modifier = Modifier) {
+fun AppTopBarTwo(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier) {
 
     Row(
             modifier = modifier
+                    .statusBarsPadding()
                     .fillMaxWidth()
                     .height(MaterialTheme.spacing.spaceExtraLarge)
-                    //   .padding(horizontal = MaterialTheme.spacing.spaceTen)
+                    .padding(horizontal = MaterialTheme.spacing.spaceTen)
                     .padding(vertical = MaterialTheme.spacing.spaceSmall),
-            horizontalArrangement = Arrangement.Start
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
     ) {
 
         Box(
@@ -115,6 +120,7 @@ fun AppTopBarTwo(modifier: Modifier = Modifier) {
                         .clip(CircleShape)
                         .background(color = TextSecondary8)
                         .size(MaterialTheme.spacing.spaceDoubleDp * 22)
+                        .clickable{ onClick()}
                         .padding(all = MaterialTheme.spacing.spaceSmall),
                 contentAlignment = Alignment.Center
         ) {
@@ -143,7 +149,7 @@ private fun AppTopBar_Preview() {
         ) {
 
             AppTopBarOne(phoneNumber = "0723 445 813", onCallClick = {})
-            AppTopBarTwo()
+            AppTopBarTwo(onClick = {})
 
         }
     }
