@@ -1,7 +1,11 @@
 package com.tonyxlab.lazypizza.presentation.screens.details.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,9 +28,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -52,6 +59,7 @@ fun ToppingsCardContent(
     onEvent: (DetailsUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
     Surface(
             modifier = modifier
                     .fillMaxWidth(),
@@ -88,7 +96,6 @@ private fun ToppingsGrid(
     onEvent: (DetailsUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     LazyVerticalGrid(
             modifier = modifier.fillMaxWidth(),
             columns = GridCells.Fixed(3),
@@ -117,8 +124,9 @@ private fun ToppingsGrid(
         items(items = uiState.toppings, key = { it.id }) { item ->
             ToppingsCard(
                     topping = item,
-                    selected = uiState.selectedToppings.contains(item),
-                    onEvent = { onEvent(DetailsUiEvent.SelectToppings) }
+                    selected = uiState.selectedToppings.isSelected(topping = item),
+                    counter = uiState.selectedToppings.counterFor(topping = item),
+                    onEvent = onEvent
             )
         }
     }
@@ -127,18 +135,35 @@ private fun ToppingsGrid(
 @Composable
 private fun ToppingsCard(
     topping: Topping,
+    counter: Int,
     selected: Boolean,
     onEvent: (DetailsUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    val haptics = LocalHapticFeedback.current
+
+    val animatedBorderColor by animateColorAsState(
+            targetValue = if (selected)
+                MaterialTheme.colorScheme.primary
+            else
+                MaterialTheme.colorScheme.outline,
+            label = "borderColor"
+    )
+
+    val animatedBorderWidth by animateDpAsState(
+            targetValue = if (selected)
+                MaterialTheme.spacing.spaceDoubleDp
+            else
+                MaterialTheme.spacing.spaceSingleDp,
+            label = "borderWidth"
+    )
+
     Card(
             modifier = modifier.border(
-                    width = MaterialTheme.spacing.spaceSingleDp,
-                    shape = MaterialTheme.shapes.medium,
-                    color = if (selected)
-                        MaterialTheme.colorScheme.primary
-                    else
-                        MaterialTheme.colorScheme.outline
+                    width = animatedBorderWidth,
+                    color = animatedBorderColor,
+                    shape = MaterialTheme.shapes.medium
             ),
             shape = MaterialTheme.shapes.medium,
             onClick = { onEvent(DetailsUiEvent.ClickToppingCard(topping)) },
@@ -155,7 +180,7 @@ private fun ToppingsCard(
         ) {
 
             DisplayImage(
-                    imageUrl =topping.imageUrl,
+                    imageUrl = topping.imageUrl,
                     containerSize = MaterialTheme.spacing.spaceSmall * 8,
                     shape = CircleShape,
                     backgroundColor = ToppingCircleBackground,
@@ -179,66 +204,89 @@ private fun ToppingsCard(
                         )
                 )
 
-                if (selected) {
-                    Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Box(
-                                modifier = Modifier
-                                        .clip(shape = MaterialTheme.shapes.small)
-                                        .border(
-                                                width = MaterialTheme.spacing.spaceSingleDp,
-                                                color = MaterialTheme.colorScheme.outline,
-                                                shape = MaterialTheme.shapes.small
-                                        ),
-                                contentAlignment = Alignment.Center
+                AnimatedContent(targetState = selected, label = "contentTransition") { isSelected ->
+                    if (isSelected) {
+                        Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Icon(
-                                    imageVector = Icons.Default.Remove,
-                                    contentDescription = stringResource(id = R.string.cds_text_back),
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            Box(
+                                    modifier = Modifier
+                                            .clip(shape = MaterialTheme.shapes.small)
+                                            .border(
+                                                    width = MaterialTheme.spacing.spaceSingleDp,
+                                                    color = MaterialTheme.colorScheme.outline,
+                                                    shape = MaterialTheme.shapes.small
+                                            )
+                                            .clickable {
+                                                haptics.performHapticFeedback(
+                                                        HapticFeedbackType.LongPress
+                                                )
+                                                onEvent(DetailsUiEvent.RemoveExtraToppings(topping))
+                                            },
+                                    contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                        imageVector = Icons.Default.Remove,
+                                        contentDescription = stringResource(id = R.string.cds_text_back),
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+
+                            Text(
+                                    text = counter.toString(),
+                                    style = MaterialTheme.typography.Title2.copy(
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                            textAlign = TextAlign.Center
+                                    )
+                            )
+
+                            Box(
+                                    modifier = Modifier
+                                            .clip(shape = MaterialTheme.shapes.small)
+                                            .border(
+                                                    width = MaterialTheme.spacing.spaceSingleDp,
+                                                    color = MaterialTheme.colorScheme.outline,
+                                                    shape = MaterialTheme.shapes.small
+                                            )
+                                            .clickable(enabled = counter < 3) {
+
+                                                haptics.performHapticFeedback(
+                                                        HapticFeedbackType.LongPress
+                                                )
+                                                onEvent(
+                                                        DetailsUiEvent.AddExtraToppings(
+                                                                topping = topping
+                                                        )
+                                                )
+                                            },
+                                    contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                        imageVector = Icons.Default.Add,
+                                        contentDescription = stringResource(id = R.string.cds_text_back),
+                                        tint = if (counter == 3)
+                                            MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                                    alpha = .2f
+                                            )
+                                        else
+                                            MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    } else {
+                        Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                    text = topping.toppingPrice.toPrice(),
+                                    style = MaterialTheme.typography.Title2.copy(
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                            textAlign = TextAlign.Center,
+                                    )
                             )
                         }
-
-                        Text(
-                                text = topping.counter.toString(),
-                                style = MaterialTheme.typography.Title2.copy(
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                        textAlign = TextAlign.Center
-                                )
-                        )
-
-                        Box(
-                                modifier = Modifier
-                                        .clip(shape = MaterialTheme.shapes.small)
-                                        .border(
-                                                width = MaterialTheme.spacing.spaceSingleDp,
-                                                color = MaterialTheme.colorScheme.outline,
-                                                shape = MaterialTheme.shapes.small
-                                        ),
-                                contentAlignment = Alignment.Center
-                        ) {
-
-                            Icon(
-                                    imageVector = Icons.Default.Add,
-                                    contentDescription = stringResource(id = R.string.cds_text_back),
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                } else {
-                    Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                                text = topping.toppingPrice.toPrice(),
-                                style = MaterialTheme.typography.Title2.copy(
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                        textAlign = TextAlign.Center,
-                                )
-                        )
                     }
                 }
             }
@@ -309,18 +357,21 @@ private fun ToppingsCard_Preview() {
                     modifier = Modifier.weight(1f),
                     topping = toppingOne,
                     selected = false,
+                    counter = 3,
                     onEvent = {}
             )
 
             ToppingsCard(
                     modifier = Modifier.weight(1f),
                     topping = toppingOne,
+                    counter = 2,
                     selected = true,
                     onEvent = {}
             )
 
             ToppingsCard(
                     modifier = Modifier.weight(1f),
+                    counter = 1,
                     topping = toppingTwo,
                     selected = false,
                     onEvent = {}
@@ -328,3 +379,10 @@ private fun ToppingsCard_Preview() {
         }
     }
 }
+
+private fun Set<Topping>.isSelected(topping: Topping): Boolean {
+    return this.any { it.id == topping.id }
+}
+
+private fun Set<Topping>.counterFor(topping: Topping): Int =
+    firstOrNull { it.id == topping.id }?.counter ?: 0
