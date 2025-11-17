@@ -1,5 +1,6 @@
 package com.tonyxlab.lazypizza.presentation.core.components
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -34,7 +35,12 @@ fun DisplayImage(
     shape: Shape = MaterialTheme.shapes.medium,
     backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     contentDescription: String = stringResource(id = R.string.cds_text_image),
-    padding: PaddingValues = PaddingValues(0.dp)
+    padding: PaddingValues = PaddingValues(0.dp),
+    prefix: String = "pizza_",
+    @DrawableRes
+    fallbackDrawableRes: Int = R.drawable.pizza_margherita,
+    @DrawableRes
+    errorDrawableRes: Int = R.drawable.pizza_margherita
 ) {
 
     val context = LocalContext.current
@@ -43,13 +49,13 @@ fun DisplayImage(
             modifier = modifier
                     .clip(shape = shape)
                     .background(color = backgroundColor)
-                    .ifThen(size > 0.dp){
+                    .ifThen(size > 0.dp) {
                         size(size = size)
                     }
-                    .ifThen(size <=0.dp){
+                    .ifThen(size <= 0.dp) {
                         fillMaxWidth()
-                    }.
-            padding(padding),
+                    }
+                    .padding(padding),
             contentAlignment = Alignment.Center
     ) {
 
@@ -58,8 +64,10 @@ fun DisplayImage(
                         .fillMaxWidth()
                         .aspectRatio(1f),
                 model = ImageRequest.Builder(context = context)
-                        .data(getDrawableResId(imageName = imageUrl))
+                        .data(getDrawableResId(imageName = imageUrl, prefix =  prefix))
                         .crossfade(true)
+                        .fallback(fallbackDrawableRes)
+                        .error(errorDrawableRes)
                         .build(),
                 contentDescription = contentDescription,
                 contentScale = ContentScale.Crop,
@@ -69,11 +77,15 @@ fun DisplayImage(
 }
 
 @Composable
-fun getDrawableResId(prefix:String = "pizza_",imageName: String): Int {
+fun getDrawableResId(
+    prefix: String,
+    imageName: String
+): Int? {
     val context = LocalContext.current
     val cleanName = imageName.substringBeforeLast('.') // remove .png or .jpg
-    return context.resources.getIdentifier(
+    val id = context.resources.getIdentifier(
             "$prefix$cleanName", "drawable", context.packageName
     )
+    return id.takeIf { it != 0 }
 }
 
