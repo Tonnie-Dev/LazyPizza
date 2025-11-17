@@ -31,7 +31,7 @@ fun DetailsScreen(
     BaseContentLayout(
             modifier = modifier.fillMaxSize(),
             viewModel = viewModel,
-            topBar = { AppTopBarTwo(onClick = { navOperations.navigateToHomeScreen() }) },
+            topBar = { AppTopBarTwo(onClick = { navOperations.popBackStack() }) },
             containerColor = MaterialTheme.colorScheme.surfaceVariant
     ) { uiState ->
         DetailsScreenContent(

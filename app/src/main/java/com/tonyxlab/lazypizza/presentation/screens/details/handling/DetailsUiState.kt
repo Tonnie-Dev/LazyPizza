@@ -10,7 +10,7 @@ import com.tonyxlab.lazypizza.utils.mockToppings
 data class DetailsUiState(
     val pizzaStateItem: Pizza? = null,
     val toppings: List<Topping> = mockToppings,
-    val selectedToppings: List<Topping> = emptyList()
+    val selectedToppings: Set<Topping> = emptySet()
 ) : UiState {
     @Stable
     data class PizzaItem(

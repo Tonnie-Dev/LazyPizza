@@ -14,7 +14,10 @@ class NavOperations(val backStack: NavBackStack) {
         backStack.add(Destinations.DetailScreenDestination(id = id))
     }
 
+    fun popBackStack(){
 
+        backStack.removeLastOrNull()
+    }
 }
 
 @Composable
