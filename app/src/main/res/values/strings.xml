@@ -19,7 +19,8 @@
 
     <!--Button Texts-->
     <string name="btn_text_share">Share</string>
-    <string name="btn_text_add_to_cart">Add to Cart for $ %.2f</string>
+    <string name="btn_text_add_to_cart">Add to Cart </string>
+    <string name="btn_text_add_to_cart_with_price">Add to Cart for $ %.2f</string>
 
     <!--Text Button Texts-->
     <string name="txt_btn_no_account">Don’t have an account?</string>
@@ -55,4 +56,5 @@
 
     <!--Meta Data Texts-->
     <string name="dollar_price_tag">$%.2f</string>
+    <string name="counter_price_tag">%d x $%.2f</string>
 </resources>
