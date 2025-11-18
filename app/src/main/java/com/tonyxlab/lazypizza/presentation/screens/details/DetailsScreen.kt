@@ -1,18 +1,23 @@
 package com.tonyxlab.lazypizza.presentation.screens.details
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.navigation.NavOperations
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarTwo
 import com.tonyxlab.lazypizza.presentation.core.components.DisplayImage
+import com.tonyxlab.lazypizza.presentation.screens.details.components.StickyAddToCart
 import com.tonyxlab.lazypizza.presentation.screens.details.components.ToppingsCardContent
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiState
@@ -35,7 +40,7 @@ fun DetailsScreen(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
     ) { uiState ->
         DetailsScreenContent(
-                modifier = modifier,
+                modifier = Modifier,
                 uiState = uiState,
                 onEvent = viewModel::onEvent
         )
@@ -48,27 +53,31 @@ private fun DetailsScreenContent(
     onEvent: (DetailsUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-            modifier = modifier
-                    .background(MaterialTheme.colorScheme.background)
-                    .fillMaxSize()
 
-    ) {
+    Box {
+        Column {
 
-        uiState.pizzaStateItem?.let {
+            uiState.pizzaStateItem?.let {
 
-            DisplayImage(
-                    modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(.35f),
-                    imageSize = 300.dp,
-                    imageUrl = it.imageUrl,
+                DisplayImage(
+                        modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(.35f),
+                        imageSize = 300.dp,
+                        imageUrl = it.imageUrl,
+                )
+            }
+
+            ToppingsCardContent(
+                    modifier = Modifier.weight(.65f),
+                    uiState = uiState,
+                    onEvent = onEvent
             )
-
         }
-        ToppingsCardContent(
-                modifier = Modifier.weight(.65f),
-                uiState = uiState,
+
+        StickyAddToCart(
+                modifier = modifier.align(alignment = Alignment.BottomCenter),
+                buttonText = stringResource(R.string.btn_text_add_to_cart, 13.30),
                 onEvent = onEvent
         )
     }

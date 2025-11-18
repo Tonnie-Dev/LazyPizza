@@ -30,7 +30,7 @@ import com.tonyxlab.lazypizza.presentation.theme.Title3
 fun AppButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    buttonText: String = "",
+    buttonText: String,
     buttonShape: Shape = MaterialTheme.shapes.RoundedCornerShape100,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary,
 ) {

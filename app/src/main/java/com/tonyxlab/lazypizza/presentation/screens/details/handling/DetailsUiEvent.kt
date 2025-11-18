@@ -8,5 +8,6 @@ sealed interface DetailsUiEvent : UiEvent {
     data class ClickToppingCard(val topping: Topping) : DetailsUiEvent
     data object SelectToppings : DetailsUiEvent
     data class AddExtraToppings(val topping: Topping) : DetailsUiEvent
+    data object AddToCart: DetailsUiEvent
     data class RemoveExtraToppings(val topping: Topping) : DetailsUiEvent
 }

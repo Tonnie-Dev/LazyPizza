@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -59,13 +60,12 @@ fun ToppingsCardContent(
     onEvent: (DetailsUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     Surface(
             modifier = modifier
-                    .fillMaxWidth(),
+                    .fillMaxSize(),
             color = MaterialTheme.colorScheme.surface,
             shape = MaterialTheme.shapes.TopLeftShape16,
-            shadowElevation = 2.dp
+           shadowElevation = 2.dp
     ) {
         Column(
                 modifier = Modifier
@@ -104,7 +104,6 @@ private fun ToppingsGrid(
     ) {
 
         stickyHeader {
-
             Box(
                     modifier = Modifier
                             .background(MaterialTheme.colorScheme.background)
@@ -142,7 +141,6 @@ private fun ToppingsCard(
 ) {
 
     val haptics = LocalHapticFeedback.current
-
     val animatedBorderColor by animateColorAsState(
             targetValue = if (selected)
                 MaterialTheme.colorScheme.primary
@@ -158,7 +156,6 @@ private fun ToppingsCard(
                 MaterialTheme.spacing.spaceSingleDp,
             label = "borderWidth"
     )
-
     Card(
             modifier = modifier.border(
                     width = animatedBorderWidth,
@@ -196,7 +193,6 @@ private fun ToppingsCard(
                             MaterialTheme.spacing.spaceSmall
                     )
             ) {
-
                 Text(
                         text = topping.toppingName,
                         style = MaterialTheme.typography.Body3Regular.copy(
@@ -205,6 +201,7 @@ private fun ToppingsCard(
                 )
 
                 AnimatedContent(targetState = selected, label = "contentTransition") { isSelected ->
+
                     if (isSelected) {
                         Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -350,7 +347,9 @@ private fun ToppingsCard_Preview() {
                         .background(MaterialTheme.colorScheme.background)
                         .padding(MaterialTheme.spacing.spaceMedium)
                         .fillMaxSize(),
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceMedium)
+                horizontalArrangement = Arrangement.spacedBy(
+                        space = MaterialTheme.spacing.spaceMedium
+                )
         ) {
 
             ToppingsCard(

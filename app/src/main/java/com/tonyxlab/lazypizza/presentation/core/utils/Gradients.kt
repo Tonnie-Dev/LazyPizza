@@ -4,10 +4,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import com.tonyxlab.lazypizza.presentation.theme.Background
 import com.tonyxlab.lazypizza.presentation.theme.PrimaryGradientEnd
 import com.tonyxlab.lazypizza.presentation.theme.PrimaryGradientStart
 import com.tonyxlab.lazypizza.presentation.theme.SurfaceHigher
+import com.tonyxlab.lazypizza.presentation.theme.SurfaceHighest
 
 class GradientScheme(
     val stickyOverlayGradient: Brush = StickyOverlayGradient,
@@ -18,7 +20,7 @@ class GradientScheme(
 
         val StickyOverlayGradient =
             Brush.verticalGradient(
-                    colors = listOf(Background, SurfaceHigher)
+                    colors = listOf(Color.Transparent, SurfaceHigher)
             )
 
         val StickyButtonGradient = Brush.horizontalGradient(

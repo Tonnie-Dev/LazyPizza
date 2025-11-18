@@ -37,6 +37,7 @@ class DetailsViewModel(private val id: Long) : DetailsBaseViewModel() {
             }
 
             DetailsUiEvent.SelectToppings -> {}
+            DetailsUiEvent.AddToCart -> {}
         }
     }
 
