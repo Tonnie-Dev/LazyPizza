@@ -9,18 +9,9 @@ import com.tonyxlab.lazypizza.utils.mockToppings
 @Stable
 data class DetailsUiState(
     val pizzaStateItem: Pizza? = null,
+    val aggregatePrice: Double = 0.0,
     val toppings: List<Topping> = mockToppings,
     val selectedToppings: Set<Topping> = emptySet()
 ) : UiState {
-    @Stable
-    data class PizzaItem(
-        val name: String = "Margherita",
-        val imageUrl: String = "",
-        val ingredients: List<String> = listOf(
-                "Tomato sauce",
-                "Mozzarella",
-                "Fresh basil",
-                "Olive oil"
-        )
-    )
+
 }

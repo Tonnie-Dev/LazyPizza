@@ -13,10 +13,15 @@ typealias DetailsBaseViewModel = BaseViewModel<DetailsUiState, DetailsUiEvent, D
 class DetailsViewModel(private val id: Long) : DetailsBaseViewModel() {
 
     init {
+
+        val pizzaItem = mockPizzas.first { pizza -> pizza.id == this.id }
         updateState {
-            val pizzaItem = mockPizzas.first { pizza -> pizza.id == this.id }
             it.copy(pizzaStateItem = pizzaItem)
+
         }
+
+
+        calculateTotalPrice()
     }
 
     override val initialState: DetailsUiState
@@ -24,15 +29,18 @@ class DetailsViewModel(private val id: Long) : DetailsBaseViewModel() {
 
     override fun onEvent(event: DetailsUiEvent) {
         when (event) {
-            is DetailsUiEvent.ClickToppingCard ->{
+            is DetailsUiEvent.ClickToppingCard -> {
                 addToSelectionList(event.topping)
             }
 
             is DetailsUiEvent.AddExtraToppings -> {
+
                 addExtraToppings(topping = event.topping)
             }
 
             is DetailsUiEvent.RemoveExtraToppings -> {
+
+
                 removeExtraToppings(topping = event.topping)
             }
 
@@ -43,9 +51,10 @@ class DetailsViewModel(private val id: Long) : DetailsBaseViewModel() {
 
     private fun addToSelectionList(topping: Topping) {
 
-        if(currentState.selectedToppings.any{it.id == topping.id} )return
+        if (currentState.selectedToppings.any { it.id == topping.id }) return
 
         updateTopping(topping, 1)
+        calculateTotalPrice()
     }
 
     private fun addExtraToppings(topping: Topping) {
@@ -54,10 +63,10 @@ class DetailsViewModel(private val id: Long) : DetailsBaseViewModel() {
                 .find { it.id == topping.id }?.counter ?: 0
 
         val newCount = currentCount.plus(1)
-                .coerceAtMost( maximumValue = 3)
+                .coerceAtMost(maximumValue = 3)
         updateTopping(topping = topping, newCount = newCount)
 
-        Timber.tag("DetailsVW").i("Adding - NewCount $newCount")
+        calculateTotalPrice()
     }
 
     private fun removeExtraToppings(topping: Topping) {
@@ -69,7 +78,8 @@ class DetailsViewModel(private val id: Long) : DetailsBaseViewModel() {
                 .coerceAtLeast(minimumValue = 0)
 
         updateTopping(topping = topping, newCount = newCount)
-        Timber.tag("DetailsVW").i("Subtraction - NewCount $newCount")
+        calculateTotalPrice()
+
     }
 
     private fun updateTopping(topping: Topping, newCount: Int) {
@@ -84,6 +94,21 @@ class DetailsViewModel(private val id: Long) : DetailsBaseViewModel() {
 
         updateState { it.copy(selectedToppings = newSet) }
 
-        Timber.tag("DetailsVW").i("NewSet is: ${currentState.selectedToppings.size}")
+
+    }
+
+    private fun updateBasePizzaPrice(basePrice: Double) {
+        updateState { it.copy(aggregatePrice = basePrice) }
+    }
+
+    private fun calculateTotalPrice() {
+
+        val basePrice = currentState.pizzaStateItem?.price ?: 0.00
+
+        val toppingsTotal = currentState.selectedToppings.sumOf {
+            it.toppingPrice * it.counter
+        }
+
+        updateState { it.copy(aggregatePrice = basePrice + toppingsTotal) }
     }
 }

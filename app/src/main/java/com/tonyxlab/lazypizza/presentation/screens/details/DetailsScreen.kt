@@ -77,7 +77,7 @@ private fun DetailsScreenContent(
 
         StickyAddToCart(
                 modifier = modifier.align(alignment = Alignment.BottomCenter),
-                buttonText = stringResource(R.string.btn_text_add_to_cart, 13.30),
+                buttonText = stringResource(R.string.btn_text_add_to_cart, uiState.aggregatePrice),
                 onEvent = onEvent
         )
     }
