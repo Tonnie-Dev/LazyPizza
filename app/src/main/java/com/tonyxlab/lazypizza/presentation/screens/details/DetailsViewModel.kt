@@ -6,20 +6,16 @@ import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsActio
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiState
 import com.tonyxlab.lazypizza.utils.mockPizzas
-import timber.log.Timber
 
 typealias DetailsBaseViewModel = BaseViewModel<DetailsUiState, DetailsUiEvent, DetailsActionEvent>
 
 class DetailsViewModel(private val id: Long) : DetailsBaseViewModel() {
 
     init {
-
         val pizzaItem = mockPizzas.first { pizza -> pizza.id == this.id }
         updateState {
             it.copy(pizzaStateItem = pizzaItem)
-
         }
-
 
         calculateTotalPrice()
     }
@@ -39,7 +35,6 @@ class DetailsViewModel(private val id: Long) : DetailsBaseViewModel() {
             }
 
             is DetailsUiEvent.RemoveExtraToppings -> {
-
 
                 removeExtraToppings(topping = event.topping)
             }
@@ -93,7 +88,6 @@ class DetailsViewModel(private val id: Long) : DetailsBaseViewModel() {
         }
 
         updateState { it.copy(selectedToppings = newSet) }
-
 
     }
 
