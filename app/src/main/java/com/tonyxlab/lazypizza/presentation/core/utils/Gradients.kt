@@ -22,7 +22,7 @@ class GradientScheme(
             )
 
         val StickyButtonGradient = Brush.horizontalGradient(
-                colors = listOf(PrimaryGradientStart, PrimaryGradientEnd)
+                colors = listOf(PrimaryGradientEnd, PrimaryGradientStart)
         )
     }
 }
