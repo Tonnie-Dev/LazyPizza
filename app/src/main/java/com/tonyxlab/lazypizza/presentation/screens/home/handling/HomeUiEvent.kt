@@ -6,5 +6,6 @@ import com.tonyxlab.lazypizza.presentation.core.base.handling.UiEvent
 sealed interface HomeUiEvent: UiEvent {
    data object PlaceCall: HomeUiEvent
     data class SelectCategoryTab(val category: Category): HomeUiEvent
-    data class ClickPizza(val id: Long): HomeUiEvent
+    data class ClickOnPizza(val id: Long): HomeUiEvent
+    data class ClickOnSideItem(val id: Long): HomeUiEvent
 }

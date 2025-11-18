@@ -5,7 +5,6 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,18 +12,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,8 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -41,6 +33,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.Topping
+import com.tonyxlab.lazypizza.presentation.core.components.CounterItem
 import com.tonyxlab.lazypizza.presentation.core.components.DisplayImage
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiEvent
@@ -65,7 +58,7 @@ fun ToppingsCardContent(
                     .fillMaxSize(),
             color = MaterialTheme.colorScheme.surface,
             shape = MaterialTheme.shapes.TopLeftShape16,
-           shadowElevation = 2.dp
+            shadowElevation = 2.dp
     ) {
         Column(
                 modifier = Modifier
@@ -203,74 +196,19 @@ private fun ToppingsCard(
                 AnimatedContent(targetState = selected, label = "contentTransition") { isSelected ->
 
                     if (isSelected) {
-                        Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Box(
-                                    modifier = Modifier
-                                            .clip(shape = MaterialTheme.shapes.small)
-                                            .border(
-                                                    width = MaterialTheme.spacing.spaceSingleDp,
-                                                    color = MaterialTheme.colorScheme.outline,
-                                                    shape = MaterialTheme.shapes.small
-                                            )
-                                            .clickable {
-                                                haptics.performHapticFeedback(
-                                                        HapticFeedbackType.LongPress
-                                                )
-                                                onEvent(DetailsUiEvent.RemoveExtraToppings(topping))
-                                            },
-                                    contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                        imageVector = Icons.Default.Remove,
-                                        contentDescription = stringResource(id = R.string.cds_text_back),
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
 
-                            Text(
-                                    text = counter.toString(),
-                                    style = MaterialTheme.typography.Title2.copy(
-                                            color = MaterialTheme.colorScheme.onSurface,
-                                            textAlign = TextAlign.Center
-                                    )
-                            )
+                        CounterItem(
+                                modifier = modifier,
+                                onAdd = {
+                                    onEvent(DetailsUiEvent.AddExtraToppings(topping = topping))
+                                },
+                                onRemove = {
+                                    onEvent(DetailsUiEvent.RemoveExtraToppings(topping = topping))
+                                },
+                                counter = counter,
+                                isCounterMaxed = (counter == 3)
+                        )
 
-                            Box(
-                                    modifier = Modifier
-                                            .clip(shape = MaterialTheme.shapes.small)
-                                            .border(
-                                                    width = MaterialTheme.spacing.spaceSingleDp,
-                                                    color = MaterialTheme.colorScheme.outline,
-                                                    shape = MaterialTheme.shapes.small
-                                            )
-                                            .clickable(enabled = counter < 3) {
-
-                                                haptics.performHapticFeedback(
-                                                        HapticFeedbackType.LongPress
-                                                )
-                                                onEvent(
-                                                        DetailsUiEvent.AddExtraToppings(
-                                                                topping = topping
-                                                        )
-                                                )
-                                            },
-                                    contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                        imageVector = Icons.Default.Add,
-                                        contentDescription = stringResource(id = R.string.cds_text_back),
-                                        tint = if (counter == 3)
-                                            MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                                                    alpha = .2f
-                                            )
-                                        else
-                                            MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        }
                     } else {
                         Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -385,3 +323,5 @@ private fun Set<Topping>.isSelected(topping: Topping): Boolean {
 
 private fun Set<Topping>.counterFor(topping: Topping): Int =
     firstOrNull { it.id == topping.id }?.counter ?: 0
+
+

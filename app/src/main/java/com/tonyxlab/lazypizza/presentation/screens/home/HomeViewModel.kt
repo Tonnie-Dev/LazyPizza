@@ -6,6 +6,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.viewModelScope
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeActionEvent
+import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeActionEvent.*
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiState
 import kotlinx.coroutines.FlowPreview
@@ -32,13 +33,15 @@ class HomeViewModel : HomeBaseViewModel() {
                 sendActionEvent(HomeActionEvent.LaunchDialingPad)
             }
 
-            is HomeUiEvent.ClickPizza -> {
-                sendActionEvent(HomeActionEvent.NavigateToDetailsScreen(event.id))
+            is HomeUiEvent.ClickOnPizza -> {
+                sendActionEvent(NavigateToDetailsScreen(event.id))
             }
 
             is HomeUiEvent.SelectCategoryTab -> {
                 updateState { it.copy(selectedCategory = event.category) }
             }
+
+            is HomeUiEvent.ClickOnSideItem -> {}
         }
     }
 
