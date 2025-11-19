@@ -39,7 +39,7 @@ class DetailsViewModel(private val id: Long) : DetailsBaseViewModel() {
                 removeExtraToppings(topping = event.topping)
             }
 
-            DetailsUiEvent.SelectToppings -> {}
+
             DetailsUiEvent.AddToCart -> {}
         }
     }
@@ -86,13 +86,8 @@ class DetailsViewModel(private val id: Long) : DetailsBaseViewModel() {
         if (newCount > 0) {
             newSet.add(topping.copy(counter = newCount))
         }
-
         updateState { it.copy(selectedToppings = newSet) }
 
-    }
-
-    private fun updateBasePizzaPrice(basePrice: Double) {
-        updateState { it.copy(aggregatePrice = basePrice) }
     }
 
     private fun calculateTotalPrice() {
@@ -102,7 +97,6 @@ class DetailsViewModel(private val id: Long) : DetailsBaseViewModel() {
         val toppingsTotal = currentState.selectedToppings.sumOf {
             it.toppingPrice * it.counter
         }
-
         updateState { it.copy(aggregatePrice = basePrice + toppingsTotal) }
     }
 }

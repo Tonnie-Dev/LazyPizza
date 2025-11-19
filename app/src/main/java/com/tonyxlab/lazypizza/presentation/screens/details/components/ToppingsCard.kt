@@ -26,7 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -133,7 +132,6 @@ private fun ToppingsCard(
     modifier: Modifier = Modifier
 ) {
 
-    val haptics = LocalHapticFeedback.current
     val animatedBorderColor by animateColorAsState(
             targetValue = if (selected)
                 MaterialTheme.colorScheme.primary
@@ -193,7 +191,8 @@ private fun ToppingsCard(
                         )
                 )
 
-                AnimatedContent(targetState = selected, label = "contentTransition") { isSelected ->
+                AnimatedContent(targetState = selected, label = "toppingContentTransition") {
+                    isSelected ->
 
                     if (isSelected) {
 
@@ -205,8 +204,7 @@ private fun ToppingsCard(
                                 onRemove = {
                                     onEvent(DetailsUiEvent.RemoveExtraToppings(topping = topping))
                                 },
-                                counter = counter,
-                                isCounterMaxed = (counter == 3)
+                                counter = counter
                         )
 
                     } else {

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
@@ -31,7 +30,7 @@ fun CounterItem(
     onRemove: () -> Unit,
     counter: Int,
     modifier: Modifier = Modifier,
-    isCounterMaxed: Boolean = false
+    maxCount:Int = 3
 ) {
 
     val haptics = LocalHapticFeedback.current
@@ -78,7 +77,7 @@ fun CounterItem(
                                 color = MaterialTheme.colorScheme.outline,
                                 shape = MaterialTheme.shapes.small
                         )
-                        .clickable(enabled = counter < 3) {
+                        .clickable(enabled = counter < maxCount) {
 
                             haptics.performHapticFeedback(
                                     HapticFeedbackType.LongPress
@@ -90,7 +89,7 @@ fun CounterItem(
             Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = stringResource(id = R.string.cds_text_back),
-                    tint = if (isCounterMaxed)
+                    tint = if (counter>= maxCount)
                         MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .2f)
                     else
                         MaterialTheme.colorScheme.onSurfaceVariant

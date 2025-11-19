@@ -7,7 +7,7 @@ import com.tonyxlab.lazypizza.domain.model.Pizza
 import com.tonyxlab.lazypizza.domain.model.SearchItem
 import com.tonyxlab.lazypizza.domain.model.SideItem
 import com.tonyxlab.lazypizza.presentation.core.base.handling.UiState
-import com.tonyxlab.lazypizza.utils.getAllSideItems
+import com.tonyxlab.lazypizza.utils.getMockSideItems
 import com.tonyxlab.lazypizza.utils.mockPizzas
 
 @Stable
@@ -16,9 +16,10 @@ data class HomeUiState(
     val textFieldState: TextFieldState = TextFieldState(),
     val isTextEmpty: Boolean = false,
     val allPizzaItems: List<Pizza> = mockPizzas,
-    val allSideItems:List<SideItem> = getAllSideItems(),
-    val filteredPizzaItems: List<Pizza> = emptyList(),
+    val allSideItems:List<SideItem> = getMockSideItems(),
     val filteredSideItems: List<SideItem> = emptyList(),
+    val selectedSideItems:Set<SideItem> = emptySet(),
     val searchResults:List<SearchItem> = emptyList(),
-    val selectedCategory : Category= Category.PIZZA
+    val selectedCategory : Category= Category.PIZZA,
+        val aggregateItemTotal: Double = 0.0
 ) : UiState {}

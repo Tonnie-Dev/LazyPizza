@@ -1,7 +1,9 @@
 package com.tonyxlab.lazypizza.presentation.screens.home.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,6 +49,9 @@ fun SideItemCard(
     onEvent: (HomeUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    val counter = uiState.selectedSideItems.counterFor(sideItem)
+    val selected = uiState.selectedSideItems.isSelected(sideItem)
     Card(
             modifier = modifier
                     .fillMaxWidth()
@@ -55,10 +60,9 @@ fun SideItemCard(
                             color = MaterialTheme.colorScheme.surface,
                             shape = MaterialTheme.shapes.medium
                     ),
-            onClick = { onEvent(HomeUiEvent.ClickOnSideItem(sideItem.id)) },
             shape = MaterialTheme.shapes.medium,
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
 
         Row(
@@ -75,10 +79,10 @@ fun SideItemCard(
             )
             SideItemCardContent(
                     sideItem = sideItem,
-                    counter = 0,
-                    selected = false,
-                    aggregatePrice = 8.13,
-                    onEvent = {}
+                    counter = counter,
+                    selected = selected,
+                    aggregatePrice = sideItem.price * counter,
+                    onEvent = onEvent
             )
 
         }
@@ -117,6 +121,7 @@ private fun SideItemCardContent(
                     )
             )
 
+
             if (selected) {
                 Box(
                         modifier = Modifier
@@ -126,9 +131,12 @@ private fun SideItemCardContent(
                                         color = MaterialTheme.colorScheme.outline,
                                         shape = MaterialTheme.shapes.small,
                                 )
-                                .size(MaterialTheme.spacing.spaceDoubleDp * 11),
+                                .size(MaterialTheme.spacing.spaceDoubleDp * 11)
+                                .clickable {
+                                    onEvent(HomeUiEvent.ResetOrderStatus(sideItem = sideItem))
+                                },
                         contentAlignment = Alignment.Center
-                ){
+                ) {
 
                     Icon(
                             painter = painterResource(R.drawable.ic_delete),
@@ -146,80 +154,78 @@ private fun SideItemCardContent(
                 verticalAlignment = Alignment.CenterVertically
         ) {
 
-            if (selected) {
+                if (selected) {
 
-                CounterItem(
-                        modifier = Modifier.weight(1f),
-                        onAdd = { onEvent(HomeUiEvent.IncrementQuantity) },
-                        onRemove = { onEvent(HomeUiEvent.DecrementQuantity) },
-                        counter = counter,
-                        isCounterMaxed = false
+                    CounterItem(
+                            modifier = Modifier.weight(1f),
+                            onAdd = { onEvent(HomeUiEvent.IncrementQuantity(sideItem)) },
+                            onRemove = { onEvent(HomeUiEvent.DecrementQuantity(sideItem)) },
+                            counter = counter,
+                            maxCount = 5
+                    )
 
-                )
+                    Column(
+                            modifier = Modifier.weight(1f),
+                            horizontalAlignment = Alignment.End
+                    ) {
+
+                        Text(
+                                text = stringResource(
+                                        id = R.string.dollar_price_tag,
+                                        aggregatePrice
+                                ),
+                                style = MaterialTheme.typography.Title1SemiBold.copy(
+                                        color = MaterialTheme.colorScheme.onSurface
+                                )
+                        )
 
 
-                Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.End
-                ) {
+                        Text(
+                                text = stringResource(
+                                        id = R.string.counter_price_tag,
+                                        counter,
+                                        sideItem.price
+                                ),
+                                style = MaterialTheme.typography.Body4Regular.copy(
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                        )
+
+                    }
+
+                } else {
 
                     Text(
+
+                            modifier = Modifier.weight(1f),
                             text = stringResource(
                                     id = R.string.dollar_price_tag,
-                                    aggregatePrice
+                                    sideItem.price
                             ),
                             style = MaterialTheme.typography.Title1SemiBold.copy(
                                     color = MaterialTheme.colorScheme.onSurface
                             )
                     )
 
-
-                    Text(
-                            text = stringResource(
-                                    id = R.string.counter_price_tag,
-                                    counter,
-                                    sideItem.price
-                            ),
-                            style = MaterialTheme.typography.Body4Regular.copy(
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+                    AppButton(
+                            modifier = Modifier.wrapContentWidth(),
+                            onClick = { onEvent(HomeUiEvent.AddSideItemToCart(sideItem = sideItem)) },
+                            buttonText = stringResource(id = R.string.btn_text_add_to_cart),
+                            buttonHeight = MaterialTheme.spacing.spaceTen * 4,
+                            isOutlineButton = true,
+                            contentColor = MaterialTheme.colorScheme.primary
                     )
-
                 }
-
-            } else {
-
-                Text(
-
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(
-                                id = R.string.dollar_price_tag,
-                                sideItem.price
-                        ),
-                        style = MaterialTheme.typography.Title1SemiBold.copy(
-                                color = MaterialTheme.colorScheme.onSurface
-                        )
-                )
-
-                AppButton(
-                        modifier = Modifier.wrapContentWidth(),
-                        onClick = { onEvent(HomeUiEvent.AddToCart) },
-                        buttonText = stringResource(id = R.string.btn_text_add_to_cart),
-                        buttonHeight = MaterialTheme.spacing.spaceTen * 4,
-                        isOutlineButton = true,
-                        contentColor = MaterialTheme.colorScheme.primary
-                )
             }
         }
     }
-}
+
 
 @PreviewLightDark
 @Composable
 private fun SideItemCard_Preview() {
 
     val sideItems = drinksMock
-
 
     LazyPizzaTheme {
 
@@ -244,6 +250,15 @@ private fun SideItemCard_Preview() {
             }
         }
     }
+}
+
+private fun Set<SideItem>.isSelected(sideItem: SideItem): Boolean {
+    return any { it.id == sideItem.id }
+}
+
+private fun Set<SideItem>.counterFor(sideItem: SideItem): Int {
+
+    return firstOrNull { it.id == sideItem.id }?.counter ?: 0
 }
 
 
