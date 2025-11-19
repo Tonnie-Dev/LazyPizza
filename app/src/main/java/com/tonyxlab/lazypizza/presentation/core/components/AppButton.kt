@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -40,7 +39,6 @@ fun AppButton(
     buttonHeight: Dp = MaterialTheme.spacing.spaceTwelve * 4,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary,
 ) {
-
     Box(
             modifier = modifier
                     .clip(shape = buttonShape)
@@ -54,23 +52,15 @@ fun AppButton(
                                         color = Primary8,
                                         shape = buttonShape
                                 )
-                               /* .padding(
-                                        horizontal = MaterialTheme.spacing.spaceTwelve * 2,
-                                        vertical = MaterialTheme.spacing.spaceTen
-                                )*/
                     }
                     .ifThen(flag = isOutlineButton.not()) {
-
                         background(
                                 brush = MaterialTheme.gradientScheme.stickyButtonGradient,
                                 shape = buttonShape
                         )
                     }
-                    .fillMaxWidth()
                     .height(buttonHeight)
-                    .clickable {
-                        onClick()
-                    }
+                    .clickable { onClick() }
                     .padding(
                             horizontal = MaterialTheme.spacing.spaceTwelve * 2,
                             vertical = MaterialTheme.spacing.spaceTen

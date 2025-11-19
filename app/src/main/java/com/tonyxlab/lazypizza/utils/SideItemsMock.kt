@@ -3,6 +3,12 @@ package com.tonyxlab.lazypizza.utils
 import com.tonyxlab.lazypizza.domain.model.Category
 import com.tonyxlab.lazypizza.domain.model.SideItem
 
+// ------------------------ ALL ITEMS ------------------------
+
+fun getAllSideItems(): List<SideItem> {
+        return drinksMock + saucesMock + iceCreamsMock
+}
+
 // ------------------------ DRINKS ------------------------
 
 val drinksMock = listOf(

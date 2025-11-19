@@ -32,6 +32,7 @@ fun StickyAddToCart(
 
        AppButton(
                 modifier = Modifier
+                        .fillMaxWidth()
                         .padding(
                                 horizontal = MaterialTheme.spacing.spaceMedium,
                                 vertical = MaterialTheme.spacing.spaceSmall

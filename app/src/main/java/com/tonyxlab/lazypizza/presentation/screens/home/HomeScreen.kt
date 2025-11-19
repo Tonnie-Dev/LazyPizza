@@ -34,6 +34,7 @@ import com.tonyxlab.lazypizza.presentation.screens.home.components.CategoryTabs
 import com.tonyxlab.lazypizza.presentation.screens.home.components.LazyCategoryList
 import com.tonyxlab.lazypizza.presentation.screens.home.components.PizzaCard
 import com.tonyxlab.lazypizza.presentation.screens.home.components.SearchComponent
+import com.tonyxlab.lazypizza.presentation.screens.home.components.SideItemCard
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiState
@@ -131,11 +132,29 @@ private fun HomeScreenContent(
                         onEvent = onEvent
                 )
 
-                LazyCategoryList(
-                        header = uiState.selectedCategory.categoryName,
-                        items = uiState.allPizzaItems,
-                        key = { item -> item.id }) { pizzaItem ->
-                    PizzaCard(pizza = pizzaItem, onEvent = onEvent)
+                if (uiState.selectedCategory == Category.PIZZA) {
+                    LazyCategoryList(
+                            header = uiState.selectedCategory.categoryName,
+                            items = uiState.filteredPizzaItems,
+                            key = { item -> item.id }) { pizzaItem ->
+                        PizzaCard(
+                                pizza = pizzaItem,
+                                onEvent = onEvent
+                        )
+                    }
+
+                } else {
+
+                    LazyCategoryList(
+                            header = uiState.selectedCategory.categoryName,
+                            items = uiState.filteredSideItems,
+                            key = { item -> item.id }) { sideItem ->
+                        SideItemCard(
+                                sideItem = sideItem,
+                                uiState = uiState,
+                                onEvent = onEvent
+                        )
+                    }
                 }
             }
         }

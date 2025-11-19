@@ -32,7 +32,6 @@ fun DetailsScreen(
     modifier: Modifier = Modifier,
     viewModel: DetailsViewModel = koinViewModel(parameters = { parametersOf(id) })
 ) {
-
     BaseContentLayout(
             modifier = modifier.fillMaxSize(),
             viewModel = viewModel,
@@ -77,7 +76,10 @@ private fun DetailsScreenContent(
 
         StickyAddToCart(
                 modifier = modifier.align(alignment = Alignment.BottomCenter),
-                buttonText = stringResource(R.string.btn_text_add_to_cart_with_price, uiState.aggregatePrice),
+                buttonText = stringResource(
+                        R.string.btn_text_add_to_cart_with_price,
+                        uiState.aggregatePrice
+                ),
                 onEvent = onEvent
         )
     }

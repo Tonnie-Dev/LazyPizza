@@ -4,7 +4,9 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Stable
 import com.tonyxlab.lazypizza.domain.model.Category
 import com.tonyxlab.lazypizza.domain.model.Pizza
+import com.tonyxlab.lazypizza.domain.model.SideItem
 import com.tonyxlab.lazypizza.presentation.core.base.handling.UiState
+import com.tonyxlab.lazypizza.utils.getAllSideItems
 import com.tonyxlab.lazypizza.utils.mockPizzas
 
 @Stable
@@ -12,7 +14,9 @@ data class HomeUiState(
     val phoneNumber: String = "+1 (555) 321-7890",
     val textFieldState: TextFieldState = TextFieldState(),
     val isTextEmpty: Boolean = false,
-    val allPizzaItems: List<Pizza> = mockPizzas, //emptyList(),
+    val allPizzaItems: List<Pizza> = mockPizzas,
+    val allSideItems:List<SideItem> = getAllSideItems(),
     val filteredPizzaItems: List<Pizza> = emptyList(),
+    val filteredSideItems: List<SideItem> = emptyList(),
     val selectedCategory : Category= Category.PIZZA
 ) : UiState {}

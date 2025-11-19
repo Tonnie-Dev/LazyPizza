@@ -6,11 +6,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -71,9 +71,9 @@ fun SideItemCard(
                     containerSize = MaterialTheme.spacing.spaceTwelve * 10,
                     shape = MaterialTheme.shapes.VerticalRoundedCornerShape12,
                     backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
+                    fallbackDrawableRes = R.drawable.drink_seven
             )
             SideItemCardContent(
-                    modifier = Modifier,
                     sideItem = sideItem,
                     counter = 0,
                     selected = false,
@@ -86,7 +86,7 @@ fun SideItemCard(
 }
 
 @Composable
-private fun RowScope.SideItemCardContent(
+private fun SideItemCardContent(
     sideItem: SideItem,
     counter: Int,
     selected: Boolean,
@@ -190,9 +190,11 @@ private fun RowScope.SideItemCardContent(
             } else {
 
                 Text(
+
+                        modifier = Modifier.weight(1f),
                         text = stringResource(
                                 id = R.string.dollar_price_tag,
-                                aggregatePrice
+                                sideItem.price
                         ),
                         style = MaterialTheme.typography.Title1SemiBold.copy(
                                 color = MaterialTheme.colorScheme.onSurface
@@ -200,15 +202,13 @@ private fun RowScope.SideItemCardContent(
                 )
 
                 AppButton(
-                        modifier = Modifier,
+                        modifier = Modifier.wrapContentWidth(),
                         onClick = { onEvent(HomeUiEvent.AddToCart) },
                         buttonText = stringResource(id = R.string.btn_text_add_to_cart),
                         buttonHeight = MaterialTheme.spacing.spaceTen * 4,
                         isOutlineButton = true,
-
                         contentColor = MaterialTheme.colorScheme.primary
                 )
-
             }
         }
     }
