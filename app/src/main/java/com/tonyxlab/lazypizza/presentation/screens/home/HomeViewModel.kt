@@ -30,7 +30,7 @@ class HomeViewModel : HomeBaseViewModel() {
     override fun onEvent(event: HomeUiEvent) {
         when (event) {
             HomeUiEvent.PlaceCall -> {
-                sendActionEvent(HomeActionEvent.LaunchDialingPad)
+                sendActionEvent(LaunchDialingPad)
             }
 
             is HomeUiEvent.ClickOnPizza -> {
@@ -42,6 +42,10 @@ class HomeViewModel : HomeBaseViewModel() {
             }
 
             is HomeUiEvent.ClickOnSideItem -> {}
+            HomeUiEvent.AddToCart -> {}
+            HomeUiEvent.DecrementQuantity -> {}
+            HomeUiEvent.IncrementQuantity -> {}
+            HomeUiEvent.ResetOrder -> {}
         }
     }
 

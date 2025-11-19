@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.Dp
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.presentation.core.utils.gradientScheme
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
@@ -36,6 +37,7 @@ fun AppButton(
     buttonText: String,
     isOutlineButton: Boolean = false,
     buttonShape: Shape = MaterialTheme.shapes.RoundedCornerShape100,
+    buttonHeight: Dp = MaterialTheme.spacing.spaceTwelve * 4,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary,
 ) {
 
@@ -48,13 +50,14 @@ fun AppButton(
                                 shape = buttonShape
                         )
                                 .border(
-                                        width = MaterialTheme.spacing.spaceSingleDp,
-                                        color = Primary8
+                                        width = MaterialTheme.spacing.spaceDoubleDp,
+                                        color = Primary8,
+                                        shape = buttonShape
                                 )
-                                .padding(
+                               /* .padding(
                                         horizontal = MaterialTheme.spacing.spaceTwelve * 2,
                                         vertical = MaterialTheme.spacing.spaceTen
-                                )
+                                )*/
                     }
                     .ifThen(flag = isOutlineButton.not()) {
 
@@ -64,7 +67,7 @@ fun AppButton(
                         )
                     }
                     .fillMaxWidth()
-                    .height(MaterialTheme.spacing.spaceTwelve * 4)
+                    .height(buttonHeight)
                     .clickable {
                         onClick()
                     }
