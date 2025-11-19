@@ -13,7 +13,7 @@ fun getAllSideItems(): List<SideItem> {
 
 val drinksMock = listOf(
         SideItem(
-                id = 1L,
+                id = 9L,
                 name = "Mineral Water",
                 price = 1.49,
                 imageUrl = "mineral_water.png",
@@ -21,7 +21,7 @@ val drinksMock = listOf(
                 category = Category.DRINKS
         ),
         SideItem(
-                id = 2L,
+                id = 10L,
                 name = "7-Up",
                 price = 1.89,
                 imageUrl = "seven_up.png",
@@ -29,7 +29,7 @@ val drinksMock = listOf(
                 category = Category.DRINKS
         ),
         SideItem(
-                id = 3L,
+                id = 11L,
                 name = "Pepsi",
                 price = 1.99,
                 imageUrl = "pepsi.png",
@@ -37,7 +37,7 @@ val drinksMock = listOf(
                 category = Category.DRINKS
         ),
         SideItem(
-                id = 4L,
+                id = 12L,
                 name = "Orange Juice",
                 price = 2.49,
                 imageUrl = "orange_juice.png",
@@ -45,7 +45,7 @@ val drinksMock = listOf(
                 category = Category.DRINKS
         ),
         SideItem(
-                id = 5L,
+                id = 13L,
                 name = "Apple Juice",
                 price = 2.29,
                 imageUrl = "apple_juice.png",
@@ -53,7 +53,7 @@ val drinksMock = listOf(
                 category = Category.DRINKS
         ),
         SideItem(
-                id = 6L,
+                id = 14L,
                 name = "Iced Tea (Lemon)",
                 price = 2.19,
                 imageUrl = "iced_tea_lemon.png",
@@ -66,7 +66,7 @@ val drinksMock = listOf(
 
 val saucesMock = listOf(
         SideItem(
-                id = 7L,
+                id = 15L,
                 name = "Garlic Sauce",
                 price = 0.59,
                 imageUrl = "garlic_sauce.png",
@@ -74,7 +74,7 @@ val saucesMock = listOf(
                 category = Category.SAUCE
         ),
         SideItem(
-                id = 8L,
+                id = 16L,
                 name = "BBQ Sauce",
                 price = 0.59,
                 imageUrl = "bbq_sauce.png",
@@ -82,7 +82,7 @@ val saucesMock = listOf(
                 category = Category.SAUCE
         ),
         SideItem(
-                id = 9L,
+                id = 17L,
                 name = "Cheese Sauce",
                 price = 0.89,
                 imageUrl = "cheese_sauce.png",
@@ -90,7 +90,7 @@ val saucesMock = listOf(
                 category = Category.SAUCE
         ),
         SideItem(
-                id = 10L,
+                id = 18L,
                 name = "Spicy Chili Sauce",
                 price = 0.59,
                 imageUrl = "spicy_chili_sauce.png",
@@ -103,7 +103,7 @@ val saucesMock = listOf(
 
 val iceCreamsMock = listOf(
         SideItem(
-                id = 11L,
+                id = 19L,
                 name = "Vanilla Ice Cream",
                 price = 2.49,
                 imageUrl = "vanilla.png",
@@ -111,7 +111,7 @@ val iceCreamsMock = listOf(
                 category = Category.ICE_CREAM
         ),
         SideItem(
-                id = 12L,
+                id = 20L,
                 name = "Chocolate Ice Cream",
                 price = 2.49,
                 imageUrl = "chocolate.png",
@@ -119,7 +119,7 @@ val iceCreamsMock = listOf(
                 category = Category.ICE_CREAM
         ),
         SideItem(
-                id = 13L,
+                id = 21L,
                 name = "Strawberry Ice Cream",
                 price = 2.49,
                 imageUrl = "strawberry.png",
@@ -127,7 +127,7 @@ val iceCreamsMock = listOf(
                 category = Category.ICE_CREAM
         ),
         SideItem(
-                id = 14L,
+                id = 22L,
                 name = "Cookies Ice Cream",
                 price = 2.79,
                 imageUrl = "cookies_cream.png",
@@ -135,7 +135,7 @@ val iceCreamsMock = listOf(
                 category = Category.ICE_CREAM
         ),
         SideItem(
-                id = 15L,
+                id = 23L,
                 name = "Pistachio Ice Cream",
                 price = 2.99,
                 imageUrl = "pistachio.png",
@@ -143,7 +143,7 @@ val iceCreamsMock = listOf(
                 category = Category.ICE_CREAM
         ),
         SideItem(
-                id = 16L,
+                id = 24L,
                 name = "Mango Sorbet",
                 price = 2.69,
                 imageUrl = "mango_sorbet.png",

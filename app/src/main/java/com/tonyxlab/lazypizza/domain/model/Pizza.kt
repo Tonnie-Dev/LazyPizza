@@ -1,14 +1,23 @@
 package com.tonyxlab.lazypizza.domain.model
 
+import android.app.appsearch.SearchResult
+
 data class Pizza(
-    val id: Long,
-    val name: String,
+    override val id: Long,
+    override val name: String,
     val ingredients: List<String>,
     val price: Double,
     val imageUrl: String,
     val description: String? = null,
+    override val category: Category
+): SearchItem
+sealed interface SearchItem{
+
+    val id: Long
+    val name: String
     val category: Category
-)
+}
+
 
 data class Topping(
     val id:Long,

@@ -135,7 +135,7 @@ private fun HomeScreenContent(
                 if (uiState.selectedCategory == Category.PIZZA) {
                     LazyCategoryList(
                             header = uiState.selectedCategory.categoryName,
-                            items = uiState.filteredPizzaItems,
+                            items = uiState.allPizzaItems,
                             key = { item -> item.id }) { pizzaItem ->
                         PizzaCard(
                                 pizza = pizzaItem,

@@ -38,7 +38,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiState
@@ -75,7 +74,7 @@ fun SearchComponent(
                 verticalArrangement = Arrangement.spacedBy(space = MaterialTheme.spacing.spaceSmall)
         ) {
 
-            val items = uiState.filteredPizzaItems
+            val items = uiState.searchResults
 
             if (textFieldHasText && items.isEmpty()) {
                 item {
@@ -89,7 +88,7 @@ fun SearchComponent(
                 }
             }
 
-            items(items = uiState.filteredPizzaItems, key = { it.id }) { item ->
+            items(items = items, key = { it.id }) { item ->
                 Text(
                         modifier = Modifier.padding(MaterialTheme.spacing.spaceSmall),
                         text = item.name,

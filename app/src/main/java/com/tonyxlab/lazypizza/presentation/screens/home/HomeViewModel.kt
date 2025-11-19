@@ -39,37 +39,8 @@ class HomeViewModel : HomeBaseViewModel() {
             }
 
             is HomeUiEvent.SelectCategoryTab -> {
-
                 val selectedCategory = event.category
                 selectCategory(category = selectedCategory)
-                /*
-                                updateState {
-
-                                    when (selectedCategory) {
-
-                                        Category.PIZZA -> {
-
-                                            it.copy(
-                                                    selectedCategory = event.category,
-                                                    filteredPizzaItems = currentState.filteredPizzaItems,
-                                                    filteredSideItems = emptyList()
-
-                                            )
-                                        }
-
-                                        Category.DRINKS, Category.ICE_CREAM, Category.SAUCE -> {
-
-                                            it.copy(
-                                                    selectedCategory = event.category,
-                                                    filteredPizzaItems = emptyList(),
-                                                    filteredSideItems = it.allSideItems.filter { sideItem ->
-                                                        sideItem.category == selectedCategory
-                                                    }
-                                            )
-                                        }
-                                    }
-                                }
-                */
             }
 
             is HomeUiEvent.ClickOnSideItem -> {}
@@ -95,16 +66,15 @@ class HomeViewModel : HomeBaseViewModel() {
 
         val query = newQuery.trim()
 
-        updateState {
-            val filteredPizzaItems = if (newQuery.isBlank()) {
-                currentState.allPizzaItems
-            } else {
-                currentState.allPizzaItems.filter { item ->
-                    item.name.contains(other = newQuery, ignoreCase = true)
-                }
-            }
-            it.copy(filteredPizzaItems = filteredPizzaItems)
-        }
+        val pizzaSearchResults =
+            currentState.allPizzaItems.filter { it.name.contains(query, ignoreCase = true) }
+
+        val sideItemSearchResults = currentState.allSideItems.filter {
+            it.name.contains(query, ignoreCase = true) }
+        updateState { it.copy(searchResults = pizzaSearchResults + sideItemSearchResults) }
+
+
+
     }
 
     private fun selectCategory(category: Category) {
