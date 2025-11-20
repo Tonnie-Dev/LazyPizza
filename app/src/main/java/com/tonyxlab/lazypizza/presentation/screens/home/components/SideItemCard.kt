@@ -1,6 +1,5 @@
 package com.tonyxlab.lazypizza.presentation.screens.home.components
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -179,7 +178,6 @@ private fun SideItemCardContent(
                                 )
                         )
 
-
                         Text(
                                 text = stringResource(
                                         id = R.string.counter_price_tag,
@@ -190,13 +188,10 @@ private fun SideItemCardContent(
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                         )
-
                     }
-
                 } else {
 
                     Text(
-
                             modifier = Modifier.weight(1f),
                             text = stringResource(
                                     id = R.string.dollar_price_tag,
@@ -228,7 +223,6 @@ private fun SideItemCard_Preview() {
     val sideItems = drinksMock
 
     LazyPizzaTheme {
-
         Column(
                 modifier = Modifier
                         .fillMaxSize()
@@ -257,7 +251,6 @@ private fun Set<SideItem>.isSelected(sideItem: SideItem): Boolean {
 }
 
 private fun Set<SideItem>.counterFor(sideItem: SideItem): Int {
-
     return firstOrNull { it.id == sideItem.id }?.counter ?: 0
 }
 

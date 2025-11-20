@@ -34,6 +34,7 @@ fun CounterItem(
 ) {
 
     val haptics = LocalHapticFeedback.current
+
     Row(
             modifier = modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -78,7 +79,6 @@ fun CounterItem(
                                 shape = MaterialTheme.shapes.small
                         )
                         .clickable(enabled = counter < maxCount) {
-
                             haptics.performHapticFeedback(
                                     HapticFeedbackType.LongPress
                             )
