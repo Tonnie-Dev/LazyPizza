@@ -1,5 +1,6 @@
 package com.tonyxlab.lazypizza.presentation.screens.home
 
+import android.app.Activity
 import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -7,11 +8,15 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,7 +43,9 @@ import com.tonyxlab.lazypizza.presentation.screens.home.components.SideItemCard
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiState
+import com.tonyxlab.lazypizza.presentation.theme.Label2SemiBold
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
+import com.tonyxlab.lazypizza.utils.DeviceType
 import com.tonyxlab.lazypizza.utils.SetStatusBarIconsColor
 import org.koin.androidx.compose.koinViewModel
 
@@ -89,71 +96,174 @@ fun HomeScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 private fun HomeScreenContent(
     uiState: HomeUiState,
     onEvent: (HomeUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-            modifier = modifier
-                    .fillMaxSize()
-                    .padding(horizontal = MaterialTheme.spacing.spaceMedium)
-                    .animateContentSize(
-                            animationSpec = spring(
-                                    dampingRatio = Spring.DampingRatioNoBouncy,
-                                    stiffness = Spring.StiffnessLow
-                            )
+
+    val pizzasList = uiState.allPizzaItems
+    val sideItemsList = uiState.filteredSideItems
+    val header = uiState.selectedCategory.categoryName
+
+    val context = LocalContext.current
+    val activity = context as? Activity ?: return
+
+    val windowClass = calculateWindowSizeClass(activity = activity)
+    val deviceType = DeviceType.fromWindowSizeClass(windowSizeClass = windowClass)
+
+    val isDeviceWide = when (deviceType) {
+        DeviceType.MOBILE_PORTRAIT -> false
+        else -> true
+    }
+
+    if (isDeviceWide) {
+        Column(
+                modifier = modifier
+                        .fillMaxSize()
+                        .padding(horizontal = MaterialTheme.spacing.spaceMedium)
+                        .animateContentSize(
+                                animationSpec = spring(
+                                        dampingRatio = Spring.DampingRatioNoBouncy,
+                                        stiffness = Spring.StiffnessLow
+                                )
+                        )
+                        .background(MaterialTheme.colorScheme.background)
+        ) {
+
+            Image(
+                    modifier = Modifier
+                            .clip(MaterialTheme.shapes.small)
+                            .fillMaxWidth(),
+                    painter = painterResource(R.drawable.banner_big),
+                    contentDescription = stringResource(R.string.cds_text_banner),
+                    contentScale = ContentScale.Crop
+            )
+
+            SearchComponent(
+                    modifier = Modifier,
+                    uiState = uiState
+            )
+
+            AnimatedVisibility(visible = !uiState.textFieldState.text.isNotBlank()) {
+
+                Column {
+                    CategoryTabs(
+                            modifier = Modifier,
+                            categories = Category.entries,
+                            selectedCategory = uiState.selectedCategory,
+                            onEvent = onEvent
                     )
-                    .background(MaterialTheme.colorScheme.background)
-    ) {
 
-        Image(
-                modifier = Modifier
-                        .clip(MaterialTheme.shapes.small)
-                        .fillMaxWidth(),
-                painter = painterResource(R.drawable.banner_small),
-                contentDescription = stringResource(R.string.cds_text_banner),
-                contentScale = ContentScale.Crop
-        )
 
-        SearchComponent(
-                modifier = Modifier.padding(top = 0.dp),
-                uiState = uiState
-        )
+                    when {
 
-        AnimatedVisibility(visible = !uiState.textFieldState.text.isNotBlank()) {
+                        uiState.selectedCategory == Category.PIZZA -> {
 
-            Column {
-                CategoryTabs(
-                        modifier = Modifier,
-                        categories = Category.entries,
-                        selectedCategory = uiState.selectedCategory,
-                        onEvent = onEvent
-                )
+                            LazyCategoryList(
+                                    header = header,
+                                    items = pizzasList,
+                                    key = { item -> item.id },
+                                    isDeviceWide = true
+                            ) { pizza ->
 
-                if (uiState.selectedCategory == Category.PIZZA) {
-                    LazyCategoryList(
-                            header = uiState.selectedCategory.categoryName,
-                            items = uiState.allPizzaItems,
-                            key = { item -> item.id }) { pizzaItem ->
-                        PizzaCard(
-                                pizza = pizzaItem,
-                                onEvent = onEvent
-                        )
+                                PizzaCard(
+                                        pizza = pizza,
+                                        onEvent = onEvent
+                                )
+
+                            }
+                        }
+
+                        else -> {
+
+                            LazyCategoryList(
+                                    header = header,
+                                    items = sideItemsList,
+                                    key = { item -> item.id },
+                                    isDeviceWide = true
+                            ) { sideItem ->
+
+                                SideItemCard(
+                                        sideItem = sideItem,
+                                        uiState = uiState,
+                                        onEvent = onEvent
+                                )
+
+                            }
+
+                        }
                     }
-
-                } else {
-
-                    LazyCategoryList(
-                            header = uiState.selectedCategory.categoryName,
-                            items = uiState.filteredSideItems,
-                            key = { item -> item.id }) { sideItem ->
-                        SideItemCard(
-                                sideItem = sideItem,
-                                uiState = uiState,
-                                onEvent = onEvent
+                }
+            }
+        }
+    } else {
+        Column(
+                modifier = modifier
+                        .fillMaxSize()
+                        .padding(horizontal = MaterialTheme.spacing.spaceMedium)
+                        .animateContentSize(
+                                animationSpec = spring(
+                                        dampingRatio = Spring.DampingRatioNoBouncy,
+                                        stiffness = Spring.StiffnessLow
+                                )
                         )
+                        .background(MaterialTheme.colorScheme.background)
+        ) {
+
+            Image(
+                    modifier = Modifier
+                            .clip(MaterialTheme.shapes.small)
+                            .fillMaxWidth(),
+                    painter = painterResource(R.drawable.banner_small),
+                    contentDescription = stringResource(R.string.cds_text_banner),
+                    contentScale = ContentScale.Crop
+            )
+
+            SearchComponent(
+                    modifier = Modifier.padding(top = 0.dp),
+                    uiState = uiState
+            )
+
+            AnimatedVisibility(visible = !uiState.textFieldState.text.isNotBlank()) {
+
+                Column {
+                    CategoryTabs(
+                            modifier = Modifier,
+                            categories = Category.entries,
+                            selectedCategory = uiState.selectedCategory,
+                            onEvent = onEvent
+                    )
+
+                    if (uiState.selectedCategory == Category.PIZZA) {
+                        LazyCategoryList(
+                                header = header,
+                                items = pizzasList,
+                                key = { item -> item.id },
+                                isDeviceWide = false
+                        ) { pizzaItem ->
+                            PizzaCard(
+                                    pizza = pizzaItem,
+                                    onEvent = onEvent
+                            )
+                        }
+
+                    } else {
+
+                        LazyCategoryList(
+                                header = uiState.selectedCategory.categoryName,
+                                items = uiState.filteredSideItems,
+                                key = { item -> item.id },
+                                isDeviceWide = false
+                        ) { sideItem ->
+                            SideItemCard(
+                                    sideItem = sideItem,
+                                    uiState = uiState,
+                                    onEvent = onEvent
+                            )
+                        }
                     }
                 }
             }

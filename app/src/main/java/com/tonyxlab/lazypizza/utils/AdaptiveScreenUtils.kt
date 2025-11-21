@@ -49,5 +49,3 @@ enum class DeviceType {
         }
     }
 }
-
-

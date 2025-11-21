@@ -232,7 +232,8 @@ private fun SideItemCard_Preview() {
 
             LazyCategoryList(
                     header = "Drinks", items = sideItems,
-                    key = { it.id }
+                    key = { it.id },
+                    isDeviceWide = false
             ) { item ->
 
                 SideItemCard(

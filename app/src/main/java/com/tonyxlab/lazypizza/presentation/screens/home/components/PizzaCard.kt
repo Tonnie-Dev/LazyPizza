@@ -122,7 +122,8 @@ private fun PizzaCard_Preview() {
 
             LazyCategoryList(
                     header = "Pizza", items = pizzas,
-                    key = { it.id }
+                    key = { it.id },
+                    isDeviceWide = false
             ) { item ->
 
                 PizzaCard(
