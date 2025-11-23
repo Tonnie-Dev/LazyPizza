@@ -24,13 +24,13 @@ fun StickyAddToCart(
 
     Box(
             modifier = modifier
-                   .navigationBarsPadding()
+                    .navigationBarsPadding()
                     .fillMaxWidth()
                     .height(height = MaterialTheme.spacing.spaceOneHundred)
                     .background(brush = MaterialTheme.gradientScheme.stickyOverlayGradient)
     ) {
 
-       AppButton(
+        AppButton(
                 modifier = Modifier
                         .fillMaxWidth()
                         .padding(

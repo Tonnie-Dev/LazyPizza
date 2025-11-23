@@ -83,7 +83,7 @@ fun ToppingsCardContent(
 }
 
 @Composable
-private fun ToppingsGrid(
+ fun ToppingsGrid(
     uiState: DetailsUiState,
     onEvent: (DetailsUiEvent) -> Unit,
     modifier: Modifier = Modifier
@@ -98,7 +98,7 @@ private fun ToppingsGrid(
         stickyHeader {
             Box(
                     modifier = Modifier
-                            .background(MaterialTheme.colorScheme.background)
+                            //.background(MaterialTheme.colorScheme.background)
                             .fillMaxWidth()
                             .padding(bottom = MaterialTheme.spacing.spaceSmall)
 
@@ -228,7 +228,7 @@ private fun ToppingsCard(
 }
 
 @Composable
-private fun PizzaMetaData(
+ fun PizzaMetaData(
     pizzaName: String,
     ingredients: List<String>,
     modifier: Modifier = Modifier,
