@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.navigation.NavOperations
+import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarTwo
 import com.tonyxlab.lazypizza.presentation.core.components.DisplayImage
@@ -42,14 +43,14 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun DetailsScreen(
     id: Long,
-    navOperations: NavOperations,
+    navigator: Navigator,
     modifier: Modifier = Modifier,
     viewModel: DetailsViewModel = koinViewModel(parameters = { parametersOf(id) })
 ) {
     BaseContentLayout(
             modifier = modifier.fillMaxSize(),
             viewModel = viewModel,
-            topBar = { AppTopBarTwo(onClick = { navOperations.popBackStack() }) },
+            topBar = { AppTopBarTwo(onClick = { navigator.goBack() }) },
             containerColor = MaterialTheme.colorScheme.surfaceVariant
     ) { uiState ->
         DetailsScreenContent(

@@ -31,7 +31,11 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.Category
+import com.tonyxlab.lazypizza.navigation.BottomNavBar
+import com.tonyxlab.lazypizza.navigation.Destinations
+import com.tonyxlab.lazypizza.navigation.DetailScreenDestination
 import com.tonyxlab.lazypizza.navigation.NavOperations
+import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarOne
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
@@ -51,7 +55,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
-    navOperations: NavOperations,
+    //navOperations: NavOperations,
+    navigator: Navigator,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = koinViewModel()
 
@@ -71,6 +76,11 @@ fun HomeScreen(
                 }
                 )
             },
+
+            bottomBar = {
+
+                BottomNavBar(navigationState = navigator.state)
+            },
             actionEventHandler = { _, action ->
                 when (action) {
 
@@ -82,7 +92,8 @@ fun HomeScreen(
                     }
 
                     is HomeActionEvent.NavigateToDetailsScreen -> {
-                        navOperations.navigateToDetailsScreen(id = action.id)
+                        //navOperations.navigateToDetailsScreen(id = action.id)
+                        navigator.navigate(DetailScreenDestination(id = action.id))
                     }
                 }
             },

@@ -10,13 +10,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.tonyxlab.lazypizza.presentation.screens.details.DetailsScreen
+import com.tonyxlab.lazypizza.presentation.screens.home.HomeScreen
 
 @Composable
 fun NavRoot(modifier: Modifier = Modifier) {
 
-   // val backStack = rememberNavBackStack(CartScreenDestination)
+    // val backStack = rememberNavBackStack(CartScreenDestination)
     //val navOperations = NavOperations(backStack = backStack)
     val topLevelRoutes = remember {
         setOf(
@@ -33,15 +34,15 @@ fun NavRoot(modifier: Modifier = Modifier) {
     val navigator = remember { Navigator(navigationState) }
     val entryProvider = entryProvider {
         entry<MenuScreenDestination> {
-
-            Scaffold(bottomBar = { BottomNavBar(navigationState = navigationState) }) {
+            HomeScreen(navigator = navigator)
+            /*Scaffold(bottomBar = { BottomNavBar(navigationState = navigationState) }) {
 
                 Box(
                         modifier = Modifier
                                 .fillMaxSize()
                                 .padding(it), contentAlignment = Alignment.Center
                 ) { Text("Menu Screen") }
-            }
+            }*/
 
         }
 
@@ -73,6 +74,11 @@ fun NavRoot(modifier: Modifier = Modifier) {
                 ) { Text("History Screen") }
             }
 
+        }
+
+        entry<DetailScreenDestination> {
+
+            DetailsScreen( id = it.id,navigator = navigator)
         }
 
     }
