@@ -79,7 +79,7 @@ fun HomeScreen(
 
             bottomBar = {
 
-                BottomNavBar(navigationState = navigator.state)
+                BottomNavBar( navigator = navigator)
             },
             actionEventHandler = { _, action ->
                 when (action) {

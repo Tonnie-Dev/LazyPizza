@@ -1,10 +1,17 @@
 package com.tonyxlab.lazypizza.navigation
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
+import androidx.annotation.DrawableRes
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -14,150 +21,125 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberDecoratedNavEntries
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import com.tonyxlab.lazypizza.R
+import com.tonyxlab.lazypizza.presentation.core.utils.spacing
+import com.tonyxlab.lazypizza.presentation.theme.PrimaryGradientEnd
 
 @Composable
 fun BottomNavBar(
-    navigationState: NavigationState,
+    navigator: Navigator,
     modifier: Modifier = Modifier
 ) {
 
-    val topLevelRoutes = remember {
-        setOf<NavKey>(
-                MenuScreenDestination,
-                CartScreenDestination,
-                HistoryScreenDestination
-        )
-    }
-
-    /*
-        val navigationState = rememberNavigationState(
-                startRoute = CartScreenDestination,
-                topLevelRoutes = topLevelRoutes
-        )
-    */
-
-    val navigator = remember { Navigator(navigationState) }
-    NavigationBar {
+    val navigationState = navigator.state
+    NavigationBar(
+            modifier = modifier,
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+    ) {
 
         NavigationBarItem(
+                modifier = Modifier.animateContentSize(),
                 selected = navigationState.topLevelRoute == MenuScreenDestination,
                 onClick = { navigator.navigate(MenuScreenDestination) },
-                icon = { Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu") },
-                label = { Text(text = "Menu") }
+                icon = {
+
+                    NavItemIcon(
+                            selected = navigationState.topLevelRoute == MenuScreenDestination,
+                            painterRes = R.drawable.icon_menu,
+                            contentDescription = "Menu"
+                    )
+                },
+                label = { Text(text = "Menu") },
+                colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = MaterialTheme.colorScheme.primary
+                )
         )
 
-
         NavigationBarItem(
+                modifier = Modifier.animateContentSize(),
                 selected = navigationState.topLevelRoute == CartScreenDestination,
                 onClick = { navigator.navigate(CartScreenDestination) },
-                icon = { Icon(imageVector = Icons.Default.Menu, contentDescription = "Cart") },
-                label = { Text(text = "Cart") }
-        )
+                icon = {
 
+                    NavItemIcon(
+                            selected = navigationState.topLevelRoute == CartScreenDestination,
+                            painterRes = R.drawable.icon_cart,
+                            contentDescription = "Cart"
+                    )
+
+                },
+                label = { Text(text = "Cart") },
+                colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = MaterialTheme.colorScheme.primary
+                )
+        )
 
         NavigationBarItem(
+                modifier = Modifier.animateContentSize(),
                 selected = navigationState.topLevelRoute == HistoryScreenDestination,
                 onClick = { navigator.navigate(HistoryScreenDestination) },
-                icon = { Icon(imageVector = Icons.Default.Menu, contentDescription = "History") },
-                label = { Text(text = "History") }
+                icon = {
+                    NavItemIcon(
+                            selected = navigationState.topLevelRoute == HistoryScreenDestination,
+                            painterRes = R.drawable.icon_history,
+                            contentDescription = "History"
+                    )
+                },
+                label = { Text(text = "History") },
+                colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = MaterialTheme.colorScheme.primary
+                )
         )
     }
 }
 
 @Composable
-fun rememberNavigationState(
-    startRoute: NavKey,
-    topLevelRoutes: Set<NavKey>
-): NavigationState {
-
-    // val topLevelRoute = rememberSaveable { mutableStateOf(startRoute) }
-    val topLevelRoute = remember { mutableStateOf(startRoute) }
-
-    val backStacks = topLevelRoutes.associateWith { key ->
-
-        rememberNavBackStack(key)
-
-    }
-
-    return remember(startRoute, topLevelRoutes) {
-        NavigationState(
-                startRoute = startRoute,
-                topLevelRoute = topLevelRoute,
-                backStacks = backStacks
-        )
-    }
-}
-
-class NavigationState(
-    val startRoute: NavKey,
-    topLevelRoute: MutableState<NavKey>,
-    val backStacks: Map<NavKey, NavBackStack<NavKey>>
+private fun NavItemIcon(
+    selected: Boolean,
+    @DrawableRes
+    painterRes: Int,
+    modifier: Modifier = Modifier,
+    contentDescription: String = ""
 ) {
 
-    var topLevelRoute: NavKey by topLevelRoute
+    if (selected) {
+        Box(
+                modifier = modifier
+                        .clip(CircleShape)
 
-    val stacksInUse: List<NavKey>
-        get() = if (topLevelRoute == startRoute) {
-            listOf(startRoute)
-        } else {
-            listOf(startRoute, topLevelRoute)
+                        .background(PrimaryGradientEnd.copy(alpha = .08f))
+                        .size(MaterialTheme.spacing.spaceLarge)
+                        .padding(MaterialTheme.spacing.spaceDoubleDp * 3),
+                contentAlignment = Alignment.Center
+        ) {
+
+            Icon(
+                    painter = painterResource(painterRes),
+                    contentDescription = contentDescription
+            )
+
         }
-}
+    } else {
 
-
-
-@Composable
-fun NavigationState.toEntries(entryProvider: (NavKey) -> NavEntry<NavKey>): SnapshotStateList<NavEntry<NavKey>> {
-
-    val decorators = listOf(
-            rememberSaveableStateHolderNavEntryDecorator<NavKey>()
-
-    )
-
-    val decoratedEntries = backStacks.mapValues {
-
-        (_, stack) ->
-
-        rememberDecoratedNavEntries(
-                backStack = stack,
-                entryDecorators = decorators,
-                entryProvider = entryProvider
+        Icon(
+                painter = painterResource(painterRes),
+                contentDescription = contentDescription
         )
     }
-
-    return stacksInUse
-            .flatMap {
-                decoratedEntries[it] ?: emptyList()
-            }
-            .toMutableStateList()
 }
 
-/*
-sealed interface NavOptions {
 
-    data class MenuNavOption(
-        val destination: Destinations,
-        val label: String,
-        @DrawableRes val iconRes: Int
-    ) : NavOptions
 
-    data class CartNavOption(
-        val destination: Destinations,
-        val label: String,
-        @DrawableRes val iconRes: Int,
-        val itemCount: Int
-    ) : NavOptions
 
-    data class HistoryNavOption(
-        val destination: Destinations,
-        val label: String,
-        @DrawableRes val iconRes: Int
-    ) : NavOptions
-}*/
+

@@ -4,19 +4,6 @@ import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class Destinations : NavKey {
-
-    /* @Serializable
-     data object MenuScreenDestination : Destinations()
-
-     @Serializable
-     data object CartScreenDestination : Destinations()
-
-     @Serializable
-     data object HistoryScreenDestination : Destinations()*/
-}
-
-@Serializable
 data object HomeScreenDestination : NavKey
 
 @Serializable

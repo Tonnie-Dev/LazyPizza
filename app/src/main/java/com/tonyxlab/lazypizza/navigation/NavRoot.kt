@@ -15,10 +15,8 @@ import com.tonyxlab.lazypizza.presentation.screens.details.DetailsScreen
 import com.tonyxlab.lazypizza.presentation.screens.home.HomeScreen
 
 @Composable
-fun NavRoot(modifier: Modifier = Modifier) {
+fun NavRoot() {
 
-    // val backStack = rememberNavBackStack(CartScreenDestination)
-    //val navOperations = NavOperations(backStack = backStack)
     val topLevelRoutes = remember {
         setOf(
                 MenuScreenDestination,
@@ -35,20 +33,11 @@ fun NavRoot(modifier: Modifier = Modifier) {
     val entryProvider = entryProvider {
         entry<MenuScreenDestination> {
             HomeScreen(navigator = navigator)
-            /*Scaffold(bottomBar = { BottomNavBar(navigationState = navigationState) }) {
-
-                Box(
-                        modifier = Modifier
-                                .fillMaxSize()
-                                .padding(it), contentAlignment = Alignment.Center
-                ) { Text("Menu Screen") }
-            }*/
-
         }
 
         entry<CartScreenDestination> {
 
-            Scaffold(bottomBar = { BottomNavBar(navigationState = navigationState) }) {
+            Scaffold(bottomBar = { BottomNavBar(navigator = navigator) }) {
 
                 Box(
                         modifier = Modifier
@@ -56,16 +45,10 @@ fun NavRoot(modifier: Modifier = Modifier) {
                                 .padding(it), contentAlignment = Alignment.Center
                 ) { Text("Cart Screen") }
             }
-
         }
 
-
-
-
-
         entry<HistoryScreenDestination> {
-
-            Scaffold(bottomBar = { BottomNavBar(navigationState = navigationState) }) {
+            Scaffold(bottomBar = { BottomNavBar(navigator = navigator) }) {
 
                 Box(
                         modifier = Modifier
@@ -78,26 +61,14 @@ fun NavRoot(modifier: Modifier = Modifier) {
 
         entry<DetailScreenDestination> {
 
-            DetailsScreen( id = it.id,navigator = navigator)
+            DetailsScreen(id = it.id, navigator = navigator)
         }
 
     }
 
     NavDisplay(
-            //  backStack = backStack,
             onBack = { navigator.goBack() },
-
             entries = navigationState.toEntries(entryProvider)
-
-            /*entryProvider {
-                entry<Destinations.HomeScreenDestination> {
-                    HomeScreen(navOperations = navOperations)
-                }
-
-                entry<Destinations.DetailScreenDestination> {
-                    DetailsScreen(id = it.id, navOperations = navOperations)
-                }
-            }*/
     )
 }
 
