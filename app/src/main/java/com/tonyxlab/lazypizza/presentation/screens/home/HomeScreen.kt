@@ -1,3 +1,6 @@
+
+@file:OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+
 package com.tonyxlab.lazypizza.presentation.screens.home
 
 import android.app.Activity
@@ -10,11 +13,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
@@ -29,12 +32,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.ui.NavDisplay
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.Category
+import com.tonyxlab.lazypizza.navigation.AppNavigationRail
 import com.tonyxlab.lazypizza.navigation.BottomNavBar
-import com.tonyxlab.lazypizza.navigation.Destinations
 import com.tonyxlab.lazypizza.navigation.DetailScreenDestination
-import com.tonyxlab.lazypizza.navigation.NavOperations
 import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarOne
@@ -47,7 +51,6 @@ import com.tonyxlab.lazypizza.presentation.screens.home.components.SideItemCard
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiState
-import com.tonyxlab.lazypizza.presentation.theme.Label2SemiBold
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.utils.DeviceType
 import com.tonyxlab.lazypizza.utils.SetStatusBarIconsColor
@@ -55,63 +58,116 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
-    //navOperations: NavOperations,
     navigator: Navigator,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = koinViewModel()
-
 ) {
+    SetStatusBarIconsColor(darkIcons = true)
+
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val activity = context as? Activity ?: return
 
-    SetStatusBarIconsColor(darkIcons = true)
-    BaseContentLayout(
-            modifier = modifier,
-            viewModel = viewModel,
-            topBar = {
-                AppTopBarOne(
-                        modifier = Modifier.padding(horizontal = MaterialTheme.spacing.spaceMedium),
-                        phoneNumber = uiState.phoneNumber, onCallClick = {
-                    viewModel.onEvent(HomeUiEvent.PlaceCall)
-                }
-                )
-            },
+    val windowClass = calculateWindowSizeClass(activity)
+    val deviceType = DeviceType.fromWindowSizeClass(windowClass)
 
-            bottomBar = {
+    val isDeviceWide = deviceType != DeviceType.MOBILE_PORTRAIT
 
-                BottomNavBar( navigator = navigator)
-            },
-            actionEventHandler = { _, action ->
-                when (action) {
+    if (isDeviceWide) {
+        // ✅ TABLET / FOLDABLE / DESKTOP LAYOUT
+        Row(modifier = Modifier.fillMaxSize()) {
 
-                    HomeActionEvent.LaunchDialingPad -> {
-                        val dialIntent = Intent(Intent.ACTION_DIAL).apply {
-                            data = "tel:${uiState.phoneNumber}".toUri()
+            // ✅ LEFT NAVIGATION RAIL
+            AppNavigationRail(navigator)
+
+            // ✅ MAIN CONTENT
+            BaseContentLayout(
+                    modifier = modifier.weight(1f),
+                    viewModel = viewModel,
+                    topBar = {
+                        AppTopBarOne(
+                                modifier = Modifier.padding(horizontal = MaterialTheme.spacing.spaceMedium),
+                                phoneNumber = uiState.phoneNumber,
+                                onCallClick = {
+                                    viewModel.onEvent(HomeUiEvent.PlaceCall)
+                                }
+                        )
+                    },
+                    bottomBar = {}, // ✅ NO BOTTOM BAR ON WIDE DEVICES
+                    actionEventHandler = { _, action ->
+                        when (action) {
+                            HomeActionEvent.LaunchDialingPad -> {
+                                val dialIntent = Intent(Intent.ACTION_DIAL).apply {
+                                    data = "tel:${uiState.phoneNumber}".toUri()
+                                }
+                                context.startActivity(dialIntent)
+                            }
+
+                            is HomeActionEvent.NavigateToDetailsScreen -> {
+                                navigator.navigate(DetailScreenDestination(id = action.id))
+                            }
                         }
-                        context.startActivity(dialIntent)
-                    }
+                    },
+                    containerColor = MaterialTheme.colorScheme.background
+            ) { state ->
+                HomeScreenContent(
+                        modifier = modifier,
+                        uiState = state,
+                        onEvent = viewModel::onEvent,
+                        isDeviceWide = true
+                )
+            }
+        }
 
-                    is HomeActionEvent.NavigateToDetailsScreen -> {
-                        //navOperations.navigateToDetailsScreen(id = action.id)
-                        navigator.navigate(DetailScreenDestination(id = action.id))
-                    }
-                }
-            },
-            containerColor = MaterialTheme.colorScheme.background
-    ) { uiState ->
-        HomeScreenContent(
+    } else {
+        // ✅ PHONE LAYOUT
+        BaseContentLayout(
                 modifier = modifier,
-                uiState = uiState,
-                onEvent = viewModel::onEvent
-        )
+                viewModel = viewModel,
+                topBar = {
+                    AppTopBarOne(
+                            modifier = Modifier.padding(horizontal = MaterialTheme.spacing.spaceMedium),
+                            phoneNumber = uiState.phoneNumber,
+                            onCallClick = {
+                                viewModel.onEvent(HomeUiEvent.PlaceCall)
+                            }
+                    )
+                },
+                bottomBar = {
+                    BottomNavBar(navigator = navigator) // ✅ ONLY HERE
+                },
+                actionEventHandler = { _, action ->
+                    when (action) {
+                        HomeActionEvent.LaunchDialingPad -> {
+                            val dialIntent = Intent(Intent.ACTION_DIAL).apply {
+                                data = "tel:${uiState.phoneNumber}".toUri()
+                            }
+                            context.startActivity(dialIntent)
+                        }
+
+                        is HomeActionEvent.NavigateToDetailsScreen -> {
+                            navigator.navigate(DetailScreenDestination(id = action.id))
+                        }
+                    }
+                },
+                containerColor = MaterialTheme.colorScheme.background
+        ) { state ->
+            HomeScreenContent(
+                    modifier = modifier,
+                    uiState = state,
+                    onEvent = viewModel::onEvent,
+                    isDeviceWide = false
+            )
+        }
     }
 }
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+
 @Composable
 private fun HomeScreenContent(
     uiState: HomeUiState,
     onEvent: (HomeUiEvent) -> Unit,
+    isDeviceWide: Boolean,
     modifier: Modifier = Modifier
 ) {
 
@@ -120,15 +176,8 @@ private fun HomeScreenContent(
     val header = uiState.selectedCategory.categoryName
 
     val context = LocalContext.current
-    val activity = context as? Activity ?: return
 
-    val windowClass = calculateWindowSizeClass(activity = activity)
-    val deviceType = DeviceType.fromWindowSizeClass(windowSizeClass = windowClass)
 
-    val isDeviceWide = when (deviceType) {
-        DeviceType.MOBILE_PORTRAIT -> false
-        else -> true
-    }
 
     if (isDeviceWide) {
         Column(
@@ -295,7 +344,8 @@ private fun HomeScreenContent_Preview() {
         ) {
             HomeScreenContent(
                     uiState = HomeUiState(),
-                    onEvent = {}
+                    onEvent = {},
+                    isDeviceWide = false
             )
         }
     }

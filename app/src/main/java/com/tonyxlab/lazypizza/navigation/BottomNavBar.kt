@@ -12,25 +12,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavEntry
-import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.rememberDecoratedNavEntries
-import androidx.navigation3.runtime.rememberNavBackStack
-import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.theme.PrimaryGradientEnd
@@ -139,7 +128,63 @@ private fun NavItemIcon(
     }
 }
 
+@Composable
+fun AppNavigationRail(
+    navigator: Navigator,
+    modifier: Modifier = Modifier
+) {
 
+    val navigationState = navigator.state
+
+    NavigationRail(modifier = modifier, containerColor = MaterialTheme.colorScheme.surface) {
+
+        NavigationRailItem(
+                modifier = Modifier.animateContentSize(),
+                selected = navigationState.topLevelRoute == MenuScreenDestination,
+                onClick = { navigator.navigate(MenuScreenDestination) },
+                icon = {
+
+                    NavItemIcon(
+                            selected = navigationState.topLevelRoute == MenuScreenDestination,
+                            painterRes = R.drawable.icon_menu,
+                            contentDescription = "Menu"
+                    )
+                },
+                label = { Text(text = "Menu") }
+        )
+
+        NavigationRailItem(
+                modifier = Modifier.animateContentSize(),
+                selected = navigationState.topLevelRoute == CartScreenDestination,
+                onClick = { navigator.navigate(CartScreenDestination) },
+                icon = {
+
+                    NavItemIcon(
+                            selected = navigationState.topLevelRoute == CartScreenDestination,
+                            painterRes = R.drawable.icon_cart,
+                            contentDescription = "Cart"
+                    )
+
+                },
+                label = { Text(text = "Cart") })
+
+
+        NavigationRailItem(
+                modifier = Modifier.animateContentSize(),
+                selected = navigationState.topLevelRoute == HistoryScreenDestination,
+                onClick = { navigator.navigate(HistoryScreenDestination) },
+                icon = {
+                    NavItemIcon(
+                            selected = navigationState.topLevelRoute == HistoryScreenDestination,
+                            painterRes = R.drawable.icon_history,
+                            contentDescription = "History"
+                    )
+                },
+                label = { Text(text = "History") })
+
+    }
+
+}
 
 
 
