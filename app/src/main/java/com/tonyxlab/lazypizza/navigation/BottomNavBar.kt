@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -13,7 +14,9 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailDefaults
 import androidx.compose.material3.NavigationRailItem
+import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -137,7 +140,7 @@ fun AppNavigationRail(
     val navigationState = navigator.state
 
     NavigationRail(modifier = modifier, containerColor = MaterialTheme.colorScheme.surface) {
-
+Spacer(modifier = Modifier.weight(1f))
         NavigationRailItem(
                 modifier = Modifier.animateContentSize(),
                 selected = navigationState.topLevelRoute == MenuScreenDestination,
@@ -150,7 +153,8 @@ fun AppNavigationRail(
                             contentDescription = "Menu"
                     )
                 },
-                label = { Text(text = "Menu") }
+                label = { Text(text = "Menu") },
+                colors = NavigationRailItemDefaults.colors(selectedIconColor = MaterialTheme.colorScheme.primary)
         )
 
         NavigationRailItem(
@@ -166,7 +170,9 @@ fun AppNavigationRail(
                     )
 
                 },
-                label = { Text(text = "Cart") })
+                label = { Text(text = "Cart") },
+                        colors = NavigationRailItemDefaults.colors(selectedIconColor = MaterialTheme.colorScheme.primary)
+        )
 
 
         NavigationRailItem(
@@ -180,8 +186,11 @@ fun AppNavigationRail(
                             contentDescription = "History"
                     )
                 },
-                label = { Text(text = "History") })
+                label = { Text(text = "History") },
+                colors = NavigationRailItemDefaults.colors(selectedIconColor = MaterialTheme.colorScheme.primary)
+                )
 
+        Spacer(modifier = Modifier.weight(1f))
     }
 
 }
