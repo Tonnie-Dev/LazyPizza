@@ -29,9 +29,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
+import com.tonyxlab.lazypizza.presentation.theme.Body1Medium
 import com.tonyxlab.lazypizza.presentation.theme.Body1Regular
 import com.tonyxlab.lazypizza.presentation.theme.Body3Medium
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
@@ -134,6 +136,33 @@ fun AppTopBarTwo(
     }
 }
 
+
+@Composable
+fun AppTopBarThree(
+    titleText:String,
+    modifier: Modifier = Modifier) {
+
+    Row(
+            modifier = modifier
+                    .statusBarsPadding()
+                    .fillMaxWidth()
+                    .height(MaterialTheme.spacing.spaceExtraLarge)
+                    .padding(horizontal = MaterialTheme.spacing.spaceTen)
+                    .padding(vertical = MaterialTheme.spacing.spaceSmall),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        Text(
+                text = titleText,
+                style = MaterialTheme.typography.Body1Medium.copy(
+                        color = MaterialTheme.colorScheme.onSurface,
+                        textAlign = TextAlign.Center
+                )
+        )
+    }
+}
+
 @PreviewLightDark
 @Composable
 private fun AppTopBar_Preview() {
@@ -150,6 +179,7 @@ private fun AppTopBar_Preview() {
 
             AppTopBarOne(phoneNumber = "0723 445 813", onCallClick = {})
             AppTopBarTwo(onClick = {})
+            AppTopBarThree(titleText = "Cart")
 
         }
     }
