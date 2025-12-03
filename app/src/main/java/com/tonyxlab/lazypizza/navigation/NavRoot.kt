@@ -11,7 +11,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
+import com.tonyxlab.lazypizza.presentation.screens.cart.CartScreen
 import com.tonyxlab.lazypizza.presentation.screens.details.DetailsScreen
+import com.tonyxlab.lazypizza.presentation.screens.history.HistoryScreen
 import com.tonyxlab.lazypizza.presentation.screens.home.HomeScreen
 
 @Composable
@@ -37,25 +39,11 @@ fun NavRoot() {
 
         entry<CartScreenDestination> {
 
-            Scaffold(bottomBar = { BottomNavBar(navigator = navigator) }) {
-
-                Box(
-                        modifier = Modifier
-                                .fillMaxSize()
-                                .padding(it), contentAlignment = Alignment.Center
-                ) { Text("Cart Screen") }
-            }
+            CartScreen(navigator = navigator)
         }
 
         entry<HistoryScreenDestination> {
-            Scaffold(bottomBar = { BottomNavBar(navigator = navigator) }) {
-
-                Box(
-                        modifier = Modifier
-                                .fillMaxSize()
-                                .padding(it), contentAlignment = Alignment.Center
-                ) { Text("History Screen") }
-            }
+           HistoryScreen(navigator = navigator)
 
         }
 

@@ -1,4 +1,3 @@
-
 @file:OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 
 package com.tonyxlab.lazypizza.presentation.screens.home
@@ -158,7 +157,6 @@ fun HomeScreen(
         }
     }
 }
-
 
 @Composable
 private fun HomeScreenContent(
