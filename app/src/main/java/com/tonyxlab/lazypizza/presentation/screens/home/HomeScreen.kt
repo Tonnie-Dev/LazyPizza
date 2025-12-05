@@ -70,13 +70,11 @@ fun HomeScreen(
     val isDeviceWide = deviceType != DeviceType.MOBILE_PORTRAIT
 
     if (isDeviceWide) {
-        // ✅ TABLET / FOLDABLE / DESKTOP LAYOUT
+
         Row(modifier = Modifier.fillMaxSize()) {
 
-            // ✅ LEFT NAVIGATION RAIL
             AppNavigationRail(navigator)
 
-            // ✅ MAIN CONTENT
             BaseContentLayout(
                     modifier = modifier.weight(1f),
                     viewModel = viewModel,
@@ -89,7 +87,7 @@ fun HomeScreen(
                                 }
                         )
                     },
-                    bottomBar = {}, // ✅ NO BOTTOM BAR ON WIDE DEVICES
+                    bottomBar = {},
                     actionEventHandler = { _, action ->
                         when (action) {
                             HomeActionEvent.LaunchDialingPad -> {
@@ -104,6 +102,7 @@ fun HomeScreen(
                             }
                         }
                     },
+                    onBackPressed = { activity.finish() },
                     containerColor = MaterialTheme.colorScheme.background
             ) { state ->
                 HomeScreenContent(
@@ -116,7 +115,6 @@ fun HomeScreen(
         }
 
     } else {
-        // ✅ PHONE LAYOUT
         BaseContentLayout(
                 modifier = modifier,
                 viewModel = viewModel,
@@ -130,7 +128,7 @@ fun HomeScreen(
                     )
                 },
                 bottomBar = {
-                    BottomNavBar(navigator = navigator) // ✅ ONLY HERE
+                    BottomNavBar(navigator = navigator)
                 },
                 actionEventHandler = { _, action ->
                     when (action) {
@@ -146,6 +144,7 @@ fun HomeScreen(
                         }
                     }
                 },
+                onBackPressed = { activity.finish() },
                 containerColor = MaterialTheme.colorScheme.background
         ) { state ->
             HomeScreenContent(
@@ -169,10 +168,6 @@ private fun HomeScreenContent(
     val pizzasList = uiState.allPizzaItems
     val sideItemsList = uiState.filteredSideItems
     val header = uiState.selectedCategory.categoryName
-
-    val context = LocalContext.current
-
-
 
     if (isDeviceWide) {
         Column(
@@ -276,14 +271,12 @@ private fun HomeScreenContent(
                     contentDescription = stringResource(R.string.cds_text_banner),
                     contentScale = ContentScale.Crop
             )
-
             SearchComponent(
                     modifier = Modifier.padding(top = 0.dp),
                     uiState = uiState
             )
 
             AnimatedVisibility(visible = !uiState.textFieldState.text.isNotBlank()) {
-
                 Column {
                     CategoryTabs(
                             modifier = Modifier,

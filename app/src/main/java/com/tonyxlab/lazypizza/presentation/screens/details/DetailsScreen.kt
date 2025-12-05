@@ -22,7 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.R
-import com.tonyxlab.lazypizza.navigation.NavOperations
 import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarTwo

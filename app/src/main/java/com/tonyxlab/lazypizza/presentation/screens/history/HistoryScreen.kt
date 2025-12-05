@@ -3,6 +3,7 @@
 package com.tonyxlab.lazypizza.presentation.screens.history
 
 import android.app.Activity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -42,8 +43,8 @@ fun HistoryScreen(
 
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
-    val activity = context as? Activity ?: return
 
+    val activity = LocalActivity.current ?: return
     val windowClass = calculateWindowSizeClass(activity)
     val deviceType = DeviceType.fromWindowSizeClass(windowClass)
 
@@ -67,6 +68,7 @@ fun HistoryScreen(
                     actionEventHandler = { _, action ->
 
                     },
+                    onBackPressed = { activity.finish()},
                     containerColor = MaterialTheme.colorScheme.background
             ) {
                 HistoryScreenContent()
@@ -80,12 +82,13 @@ fun HistoryScreen(
                 topBar = {
                     AppTopBarThree(
                             modifier = Modifier,
-                            titleText = stringResource(id = R.string.topbar_text_cart)
+                            titleText = stringResource(id = R.string.topbar_text_history)
                     )
                 },
                 bottomBar = {
                     BottomNavBar(navigator = navigator)
                 },
+                onBackPressed = {activity.finish()},
                 actionEventHandler = { _, action ->
 
                 },

@@ -40,9 +40,7 @@ fun rememberNavigationState(
     val topLevelRoute = remember { mutableStateOf(startRoute) }
 
     val backStacks = topLevelRoutes.associateWith { key ->
-
         rememberNavBackStack(key)
-
     }
 
     return remember(startRoute, topLevelRoutes) {
@@ -59,13 +57,9 @@ fun NavigationState.toEntries(entryProvider: (NavKey) -> NavEntry<NavKey>): Snap
 
     val decorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator<NavKey>()
-
     )
 
-    val decoratedEntries = backStacks.mapValues {
-
-        (_, stack) ->
-
+    val decoratedEntries = backStacks.mapValues { (_, stack) ->
         rememberDecoratedNavEntries(
                 backStack = stack,
                 entryDecorators = decorators,

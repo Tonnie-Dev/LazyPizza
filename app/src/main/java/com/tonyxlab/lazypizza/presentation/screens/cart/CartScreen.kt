@@ -3,6 +3,7 @@
 package com.tonyxlab.lazypizza.presentation.screens.cart
 
 import android.app.Activity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -49,7 +50,7 @@ fun CartScreen(
 
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
-    val activity = context as? Activity ?: return
+    val activity = LocalActivity.current ?: return
 
     val windowClass = calculateWindowSizeClass(activity)
     val deviceType = DeviceType.fromWindowSizeClass(windowClass)
@@ -61,8 +62,6 @@ fun CartScreen(
         Row(modifier = Modifier.fillMaxSize()) {
 
             AppNavigationRail(navigator = navigator)
-
-
             BaseContentLayout(
                     modifier = modifier,
                     viewModel = viewModel,
@@ -75,6 +74,7 @@ fun CartScreen(
                     actionEventHandler = { _, action ->
 
                     },
+                    onBackPressed = { activity.finish()},
                     containerColor = MaterialTheme.colorScheme.background
             ) {
 
@@ -99,6 +99,7 @@ fun CartScreen(
                 actionEventHandler = { _, action ->
 
                 },
+                onBackPressed = { activity.finish()},
                 containerColor = MaterialTheme.colorScheme.background
         ) {
             CartScreenContent()
