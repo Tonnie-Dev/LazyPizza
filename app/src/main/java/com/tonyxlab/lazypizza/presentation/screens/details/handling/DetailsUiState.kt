@@ -12,6 +12,4 @@ data class DetailsUiState(
     val aggregatePrice: Double = 0.0,
     val toppings: List<Topping> = mockToppings,
     val selectedToppings: Set<Topping> = emptySet()
-) : UiState {
-
-}
+) : UiState

@@ -6,7 +6,13 @@ import com.tonyxlab.lazypizza.domain.model.SideItem
 // ------------------------ ALL ITEMS ------------------------
 
 fun getMockSideItems(): List<SideItem> {
-        return drinksMock + saucesMock + iceCreamsMock
+    return drinksMock + saucesMock + iceCreamsMock
+}
+
+// ------------------------ RECOMMENDED ITEMS ------------------------
+
+fun getRecommendedItems(): List<SideItem> {
+    return drinksMock + saucesMock
 }
 
 // ------------------------ DRINKS ------------------------

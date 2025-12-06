@@ -25,8 +25,8 @@ import com.tonyxlab.lazypizza.presentation.theme.Label2SemiBold
 fun <T> LazyCategoryList(
     items: List<T>,
     key: (T) -> Any,
-    modifier: Modifier = Modifier,
     header: String = "",
+    modifier: Modifier = Modifier,
     isDeviceWide: Boolean = false,
     content: @Composable (T) -> Unit,
 ) {

@@ -45,13 +45,13 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun CartScreen(
     navigator: Navigator,
-    modifier: Modifier = Modifier, viewModel: CartViewModel = koinViewModel()
+    modifier: Modifier = Modifier,
+    viewModel: CartViewModel = koinViewModel()
 ) {
 
     SetStatusBarIconsColor(darkIcons = true)
 
     val uiState by viewModel.uiState.collectAsState()
-    val context = LocalContext.current
     val activity = LocalActivity.current ?: return
 
     val windowClass = calculateWindowSizeClass(activity)
@@ -65,7 +65,7 @@ fun CartScreen(
 
             AppNavigationRail(navigator = navigator)
             BaseContentLayout(
-                    modifier = modifier,
+                    modifier = modifier.padding(MaterialTheme.spacing.spaceMedium),
                     viewModel = viewModel,
                     topBar = {
                         AppTopBarThree(
@@ -87,7 +87,7 @@ fun CartScreen(
     } else {
 
         BaseContentLayout(
-                modifier = modifier,
+                modifier = modifier.padding(MaterialTheme.spacing.spaceMedium),
                 viewModel = viewModel,
                 topBar = {
                     AppTopBarThree(

@@ -1,8 +1,5 @@
 package com.tonyxlab.lazypizza.utils
 
-
-
-
 import com.tonyxlab.lazypizza.domain.model.CartItem
 import com.tonyxlab.lazypizza.domain.model.ProductType
 import com.tonyxlab.lazypizza.domain.model.Topping
@@ -19,8 +16,10 @@ val cartItemsMock = listOf(
                 counter = 2,
                 toppings = listOf(
                         Topping(1L, "Extra Cheese", 1.49, "cheese.png", 1),
-                        Topping(2L, "Pepperoni", 1.99, "pepperoni.png", 1)
-                ),
+                        Topping(2L, "Pepperoni", 1.99, "pepperoni.png", 2),
+                      //  Topping(3L, "Olive", 2.99, "pepperoni.png", 3),
+
+                        ),
                 productType = ProductType.PIZZA
         ),
 
@@ -31,7 +30,7 @@ val cartItemsMock = listOf(
                 unitPrice = 9.99,
                 counter = 1,
                 toppings = listOf(
-                        Topping(3L, "Extra Pepperoni", 2.49, "pepperoni.png", 2)
+                        Topping(4L, "Extra Pepperoni", 2.49, "pepperoni.png", 2)
                 ),
                 productType = ProductType.PIZZA
         ),
@@ -53,7 +52,7 @@ val cartItemsMock = listOf(
                 unitPrice = 12.49,
                 counter = 1,
                 toppings = listOf(
-                        Topping(4L, "Extra Mushrooms", 1.79, "mushroom.png", 1)
+                        Topping(5L, "Extra Mushrooms", 1.79, "mushroom.png", 1)
                 ),
                 productType = ProductType.PIZZA
         ),

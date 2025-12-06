@@ -30,7 +30,8 @@ fun CounterItem(
     onRemove: () -> Unit,
     counter: Int,
     modifier: Modifier = Modifier,
-    maxCount:Int = 3
+    maxCount:Int = 3,
+    minCount:Int = 0
 ) {
 
     val haptics = LocalHapticFeedback.current
@@ -47,7 +48,7 @@ fun CounterItem(
                                 color = MaterialTheme.colorScheme.outline,
                                 shape = MaterialTheme.shapes.small
                         )
-                        .clickable {
+                        .clickable (enabled = (counter<=minCount)){
                             haptics.performHapticFeedback(
                                     HapticFeedbackType.LongPress
                             )
@@ -57,8 +58,11 @@ fun CounterItem(
         ) {
             Icon(
                     imageVector = Icons.Default.Remove,
-                    contentDescription = stringResource(id = R.string.cds_text_back),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    contentDescription = stringResource(id = R.string.cds_text_remove),
+                    tint = if (counter == minCount)
+                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .2f)
+                    else
+                        MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
 
@@ -78,7 +82,7 @@ fun CounterItem(
                                 color = MaterialTheme.colorScheme.outline,
                                 shape = MaterialTheme.shapes.small
                         )
-                        .clickable(enabled = counter < maxCount) {
+                        .clickable(enabled = (counter < maxCount)) {
                             haptics.performHapticFeedback(
                                     HapticFeedbackType.LongPress
                             )
@@ -88,7 +92,7 @@ fun CounterItem(
         ) {
             Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(id = R.string.cds_text_back),
+                    contentDescription = stringResource(id = R.string.cds_text_add),
                     tint = if (counter>= maxCount)
                         MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .2f)
                     else

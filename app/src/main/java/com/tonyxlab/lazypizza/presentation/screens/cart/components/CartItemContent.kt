@@ -1,14 +1,15 @@
 package com.tonyxlab.lazypizza.presentation.screens.cart.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
@@ -25,10 +26,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEach
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.CartItem
-import com.tonyxlab.lazypizza.domain.model.SideItem
-import com.tonyxlab.lazypizza.domain.model.Topping
+import com.tonyxlab.lazypizza.domain.model.ProductType
 import com.tonyxlab.lazypizza.presentation.core.components.CounterItem
 import com.tonyxlab.lazypizza.presentation.core.components.DisplayImage
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
@@ -60,7 +61,7 @@ fun CartItemList(
                 modifier = modifier,
                 cartItem = item,
                 uiState = uiState,
-                onEvent =onEvent
+                onEvent = onEvent
         )
     }
 }
@@ -73,7 +74,7 @@ private fun CardItemContent(
     modifier: Modifier = Modifier
 ) {
 
-    val counter = 1 //uiState.selectedSideItems.counterFor(sideItem)
+    val counter = uiState.cartItems.counterFor(cartItem)
 
     Card(
             modifier = modifier
@@ -89,18 +90,19 @@ private fun CardItemContent(
     ) {
 
         Row(
-                modifier = modifier.fillMaxWidth(),
+                modifier = modifier.fillMaxWidth().height(intrinsicSize = IntrinsicSize.Max),
                 verticalAlignment = Alignment.CenterVertically
         ) {
 
             DisplayImage(
+                    modifier = Modifier.weight(.3f).fillMaxHeight(),
                     imageUrl = cartItem.imageUrl,
-                    containerSize = MaterialTheme.spacing.spaceTwelve * 10,
                     shape = MaterialTheme.shapes.VerticalRoundedCornerShape12,
                     backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
                     fallbackDrawableRes = R.drawable.drink_seven
             )
             CartItemMainContent(
+                   modifier = Modifier.weight(.7f),
                     cartItem = cartItem,
                     counter = counter,
                     aggregatePrice = cartItem.unitPrice * counter,
@@ -118,8 +120,8 @@ private fun CartItemMainContent(
     aggregatePrice: Double,
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier,
-    toppings: List<Topping> = emptyList()
-) {
+
+    ) {
     Column(
             modifier = modifier
                     .padding(
@@ -128,60 +130,62 @@ private fun CartItemMainContent(
                     ),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceTen * 3)
     ) {
-
-        //Row 1
-        Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-
-            Text(
-                    text = cartItem.name,
-                    style = MaterialTheme.typography.Body1Medium.copy(
-                            color = MaterialTheme.colorScheme.onSurface,
-                            fontWeight = FontWeight.W700
-                    )
-            )
-
-            Box(
-                    modifier = Modifier
-                            .clip(MaterialTheme.shapes.small)
-                            .border(
-                                    width = MaterialTheme.spacing.spaceSingleDp,
-                                    color = MaterialTheme.colorScheme.outline,
-                                    shape = MaterialTheme.shapes.small,
-                            )
-                            .size(MaterialTheme.spacing.spaceDoubleDp * 11)
-                            .clickable {
-                                onEvent(CartUiEvent.RemoveItem(item = cartItem))
-                            },
-                    contentAlignment = Alignment.Center
+        Column {
+            //Row 1
+            Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
             ) {
 
-                Icon(
-                        painter = painterResource(R.drawable.ic_delete),
-                        contentDescription = stringResource(id = R.string.cds_text_delete),
-                        tint = MaterialTheme.colorScheme.primary
-                )
-            }
-        }
-        //Row 3
-
-        if (toppings.isNotEmpty()) {
-
-            toppings.forEach { topping ->
-
                 Text(
-                        text = topping.toppingName,
-                        style = MaterialTheme.typography.Body3Regular.copy(
-                                color = MaterialTheme.colorScheme.surfaceVariant
+                        text = cartItem.name,
+                        style = MaterialTheme.typography.Body1Medium.copy(
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontWeight = FontWeight.W700
                         )
                 )
+
+                Box(
+                        modifier = Modifier
+                                .clip(MaterialTheme.shapes.small)
+                                .border(
+                                        width = MaterialTheme.spacing.spaceSingleDp,
+                                        color = MaterialTheme.colorScheme.outline,
+                                        shape = MaterialTheme.shapes.small,
+                                )
+                                .size(MaterialTheme.spacing.spaceDoubleDp * 11)
+                                .clickable {
+                                    onEvent(CartUiEvent.RemoveItem(item = cartItem))
+                                },
+                        contentAlignment = Alignment.Center
+                ) {
+
+                    Icon(
+                            painter = painterResource(R.drawable.ic_delete),
+                            contentDescription = stringResource(id = R.string.cds_text_delete),
+                            tint = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
 
+
+            if (cartItem.productType == ProductType.PIZZA && cartItem.toppings.isNotEmpty()) {
+
+                Column {
+                    cartItem.toppings.fastForEach { topping ->
+                        val counter = topping.counter
+                        Text(
+                                text = "${topping.counter} x ${topping.toppingName}",
+                                style = MaterialTheme.typography.Body3Regular.copy(
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                        )
+                    }
+                }
+            }
         }
 
-        // Row 3
+        //Row 2
         Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -193,7 +197,8 @@ private fun CartItemMainContent(
                     onAdd = { onEvent(CartUiEvent.IncrementQuantity(item = cartItem)) },
                     onRemove = { onEvent(CartUiEvent.DecrementQuantity(item = cartItem)) },
                     counter = counter,
-                    maxCount = 5
+                    maxCount = 5,
+                    minCount = 1
             )
 
             Column(
@@ -226,13 +231,8 @@ private fun CartItemMainContent(
     }
 }
 
-private fun Set<SideItem>.isSelected(sideItem: SideItem): Boolean {
-    return any { it.id == sideItem.id }
-}
-
-private fun Set<SideItem>.counterFor(sideItem: SideItem): Int {
-    return firstOrNull { it.id == sideItem.id }?.counter ?: 0
-}
+private fun List<CartItem>.counterFor(cartItem: CartItem): Int =
+    firstOrNull { it.id == cartItem.id }?.counter ?: 0
 
 @PreviewLightDark
 @Composable
@@ -241,7 +241,7 @@ private fun CartItemContent_Preview() {
     val items = cartItemsMock
     LazyPizzaTheme {
 
-       CartItemList(uiState = CartUiState(), onEvent = {})
+        CartItemList(uiState = CartUiState(), onEvent = {})
 
     }
 }
