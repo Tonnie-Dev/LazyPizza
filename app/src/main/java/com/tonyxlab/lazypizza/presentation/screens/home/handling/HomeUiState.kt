@@ -16,10 +16,10 @@ data class HomeUiState(
     val textFieldState: TextFieldState = TextFieldState(),
     val isTextEmpty: Boolean = false,
     val allPizzaItems: List<Pizza> = mockPizzas,
-    val allSideItems:List<SideItem> = getMockSideItems(),
+    val allSideItems: List<SideItem> = getMockSideItems(),
     val filteredSideItems: List<SideItem> = emptyList(),
-    val selectedSideItems:Set<SideItem> = emptySet(),
-    val searchResults:List<SearchItem> = emptyList(),
-    val selectedCategory : Category= Category.PIZZA,
-        val aggregateItemTotal: Double = 0.0
-) : UiState {}
+    val selectedSideItems: Set<SideItem> = emptySet(),
+    val searchResults: List<SearchItem> = emptyList(),
+    val selectedCategory: Category = Category.PIZZA,
+    val aggregateItemTotal: Double = 0.0
+) : UiState

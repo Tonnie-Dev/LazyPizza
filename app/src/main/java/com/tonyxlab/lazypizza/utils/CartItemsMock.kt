@@ -1,6 +1,7 @@
 package com.tonyxlab.lazypizza.utils
 
-package com.tonyxlab.lazypizza.utils
+
+
 
 import com.tonyxlab.lazypizza.domain.model.CartItem
 import com.tonyxlab.lazypizza.domain.model.ProductType

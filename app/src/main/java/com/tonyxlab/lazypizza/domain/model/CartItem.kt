@@ -34,7 +34,7 @@ fun SideItem.toCartItem(): CartItem{
             name = this.name,
             imageUrl = imageUrl,
             unitPrice = price,
-            counter = counter,
+            counter = 1,
             toppings = emptyList(),
             productType = ProductType.SIDE_ITEM
     )

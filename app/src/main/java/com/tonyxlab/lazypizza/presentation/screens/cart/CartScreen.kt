@@ -2,7 +2,6 @@
 
 package com.tonyxlab.lazypizza.presentation.screens.cart
 
-import android.app.Activity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -33,6 +32,9 @@ import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppButton
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarThree
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
+import com.tonyxlab.lazypizza.presentation.screens.cart.components.CartItemList
+import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartUiEvent
+import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartUiState
 import com.tonyxlab.lazypizza.presentation.theme.Body3Regular
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.presentation.theme.Title1SemiBold
@@ -74,11 +76,11 @@ fun CartScreen(
                     actionEventHandler = { _, action ->
 
                     },
-                    onBackPressed = { activity.finish()},
+                    onBackPressed = { activity.finish() },
                     containerColor = MaterialTheme.colorScheme.background
             ) {
 
-                CartScreenContent()
+                CartScreenContent( uiState = uiState, onEvent = viewModel::onEvent)
             }
         }
 
@@ -99,16 +101,20 @@ fun CartScreen(
                 actionEventHandler = { _, action ->
 
                 },
-                onBackPressed = { activity.finish()},
+                onBackPressed = { activity.finish() },
                 containerColor = MaterialTheme.colorScheme.background
-        ) {
-            CartScreenContent()
+        ) {uiState ->
+            CartScreenContent( uiState = uiState, onEvent = viewModel::onEvent)
         }
     }
 }
 
 @Composable
-private fun CartScreenContent(modifier: Modifier = Modifier) {
+private fun CartScreenContent(
+    uiState: CartUiState,
+    onEvent: (CartUiEvent) -> Unit,
+    modifier: Modifier = Modifier
+) {
 
     Box(
             modifier = Modifier
@@ -116,7 +122,18 @@ private fun CartScreenContent(modifier: Modifier = Modifier) {
                     .fillMaxSize()
     ) {
 
-        EmptyCartBody()
+        uiState.cartItems.ifEmpty {
+
+            EmptyCartBody()
+
+        }
+
+        CartItemList(
+                modifier = modifier,
+                uiState = uiState,
+                onEvent = onEvent
+        )
+
     }
 
 }
@@ -164,7 +181,7 @@ private fun EmptyCartBody(modifier: Modifier = Modifier) {
 private fun HomeScreenContent_Preview() {
 
     LazyPizzaTheme {
-        CartScreenContent()
+        CartScreenContent(uiState = CartUiState(), onEvent = {})
     }
 }
 
