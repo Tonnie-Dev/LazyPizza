@@ -23,11 +23,11 @@ import com.tonyxlab.lazypizza.presentation.theme.Label2SemiBold
 
 @Composable
 fun <T> LazyCategoryList(
-    header: String,
     items: List<T>,
     key: (T) -> Any,
     modifier: Modifier = Modifier,
-    isDeviceWide: Boolean,
+    header: String = "",
+    isDeviceWide: Boolean = false,
     content: @Composable (T) -> Unit,
 ) {
     val listState = rememberSaveable(saver = LazyListState.Saver) {
@@ -84,21 +84,23 @@ fun <T> LazyCategoryList(
                     state = listState
             ) {
 
-                stickyHeader {
+                if (header.isNotBlank()) {
+                    stickyHeader {
 
-                    Box(
-                            modifier = Modifier
-                                    .background(MaterialTheme.colorScheme.background)
-                                    .fillMaxWidth()
-                                    .padding(bottom = MaterialTheme.spacing.spaceExtraSmall)
+                        Box(
+                                modifier = Modifier
+                                        .background(MaterialTheme.colorScheme.background)
+                                        .fillMaxWidth()
+                                        .padding(bottom = MaterialTheme.spacing.spaceExtraSmall)
 
-                    ) {
-                        Text(
-                                text = header.uppercase(),
-                                style = MaterialTheme.typography.Label2SemiBold.copy(
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                        )
+                        ) {
+                            Text(
+                                    text = header.uppercase(),
+                                    style = MaterialTheme.typography.Label2SemiBold.copy(
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                            )
+                        }
                     }
                 }
 
