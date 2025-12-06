@@ -11,3 +11,31 @@ data class CartItem(
 )
 
 enum class ProductType { PIZZA, SIDE_ITEM }
+
+
+fun Pizza.toCartItem(): CartItem{
+
+    return CartItem(
+            id = id,
+            name =name,
+            imageUrl = imageUrl,
+            unitPrice = price,
+            counter = 1,
+            toppings = listOf(),
+            productType = ProductType.PIZZA
+    )
+}
+
+
+fun SideItem.toCartItem(): CartItem{
+
+    return CartItem(
+            id = id,
+            name = this.name,
+            imageUrl = imageUrl,
+            unitPrice = price,
+            counter = counter,
+            toppings = emptyList(),
+            productType = ProductType.SIDE_ITEM
+    )
+}
