@@ -13,7 +13,7 @@
 
     <!--Header Texts-->
     <string name="header_text_add_toppings">ADD EXTRA TOPPINGS</string>
-
+    <string name="header_text_recommended_options">RECOMMENDED TO ADD TO YOUR ORDER</string>
     <!--Caption Texts-->
     <string name="cap_text_no_results">No results found for your query</string>
     <string name="cap_text_empty_cart">Your Cart is Empty</string>
@@ -63,4 +63,5 @@
     <!--Meta Data Texts-->
     <string name="dollar_price_tag">$%.2f</string>
     <string name="counter_price_tag">%d x $%.2f</string>
+
 </resources>
