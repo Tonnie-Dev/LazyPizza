@@ -3,6 +3,9 @@
 package com.tonyxlab.lazypizza.presentation.screens.cart
 
 import androidx.activity.compose.LocalActivity
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,9 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
@@ -25,10 +26,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.navigation.AppNavigationRail
 import com.tonyxlab.lazypizza.navigation.BottomNavBar
+import com.tonyxlab.lazypizza.navigation.HomeScreenDestination
 import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppButton
@@ -36,6 +37,7 @@ import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarThree
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.cart.components.AddOnItemsSection
 import com.tonyxlab.lazypizza.presentation.screens.cart.components.CartItemList
+import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartUiState
 import com.tonyxlab.lazypizza.presentation.theme.Body3Regular
@@ -78,6 +80,11 @@ fun CartScreen(
                     },
                     actionEventHandler = { _, action ->
 
+                        when (action) {
+                            CartActionEvent.NavigateBackToMenu -> {
+                                navigator.navigate(HomeScreenDestination)
+                            }
+                        }
                     },
                     onBackPressed = { activity.finish() },
                     containerColor = MaterialTheme.colorScheme.background
@@ -121,47 +128,65 @@ private fun CartScreenContent(
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    val animatedTotal by animateFloatAsState(
+            targetValue = uiState.aggregateCartAmount.toFloat(),
+            animationSpec = tween(
+                    durationMillis = 450,
+                    easing = FastOutSlowInEasing
+            ),
+            label = "CheckoutTotalAnimation"
+    )
+
     Box(
             modifier = modifier
                     .background(color = MaterialTheme.colorScheme.background)
                     .fillMaxSize(), contentAlignment = Alignment.Center
     ) {
-        uiState.cartItems.ifEmpty { EmptyCartBody() }
-        Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-            CartItemList(
+        if (uiState.cartItems.isEmpty()) {
+            EmptyCartBody(
                     modifier = Modifier
-                            .weight(1f)
-                            .padding(bottom = MaterialTheme.spacing.spaceTen * 2),
-                    uiState = uiState,
+                            .align(alignment = Alignment.TopCenter)
+                            .padding(top = MaterialTheme.spacing.spaceTwelve * 10),
                     onEvent = onEvent
             )
+        } else
+            Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
-            AddOnItemsSection(
-                    modifier = Modifier,
-                    items = uiState.addOnItems
-            )
+                CartItemList(
+                        modifier = Modifier
+                                .weight(1f)
+                                .padding(bottom = MaterialTheme.spacing.spaceTen * 2),
+                        uiState = uiState,
+                        onEvent = onEvent
+                )
 
-            AppButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    buttonText = stringResource(
-                            id = R.string.btn_text_proceed_to_checkout,
-                            uiState.aggregateCartAmount
-                    ), onClick = {
-                onEvent(
-                        CartUiEvent.Checkout
+                AddOnItemsSection(
+                        modifier = Modifier,
+                        items = uiState.addOnItems
+                )
+
+                AppButton(
+                        modifier = Modifier.fillMaxWidth(),
+                        buttonText = stringResource(
+                                id = R.string.btn_text_proceed_to_checkout,
+                                animatedTotal
+
+                        ), onClick = {
+                    onEvent(CartUiEvent.Checkout)
+                }
                 )
             }
-            )
-        }
     }
 }
 
 @Composable
-private fun EmptyCartBody(modifier: Modifier = Modifier) {
+private fun EmptyCartBody(
+   onEvent: (CartUiEvent) -> Unit,
+    modifier: Modifier = Modifier) {
 
     Column(
             modifier = modifier.fillMaxWidth(),
@@ -192,7 +217,7 @@ private fun EmptyCartBody(modifier: Modifier = Modifier) {
         }
 
         AppButton(
-                onClick = {},
+                onClick = {onEvent(CartUiEvent.BackToMenu)},
                 buttonText = stringResource(id = R.string.btn_text_back_to_menu)
         )
     }
@@ -203,7 +228,17 @@ private fun EmptyCartBody(modifier: Modifier = Modifier) {
 private fun HomeScreenContent_Preview() {
 
     LazyPizzaTheme {
-        CartScreenContent(uiState = CartUiState(), onEvent = {})
+        Column(
+                modifier = Modifier
+                        .background(color = MaterialTheme.colorScheme.background)
+                        .padding(all = MaterialTheme.spacing.spaceMedium)
+                        .fillMaxSize()
+        ) {
+            CartScreenContent(
+                    uiState = CartUiState(),
+                    onEvent = {}
+            )
+        }
     }
 }
 
