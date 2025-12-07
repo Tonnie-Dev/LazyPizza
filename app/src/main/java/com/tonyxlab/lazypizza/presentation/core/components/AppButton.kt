@@ -1,5 +1,7 @@
 package com.tonyxlab.lazypizza.presentation.core.components
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -68,6 +70,9 @@ fun AppButton(
             contentAlignment = Alignment.Center) {
 
         Text(
+                modifier = Modifier.animateContentSize(
+                        animationSpec = spring(stiffness = .8f)
+                ),
                 text = buttonText,
                 style = MaterialTheme.typography.Title3.copy(
                         color = contentColor

@@ -1,6 +1,9 @@
 package com.tonyxlab.lazypizza.presentation.screens.cart
 
 import com.tonyxlab.lazypizza.domain.model.CartItem
+import com.tonyxlab.lazypizza.domain.model.SideItem
+import com.tonyxlab.lazypizza.domain.model.toCartItem
+import com.tonyxlab.lazypizza.domain.model.toSideItem
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartUiEvent
@@ -14,7 +17,7 @@ class CartViewModel : CartBaseViewModel() {
 
     init {
 
-        val initialAggregate = currentState.cartItems.sumOf { it.unitPrice * it.counter }
+        val initialAggregate = currentState.cartItemsList.sumOf { it.unitPrice * it.counter }
         updateState { it.copy(aggregateCartAmount = initialAggregate) }
     }
 
@@ -23,8 +26,8 @@ class CartViewModel : CartBaseViewModel() {
         when (event) {
             is CartUiEvent.IncrementQuantity -> incrementCount(event.item)
             is CartUiEvent.DecrementQuantity -> decrementCount(event.item)
-            is CartUiEvent.RemoveItem -> removeItem(event.item)
-
+            is CartUiEvent.RemoveItem -> removeFromCart(event.item)
+            is CartUiEvent.PickAddOn -> pickAddOn(event.sideItem)
             CartUiEvent.BackToMenu -> navigateToMenu()
             CartUiEvent.Checkout -> {}
         }
@@ -32,7 +35,7 @@ class CartViewModel : CartBaseViewModel() {
 
     private fun incrementCount(cartItem: CartItem) {
 
-        val updatedList = currentState.cartItems.map {
+        val updatedList = currentState.cartItemsList.map {
 
             if (it.id == cartItem.id) {
                 val newCount = it.counter.plus(1)
@@ -41,12 +44,12 @@ class CartViewModel : CartBaseViewModel() {
             } else it
         }
         val newAggregate = updatedList.sumOf { it.unitPrice * it.counter }
-        updateState { it.copy(cartItems = updatedList, aggregateCartAmount = newAggregate) }
+        updateState { it.copy(cartItemsList = updatedList, aggregateCartAmount = newAggregate) }
 
     }
 
     private fun decrementCount(cartItem: CartItem) {
-        val updatedList = currentState.cartItems.map {
+        val updatedList = currentState.cartItemsList.map {
 
             if (it.id == cartItem.id) {
                 val newCount = it.counter.minus(1)
@@ -56,18 +59,72 @@ class CartViewModel : CartBaseViewModel() {
         }
 
         val newAggregate = updatedList.sumOf { it.unitPrice * it.counter }
-        updateState { it.copy(cartItems = updatedList, aggregateCartAmount = newAggregate) }
+        updateState { it.copy(cartItemsList = updatedList, aggregateCartAmount = newAggregate) }
 
     }
 
-    private fun removeItem(cartItem: CartItem) {
-        val updatedList = currentState.cartItems.filterNot { it.id == cartItem.id }
-        val newAggregate = updatedList.sumOf { it.unitPrice * it.counter }
-        updateState { it.copy(cartItems = updatedList, aggregateCartAmount = newAggregate) }
+    fun pickAddOn(sideItem: SideItem) {
+        val pickedItem = sideItem.toCartItem()
+
+        val updatedPickedAddOnsList =
+            currentState.pickedAddOnItemsList
+                    .plus(sideItem)
+                    .distinctBy { it.id }
+
+        val updatedCartItemsList =
+            currentState.cartItemsList
+                    .plus(pickedItem)
+                    .distinctBy { it.id }
+
+        val updatedAddOnItems =
+            currentState.addOnItemsList
+                    .filterNot { it.id == sideItem.id }
+
+        val newAggregate = updatedCartItemsList
+                .sumOf { it.unitPrice * it.counter }
+
+        updateState {
+            it.copy(
+                    cartItemsList = updatedCartItemsList,
+                    addOnItemsList = updatedAddOnItems,
+                    pickedAddOnItemsList = updatedPickedAddOnsList,
+                    aggregateCartAmount = newAggregate
+            )
+        }
     }
 
-    private fun navigateToMenu(){
+    private fun removeFromCart(cartItem: CartItem) {
+
+        val updatedPickedItemsList =
+            currentState.pickedAddOnItemsList.filterNot { it.id == cartItem.id }
+
+        val updatedCartList = currentState
+                .cartItemsList.filterNot { it.id == cartItem.id }
+
+        val newAggregate = updatedCartList
+                .sumOf { it.unitPrice * it.counter }
+
+        val wasPickedAddOn = currentState.pickedAddOnItemsList
+                .any { it.id == cartItem.id }
+
+        val updatedAddOnOns = if (wasPickedAddOn)
+            currentState.addOnItemsList
+                    .plus(cartItem.toSideItem())
+                    .shuffled()
+        else
+            currentState.addOnItemsList
+
+        updateState {
+            it.copy(
+                    cartItemsList = updatedCartList,
+                    addOnItemsList = updatedAddOnOns,
+                    pickedAddOnItemsList = updatedPickedItemsList,
+                    aggregateCartAmount = newAggregate,
+            )
+        }
+    }
+
+    private fun navigateToMenu() {
         sendActionEvent(actionEvent = CartActionEvent.NavigateBackToMenu)
     }
-
 }

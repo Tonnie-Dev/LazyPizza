@@ -52,7 +52,7 @@ fun CartItemList(
 ) {
     LazyCategoryList(
             modifier = modifier,
-            items = uiState.cartItems,
+            items = uiState.cartItemsList,
             key = { it.id }
     ) { item ->
 
@@ -72,7 +72,7 @@ private fun CardItemContent(
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val counter = uiState.cartItems.counterFor(cartItem)
+    val counter = uiState.cartItemsList.counterFor(cartItem)
 
     Card(
             modifier = modifier

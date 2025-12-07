@@ -39,3 +39,17 @@ fun SideItem.toCartItem(): CartItem{
             productType = ProductType.SIDE_ITEM
     )
 }
+
+fun CartItem.toSideItem(): SideItem{
+   return SideItem(
+           id = id,
+           name = this.name,
+           imageUrl = imageUrl,
+           price = unitPrice,
+           counter = 1,
+           category = Category.DRINKS
+
+   )
+
+
+}

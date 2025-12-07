@@ -3,6 +3,7 @@
 package com.tonyxlab.lazypizza.presentation.screens.cart
 
 import androidx.activity.compose.LocalActivity
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -68,7 +69,7 @@ fun CartScreen(
 
         Row(modifier = Modifier.fillMaxSize()) {
 
-            AppNavigationRail(navigator = navigator, itemCount = uiState.cartItems.size)
+            AppNavigationRail(navigator = navigator, itemCount = uiState.cartItemsList.size)
             BaseContentLayout(
                     modifier = modifier.padding(MaterialTheme.spacing.spaceMedium),
                     viewModel = viewModel,
@@ -105,7 +106,7 @@ fun CartScreen(
                     )
                 },
                 bottomBar = {
-                    BottomNavBar(navigator = navigator, itemCount = uiState.cartItems.size)
+                    BottomNavBar(navigator = navigator, itemCount = uiState.cartItemsList.size)
                 },
                 actionEventHandler = { _, action ->
 
@@ -142,7 +143,7 @@ private fun CartScreenContent(
                     .background(color = MaterialTheme.colorScheme.background)
                     .fillMaxSize(), contentAlignment = Alignment.Center
     ) {
-        if (uiState.cartItems.isEmpty()) {
+        if (uiState.cartItemsList.isEmpty()) {
             EmptyCartBody(
                     modifier = Modifier
                             .align(alignment = Alignment.TopCenter)
@@ -165,7 +166,8 @@ private fun CartScreenContent(
 
                 AddOnItemsSection(
                         modifier = Modifier,
-                        items = uiState.addOnItems
+                        items = uiState.addOnItemsList,
+                        onEvent = onEvent
                 )
 
                 AppButton(

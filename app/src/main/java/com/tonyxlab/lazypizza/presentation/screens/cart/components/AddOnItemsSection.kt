@@ -2,10 +2,10 @@ package com.tonyxlab.lazypizza.presentation.screens.cart.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,6 +31,7 @@ import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.SideItem
 import com.tonyxlab.lazypizza.presentation.core.components.DisplayImage
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
+import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartUiEvent
 import com.tonyxlab.lazypizza.presentation.theme.Body1Regular
 import com.tonyxlab.lazypizza.presentation.theme.HorizontalRoundedCornerShape12
 import com.tonyxlab.lazypizza.presentation.theme.Label2SemiBold
@@ -41,6 +42,7 @@ import com.tonyxlab.lazypizza.utils.getMockSideItems
 @Composable
 fun AddOnItemsSection(
     items: List<SideItem>,
+    onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -63,8 +65,10 @@ fun AddOnItemsSection(
 
             items(items = items, key = { it.id }) { sideItem ->
 
-                AddOnItem(sideItem = sideItem)
-
+                AddOnItem(
+                        sideItem = sideItem,
+                        onEvent = onEvent
+                )
             }
         }
     }
@@ -73,6 +77,7 @@ fun AddOnItemsSection(
 @Composable
 private fun AddOnItem(
     sideItem: SideItem,
+    onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -131,6 +136,9 @@ private fun AddOnItem(
                                             color = MaterialTheme.colorScheme.outline,
                                             shape = MaterialTheme.shapes.small
                                     )
+                                    .clickable {
+                                        onEvent(CartUiEvent.PickAddOn(sideItem = sideItem))
+                                    }
                                     .padding(MaterialTheme.spacing.spaceExtraSmall),
                             contentAlignment = Alignment.Center
                     ) {
@@ -161,7 +169,7 @@ private fun AddOnsRow_PreviewSection() {
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            AddOnItemsSection(items = sideItems)
+            AddOnItemsSection(items = sideItems, onEvent = {})
 
         }
     }
