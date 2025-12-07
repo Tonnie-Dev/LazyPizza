@@ -9,9 +9,9 @@ fun getMockSideItems(): List<SideItem> {
     return drinksMock + saucesMock + iceCreamsMock
 }
 
-// ------------------------ RECOMMENDED ITEMS ------------------------
+// ------------------------ ADD-ON ITEMS ------------------------
 
-fun getRecommendedItems(): List<SideItem> {
+fun getMockAddOnItems(): List<SideItem> {
     return drinksMock + saucesMock
 }
 

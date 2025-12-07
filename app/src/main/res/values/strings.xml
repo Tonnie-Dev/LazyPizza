@@ -27,6 +27,7 @@
     <string name="btn_text_add_to_cart">Add to Cart </string>
     <string name="btn_text_add_to_cart_with_price">Add to Cart for $ %.2f</string>
     <string name="btn_text_back_to_menu">Back To Menu</string>
+    <string name="btn_text_proceed_to_checkout">Proceed to Checkout ($%.2f)</string>
 
     <!--Text Button Texts-->
     <string name="txt_btn_no_account">Don’t have an account?</string>

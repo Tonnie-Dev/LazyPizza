@@ -50,15 +50,14 @@ fun CartItemList(
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     LazyCategoryList(
-
+            modifier = modifier,
             items = uiState.cartItems,
             key = { it.id }
     ) { item ->
 
         CardItemContent(
-                modifier = modifier,
+                modifier = Modifier,
                 cartItem = item,
                 uiState = uiState,
                 onEvent = onEvent
@@ -73,7 +72,6 @@ private fun CardItemContent(
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     val counter = uiState.cartItems.counterFor(cartItem)
 
     Card(
@@ -90,25 +88,28 @@ private fun CardItemContent(
     ) {
 
         Row(
-                modifier = modifier.fillMaxWidth().height(intrinsicSize = IntrinsicSize.Max),
+                modifier = modifier
+                        .fillMaxWidth()
+                        .height(intrinsicSize = IntrinsicSize.Max),
                 verticalAlignment = Alignment.CenterVertically
         ) {
 
             DisplayImage(
-                    modifier = Modifier.weight(.3f).fillMaxHeight(),
+                    modifier = Modifier
+                            .weight(.3f)
+                            .fillMaxHeight(),
                     imageUrl = cartItem.imageUrl,
                     shape = MaterialTheme.shapes.VerticalRoundedCornerShape12,
                     backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
                     fallbackDrawableRes = R.drawable.drink_seven
             )
             CartItemMainContent(
-                   modifier = Modifier.weight(.7f),
+                    modifier = Modifier.weight(.7f),
                     cartItem = cartItem,
                     counter = counter,
                     aggregatePrice = cartItem.unitPrice * counter,
                     onEvent = onEvent
             )
-
         }
     }
 }
@@ -120,15 +121,14 @@ private fun CartItemMainContent(
     aggregatePrice: Double,
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier,
-
-    ) {
+) {
     Column(
             modifier = modifier
                     .padding(
                             horizontal = MaterialTheme.spacing.spaceMedium,
                             vertical = MaterialTheme.spacing.spaceTwelve
                     ),
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceTen * 3)
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceMedium)
     ) {
         Column {
             //Row 1
@@ -168,12 +168,11 @@ private fun CartItemMainContent(
                 }
             }
 
-
             if (cartItem.productType == ProductType.PIZZA && cartItem.toppings.isNotEmpty()) {
 
                 Column {
                     cartItem.toppings.fastForEach { topping ->
-                        val counter = topping.counter
+
                         Text(
                                 text = "${topping.counter} x ${topping.toppingName}",
                                 style = MaterialTheme.typography.Body3Regular.copy(
@@ -232,7 +231,7 @@ private fun CartItemMainContent(
 }
 
 private fun List<CartItem>.counterFor(cartItem: CartItem): Int =
-    firstOrNull { it.id == cartItem.id }?.counter ?: 0
+    firstOrNull { it.id == cartItem.id }?.counter ?: 1
 
 @PreviewLightDark
 @Composable
@@ -240,9 +239,7 @@ private fun CartItemContent_Preview() {
 
     val items = cartItemsMock
     LazyPizzaTheme {
-
         CartItemList(uiState = CartUiState(), onEvent = {})
-
     }
 }
 

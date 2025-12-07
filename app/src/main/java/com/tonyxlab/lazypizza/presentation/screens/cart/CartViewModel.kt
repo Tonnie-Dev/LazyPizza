@@ -12,14 +12,18 @@ class CartViewModel : CartBaseViewModel() {
     override val initialState: CartUiState
         get() = CartUiState()
 
+    init {
+        updateAggregateCartAmount()
+    }
+
     override fun onEvent(event: CartUiEvent) {
 
         when (event) {
-            is CartUiEvent.DecrementQuantity -> decrementCount(event.item)
             is CartUiEvent.IncrementQuantity -> incrementCount(event.item)
+            is CartUiEvent.DecrementQuantity -> decrementCount(event.item)
             is CartUiEvent.RemoveItem -> removeItem(event.item)
+            CartUiEvent.Checkout -> {}
         }
-
     }
 
     private fun incrementCount(cartItem: CartItem) {
@@ -34,6 +38,7 @@ class CartViewModel : CartBaseViewModel() {
         }
 
         updateState { it.copy(cartItems = updatedList) }
+        updateAggregateCartAmount()
     }
 
     private fun decrementCount(cartItem: CartItem) {
@@ -47,6 +52,7 @@ class CartViewModel : CartBaseViewModel() {
         }
 
         updateState { it.copy(cartItems = updatedList) }
+        updateAggregateCartAmount()
     }
 
     private fun removeItem(cartItem: CartItem) {
@@ -54,6 +60,13 @@ class CartViewModel : CartBaseViewModel() {
         val updatedList = currentState.cartItems.filterNot { it.id == cartItem.id }
 
         updateState { it.copy(cartItems = updatedList) }
+        updateAggregateCartAmount()
+    }
+
+    private fun updateAggregateCartAmount() {
+
+        val aggregateCartAmount = currentState.cartItems.sumOf { item -> item.unitPrice }
+        updateState { it.copy(aggregateCartAmount = aggregateCartAmount) }
     }
     /* private fun incrementCount(item: CartItem) {
 

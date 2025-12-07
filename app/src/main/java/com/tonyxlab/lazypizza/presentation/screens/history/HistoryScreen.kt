@@ -103,7 +103,7 @@ fun HistoryScreen(
 private fun HistoryScreenContent(modifier: Modifier = Modifier) {
     Column(
             modifier = modifier
-                    .background(MaterialTheme.colorScheme.background)
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha =0.5f ))
                     .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center

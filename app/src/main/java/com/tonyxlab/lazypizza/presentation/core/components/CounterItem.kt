@@ -48,7 +48,7 @@ fun CounterItem(
                                 color = MaterialTheme.colorScheme.outline,
                                 shape = MaterialTheme.shapes.small
                         )
-                        .clickable (enabled = (counter<=minCount)){
+                        .clickable (enabled = (counter>=minCount)){
                             haptics.performHapticFeedback(
                                     HapticFeedbackType.LongPress
                             )

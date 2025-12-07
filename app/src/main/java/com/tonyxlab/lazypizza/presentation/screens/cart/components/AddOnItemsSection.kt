@@ -43,7 +43,11 @@ fun AddOnItemsSection(
     items: List<SideItem>,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(
+            modifier = modifier
+                    .fillMaxWidth()
+                    .padding(bottom = MaterialTheme.spacing.spaceTen * 2)
+    ) {
 
         Text(
                 modifier = Modifier.padding(bottom = MaterialTheme.spacing.spaceSmall),
@@ -74,7 +78,6 @@ private fun AddOnItem(
 
     Card(
             modifier = modifier
-
                     .border(
                             width = MaterialTheme.spacing.spaceSingleDp,
                             color = MaterialTheme.colorScheme.surface,
@@ -82,13 +85,13 @@ private fun AddOnItem(
                     ),
             shape = MaterialTheme.shapes.medium,
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
-        Column(modifier = Modifier.width(intrinsicSize = IntrinsicSize.Min)) {
+        Column(modifier = Modifier.width(MaterialTheme.spacing.spaceMedium * 10)) {
 
             DisplayImage(
                     imageUrl = sideItem.imageUrl,
-                    containerSize = MaterialTheme.spacing.spaceMedium * 10,
+                    imageSize = MaterialTheme.spacing.spaceTwelve * 9,
                     shape = MaterialTheme.shapes.HorizontalRoundedCornerShape12
             )
 

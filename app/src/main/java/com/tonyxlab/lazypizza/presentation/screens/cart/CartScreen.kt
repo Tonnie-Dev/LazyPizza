@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
@@ -20,10 +22,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.navigation.AppNavigationRail
 import com.tonyxlab.lazypizza.navigation.BottomNavBar
@@ -32,6 +34,7 @@ import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppButton
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarThree
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
+import com.tonyxlab.lazypizza.presentation.screens.cart.components.AddOnItemsSection
 import com.tonyxlab.lazypizza.presentation.screens.cart.components.CartItemList
 import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartUiState
@@ -80,7 +83,7 @@ fun CartScreen(
                     containerColor = MaterialTheme.colorScheme.background
             ) {
 
-                CartScreenContent( uiState = uiState, onEvent = viewModel::onEvent)
+                CartScreenContent(uiState = uiState, onEvent = viewModel::onEvent)
             }
         }
 
@@ -103,8 +106,11 @@ fun CartScreen(
                 },
                 onBackPressed = { activity.finish() },
                 containerColor = MaterialTheme.colorScheme.background
-        ) {uiState ->
-            CartScreenContent( uiState = uiState, onEvent = viewModel::onEvent)
+        ) { uiState ->
+            CartScreenContent(
+                    uiState = uiState,
+                    onEvent = viewModel::onEvent
+            )
         }
     }
 }
@@ -115,27 +121,43 @@ private fun CartScreenContent(
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     Box(
-            modifier = Modifier
-                    .background(MaterialTheme.colorScheme.background)
-                    .fillMaxSize()
+            modifier = modifier
+                    .background(color = MaterialTheme.colorScheme.background)
+                    .fillMaxSize(), contentAlignment = Alignment.Center
     ) {
+        uiState.cartItems.ifEmpty { EmptyCartBody() }
+        Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        uiState.cartItems.ifEmpty {
+            CartItemList(
+                    modifier = Modifier
+                            .weight(1f)
+                            .padding(bottom = MaterialTheme.spacing.spaceTen * 2),
+                    uiState = uiState,
+                    onEvent = onEvent
+            )
 
-            EmptyCartBody()
+            AddOnItemsSection(
+                    modifier = Modifier,
+                    items = uiState.addOnItems
+            )
 
+            AppButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    buttonText = stringResource(
+                            id = R.string.btn_text_proceed_to_checkout,
+                            uiState.aggregateCartAmount
+                    ), onClick = {
+                onEvent(
+                        CartUiEvent.Checkout
+                )
+            }
+            )
         }
-
-        CartItemList(
-                modifier = modifier,
-                uiState = uiState,
-                onEvent = onEvent
-        )
-
     }
-
 }
 
 @Composable

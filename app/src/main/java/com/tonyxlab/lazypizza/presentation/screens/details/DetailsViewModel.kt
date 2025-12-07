@@ -39,7 +39,6 @@ class DetailsViewModel(private val id: Long) : DetailsBaseViewModel() {
                 removeExtraToppings(topping = event.topping)
             }
 
-
             DetailsUiEvent.AddToCart -> {}
         }
     }
