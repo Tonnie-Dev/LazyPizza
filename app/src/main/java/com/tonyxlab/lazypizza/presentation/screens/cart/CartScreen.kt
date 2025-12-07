@@ -3,7 +3,6 @@
 package com.tonyxlab.lazypizza.presentation.screens.cart
 
 import androidx.activity.compose.LocalActivity
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -30,7 +29,8 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.navigation.AppNavigationRail
 import com.tonyxlab.lazypizza.navigation.BottomNavBar
-import com.tonyxlab.lazypizza.navigation.HomeScreenDestination
+import com.tonyxlab.lazypizza.navigation.HistoryScreenDestination
+import com.tonyxlab.lazypizza.navigation.MenuScreenDestination
 import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppButton
@@ -82,7 +82,7 @@ fun CartScreen(
                     actionEventHandler = { _, action ->
                         when (action) {
                             CartActionEvent.NavigateBackToMenu -> {
-                                navigator.navigate(HomeScreenDestination)
+                               navigator.navigate(MenuScreenDestination)
                             }
                         }
                     },
@@ -109,7 +109,11 @@ fun CartScreen(
                     BottomNavBar(navigator = navigator, itemCount = uiState.cartItemsList.size)
                 },
                 actionEventHandler = { _, action ->
-
+                    when (action) {
+                        CartActionEvent.NavigateBackToMenu -> {
+                            navigator.navigate(MenuScreenDestination)
+                        }
+                    }
                 },
                 onBackPressed = { activity.finish() },
                 containerColor = MaterialTheme.colorScheme.background
@@ -186,8 +190,9 @@ private fun CartScreenContent(
 
 @Composable
 private fun EmptyCartBody(
-   onEvent: (CartUiEvent) -> Unit,
-    modifier: Modifier = Modifier) {
+    onEvent: (CartUiEvent) -> Unit,
+    modifier: Modifier = Modifier
+) {
 
     Column(
             modifier = modifier.fillMaxWidth(),
@@ -218,7 +223,7 @@ private fun EmptyCartBody(
         }
 
         AppButton(
-                onClick = {onEvent(CartUiEvent.BackToMenu)},
+                onClick = { onEvent(CartUiEvent.BackToMenu) },
                 buttonText = stringResource(id = R.string.btn_text_back_to_menu)
         )
     }
