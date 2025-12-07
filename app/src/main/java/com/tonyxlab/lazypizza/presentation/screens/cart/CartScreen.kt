@@ -68,7 +68,7 @@ fun CartScreen(
 
         Row(modifier = Modifier.fillMaxSize()) {
 
-            AppNavigationRail(navigator = navigator)
+            AppNavigationRail(navigator = navigator, itemCount = uiState.cartItems.size)
             BaseContentLayout(
                     modifier = modifier.padding(MaterialTheme.spacing.spaceMedium),
                     viewModel = viewModel,
@@ -79,7 +79,6 @@ fun CartScreen(
                         )
                     },
                     actionEventHandler = { _, action ->
-
                         when (action) {
                             CartActionEvent.NavigateBackToMenu -> {
                                 navigator.navigate(HomeScreenDestination)
@@ -106,14 +105,14 @@ fun CartScreen(
                     )
                 },
                 bottomBar = {
-                    BottomNavBar(navigator = navigator)
+                    BottomNavBar(navigator = navigator, itemCount = uiState.cartItems.size)
                 },
                 actionEventHandler = { _, action ->
 
                 },
                 onBackPressed = { activity.finish() },
                 containerColor = MaterialTheme.colorScheme.background
-        ) { uiState ->
+        ) {
             CartScreenContent(
                     uiState = uiState,
                     onEvent = viewModel::onEvent

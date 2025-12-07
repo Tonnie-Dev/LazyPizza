@@ -14,10 +14,12 @@
     <!--Header Texts-->
     <string name="header_text_add_toppings">ADD EXTRA TOPPINGS</string>
     <string name="header_text_recommended_options">RECOMMENDED TO ADD TO YOUR ORDER</string>
+
     <!--Caption Texts-->
     <string name="cap_text_no_results">No results found for your query</string>
     <string name="cap_text_empty_cart">Your Cart is Empty</string>
     <string name="cap_text_head_back">Head back to the menu and grab a pizza you love.</string>
+    <string name="cap_text_item_count">%d</string>
 
     <!--Label Texts-->
     <string name="lab_text_text">Text</string>

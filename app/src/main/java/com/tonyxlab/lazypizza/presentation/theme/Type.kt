@@ -1,4 +1,4 @@
- package com.tonyxlab.lazypizza.presentation.theme
+package com.tonyxlab.lazypizza.presentation.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
@@ -22,6 +22,14 @@ val Typography = Typography(
 )
 
 object ExtendedTypography {
+
+    val Title1Medium = TextStyle(
+            fontFamily = InstrumentSansFamily,
+            fontWeight = FontWeight.Medium,
+            fontSize = 24.sp,
+            lineHeight = 28.sp,
+            letterSpacing = 0.sp
+    )
 
     val Title1SemiBold = TextStyle(
             fontFamily = InstrumentSansFamily,
@@ -47,6 +55,13 @@ object ExtendedTypography {
             letterSpacing = 0.sp
     )
 
+    val Title4 = TextStyle(
+            fontFamily = InstrumentSansFamily,
+            fontWeight = FontWeight.Medium,
+            fontSize = 11.sp,
+            lineHeight = 16.sp,
+            letterSpacing = 0.sp
+    )
     val Label2SemiBold = TextStyle(
             fontFamily = InstrumentSansFamily,
             fontWeight = FontWeight.SemiBold,
@@ -96,6 +111,10 @@ object ExtendedTypography {
     )
 }
 
+val Typography.Title1Medium
+    @Composable
+    get() = ExtendedTypography.Title1Medium
+
 val Typography.Title1SemiBold
     @Composable
     get() = ExtendedTypography.Title1SemiBold
@@ -107,6 +126,10 @@ val Typography.Title2
 val Typography.Title3
     @Composable
     get() = ExtendedTypography.Title3
+
+val Typography.Title4
+    @Composable
+    get() = ExtendedTypography.Title4
 
 val Typography.Label2SemiBold
     @Composable
