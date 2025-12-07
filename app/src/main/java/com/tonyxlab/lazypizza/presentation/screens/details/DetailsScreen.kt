@@ -31,6 +31,7 @@ import com.tonyxlab.lazypizza.presentation.screens.details.components.PizzaMetaD
 import com.tonyxlab.lazypizza.presentation.screens.details.components.StickyAddToCart
 import com.tonyxlab.lazypizza.presentation.screens.details.components.ToppingsCardContent
 import com.tonyxlab.lazypizza.presentation.screens.details.components.ToppingsGrid
+import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiState
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
@@ -50,7 +51,13 @@ fun DetailsScreen(
             modifier = modifier.fillMaxSize(),
             viewModel = viewModel,
             topBar = { AppTopBarTwo(onClick = { navigator.goBack() }) },
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            actionEventHandler = { _, action ->
+
+                when (action) {
+                    DetailsActionEvent.NavigateBackToMenu -> navigator.goBack()
+                }
+            }
     ) { uiState ->
         DetailsScreenContent(
                 modifier = Modifier,
@@ -95,7 +102,9 @@ private fun DetailsScreenContent(
                         )
 
                         PizzaMetaData(
-                                modifier = Modifier.weight(1f).padding(start = MaterialTheme.spacing.spaceMedium),
+                                modifier = Modifier
+                                        .weight(1f)
+                                        .padding(start = MaterialTheme.spacing.spaceMedium),
                                 pizzaName = it.name,
                                 ingredients = it.ingredients
                         )

@@ -1,5 +1,6 @@
 package com.tonyxlab.lazypizza.di
 
+import com.tonyxlab.lazypizza.data.repository.CartRepositoryImpl
 import com.tonyxlab.lazypizza.presentation.screens.cart.CartViewModel
 import com.tonyxlab.lazypizza.presentation.screens.details.DetailsViewModel
 import com.tonyxlab.lazypizza.presentation.screens.history.HistoryViewModel
@@ -12,4 +13,19 @@ val viewModelModule = module {
     viewModelOf(::DetailsViewModel)
     viewModelOf(::CartViewModel)
     viewModelOf(::HistoryViewModel)
+
+
 }
+
+
+
+val repositoryModule = module {
+    single { CartRepositoryImpl() }
+}
+
+
+
+
+
+
+

@@ -1,6 +1,7 @@
 package com.tonyxlab.lazypizza
 
 import android.app.Application
+import com.tonyxlab.lazypizza.di.repositoryModule
 import com.tonyxlab.lazypizza.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -17,7 +18,7 @@ class LazyPizzaApp: Application() {
 
             androidContext(androidContext = this@LazyPizzaApp)
             modules(
-                    listOf(viewModelModule,)
+                    listOf(viewModelModule,repositoryModule)
             )
         }
     }

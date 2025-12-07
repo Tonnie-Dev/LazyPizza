@@ -1,6 +1,8 @@
 package com.tonyxlab.lazypizza.presentation.screens.details
 
+import com.tonyxlab.lazypizza.data.repository.CartRepositoryImpl
 import com.tonyxlab.lazypizza.domain.model.Topping
+import com.tonyxlab.lazypizza.domain.model.toCartItem
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiEvent
@@ -9,7 +11,10 @@ import com.tonyxlab.lazypizza.utils.mockPizzas
 
 typealias DetailsBaseViewModel = BaseViewModel<DetailsUiState, DetailsUiEvent, DetailsActionEvent>
 
-class DetailsViewModel(private val id: Long) : DetailsBaseViewModel() {
+class DetailsViewModel(
+    private val id: Long,
+    private val cartRepository: CartRepositoryImpl
+        ) : DetailsBaseViewModel() {
 
     init {
         val pizzaItem = mockPizzas.first { pizza -> pizza.id == this.id }
@@ -39,7 +44,14 @@ class DetailsViewModel(private val id: Long) : DetailsBaseViewModel() {
                 removeExtraToppings(topping = event.topping)
             }
 
-            DetailsUiEvent.AddToCart -> {}
+            DetailsUiEvent.AddToCart -> {
+
+                val cartItem = currentState.pizzaStateItem!!.toCartItem().copy(
+                        toppings = currentState.selectedToppings.toList()
+                )
+                cartRepository.addItem(cartItem)
+                sendActionEvent(DetailsActionEvent.NavigateBackToMenu)
+            }
         }
     }
 
