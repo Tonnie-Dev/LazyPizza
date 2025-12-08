@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -24,10 +23,10 @@ fun StickyAddToCart(
 
     Box(
             modifier = modifier
-                    .navigationBarsPadding()
                     .fillMaxWidth()
                     .height(height = MaterialTheme.spacing.spaceOneHundred)
-                    .background(brush = MaterialTheme.gradientScheme.stickyOverlayGradient)
+                    .background(brush = MaterialTheme.gradientScheme.stickyOverlayGradient),
+            contentAlignment = Alignment.Center
     ) {
 
         AppButton(

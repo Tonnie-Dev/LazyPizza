@@ -6,7 +6,6 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -83,34 +82,24 @@ fun ToppingsCardContent(
 }
 
 @Composable
- fun ToppingsGrid(
+fun ToppingsGrid(
     uiState: DetailsUiState,
     onEvent: (DetailsUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    Text(
+            text = stringResource(id = R.string.header_text_add_toppings),
+            style = MaterialTheme.typography.Label2SemiBold.copy(
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+    )
     LazyVerticalGrid(
             modifier = modifier.fillMaxWidth(),
             columns = GridCells.Fixed(3),
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceSmall),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceSmall),
     ) {
-
-        stickyHeader {
-            Box(
-                    modifier = Modifier
-                            //.background(MaterialTheme.colorScheme.background)
-                            .fillMaxWidth()
-                            .padding(bottom = MaterialTheme.spacing.spaceSmall)
-
-            ) {
-                Text(
-                        text = stringResource(id = R.string.header_text_add_toppings),
-                        style = MaterialTheme.typography.Label2SemiBold.copy(
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                )
-            }
-        }
 
         items(items = uiState.toppings, key = { it.id }) { item ->
             ToppingsCard(
@@ -191,8 +180,10 @@ private fun ToppingsCard(
                         )
                 )
 
-                AnimatedContent(targetState = selected, label = "toppingContentTransition") {
-                    isSelected ->
+                AnimatedContent(
+                        targetState = selected,
+                        label = "toppingContentTransition"
+                ) { isSelected ->
 
                     if (isSelected) {
 
@@ -228,7 +219,7 @@ private fun ToppingsCard(
 }
 
 @Composable
- fun PizzaMetaData(
+fun PizzaMetaData(
     pizzaName: String,
     ingredients: List<String>,
     modifier: Modifier = Modifier,
