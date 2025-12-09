@@ -29,7 +29,6 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.navigation.AppNavigationRail
 import com.tonyxlab.lazypizza.navigation.BottomNavBar
-import com.tonyxlab.lazypizza.navigation.HistoryScreenDestination
 import com.tonyxlab.lazypizza.navigation.MenuScreenDestination
 import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
@@ -69,7 +68,12 @@ fun CartScreen(
 
         Row(modifier = Modifier.fillMaxSize()) {
 
-            AppNavigationRail(navigator = navigator, itemCount = uiState.cartItemsList.size)
+            AppNavigationRail(
+                    navigator = navigator,
+                    itemCount = viewModel.cartItems.collectAsState().value.size
+            )
+
+
             BaseContentLayout(
                     modifier = modifier.padding(MaterialTheme.spacing.spaceMedium),
                     viewModel = viewModel,
@@ -82,7 +86,7 @@ fun CartScreen(
                     actionEventHandler = { _, action ->
                         when (action) {
                             CartActionEvent.NavigateBackToMenu -> {
-                               navigator.navigate(MenuScreenDestination)
+                                navigator.navigate(MenuScreenDestination)
                             }
                         }
                     },
@@ -106,7 +110,10 @@ fun CartScreen(
                     )
                 },
                 bottomBar = {
-                    BottomNavBar(navigator = navigator, itemCount = uiState.cartItemsList.size)
+                    BottomNavBar(
+                            navigator = navigator,
+                            itemCount = viewModel.cartItems.collectAsState().value.size
+                    )
                 },
                 actionEventHandler = { _, action ->
                     when (action) {
@@ -127,6 +134,79 @@ fun CartScreen(
 }
 
 @Composable
+private fun CartScreenContent(
+    uiState: CartUiState,
+    onEvent: (CartUiEvent) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: CartViewModel = koinViewModel()
+) {
+    // NEW → collect real cart items
+    val cartItems by viewModel.cartItems.collectAsState()
+
+    // NEW → derive animated total from repo-backed flow
+    val aggregateAmount by viewModel.aggregateAmount.collectAsState()
+
+    val animatedTotal by animateFloatAsState(
+            targetValue = aggregateAmount.toFloat(),
+            animationSpec = tween(
+                    durationMillis = 450,
+                    easing = FastOutSlowInEasing
+            ),
+            label = "CheckoutTotalAnimation"
+    )
+
+    Box(
+            modifier = modifier
+                    .background(color = MaterialTheme.colorScheme.background)
+                    .fillMaxSize(),
+            contentAlignment = Alignment.Center
+    ) {
+
+        // NEW: use REAL cart list, not uiState.cartItemsList
+        if (cartItems.isEmpty()) {
+            EmptyCartBody(
+                    modifier = Modifier
+                            .align(alignment = Alignment.TopCenter)
+                            .padding(top = MaterialTheme.spacing.spaceTwelve * 10),
+                    onEvent = onEvent
+            )
+
+        } else {
+            Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                // UPDATED → pass in real cart list
+                CartItemList(
+                        modifier = Modifier
+                                .weight(1f)
+                                .padding(bottom = MaterialTheme.spacing.spaceTen * 2),
+                        cartItems = cartItems,
+                        onEvent = onEvent
+                )
+
+                // AddOnItems still uses uiState list (this is correct)
+                AddOnItemsSection(
+                        modifier = Modifier,
+                        items = uiState.addOnItemsList,
+                        onEvent = onEvent
+                )
+
+                AppButton(
+                        modifier = Modifier.fillMaxWidth(),
+                        buttonText = stringResource(
+                                id = R.string.btn_text_proceed_to_checkout,
+                                animatedTotal
+                        ),
+                        onClick = { onEvent(CartUiEvent.Checkout) }
+                )
+            }
+        }
+    }
+}
+
+/*@Composable
 private fun CartScreenContent(
     uiState: CartUiState,
     onEvent: (CartUiEvent) -> Unit,
@@ -186,7 +266,7 @@ private fun CartScreenContent(
                 )
             }
     }
-}
+}*/
 
 @Composable
 private fun EmptyCartBody(

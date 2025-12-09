@@ -4,8 +4,11 @@ package com.tonyxlab.lazypizza.presentation.screens.home
 
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.viewModelScope
+import com.tonyxlab.lazypizza.data.repository.CartRepositoryImpl
 import com.tonyxlab.lazypizza.domain.model.Category
 import com.tonyxlab.lazypizza.domain.model.SideItem
+import com.tonyxlab.lazypizza.domain.model.toCartItem
+import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeActionEvent.LaunchDialingPad
@@ -17,11 +20,16 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.koin.core.KoinApplication.Companion.init
 
 typealias HomeBaseViewModel = BaseViewModel<HomeUiState, HomeUiEvent, HomeActionEvent>
 
-class HomeViewModel : HomeBaseViewModel() {
+class HomeViewModel(
+    private val repository: CartRepository
 
+) : HomeBaseViewModel() {
+
+    val cartItems = repository.cartItems
     init {
         observeSearchBarState()
     }
@@ -46,7 +54,11 @@ class HomeViewModel : HomeBaseViewModel() {
             }
 
             is HomeUiEvent.AddSideItemToCart -> {
+
                 addSideItemToCart(sideItem = event.sideItem)
+
+                val cartItem = event.sideItem.toCartItem()
+                repository.addItem(cartItem)
             }
 
             is HomeUiEvent.IncrementQuantity -> {

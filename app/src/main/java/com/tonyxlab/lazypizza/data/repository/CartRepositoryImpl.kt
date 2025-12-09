@@ -1,42 +1,59 @@
 package com.tonyxlab.lazypizza.data.repository
 
 import com.tonyxlab.lazypizza.domain.model.CartItem
+import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
-class CartRepositoryImpl {
+class CartRepositoryImpl : CartRepository {
 
     private val _cartItems = MutableStateFlow<List<CartItem>>(emptyList())
-    val cartItems = _cartItems.asStateFlow()
+    override val cartItems = _cartItems.asStateFlow()
 
-    fun addItem(item: CartItem) {
+    override fun addItem(cartItem: CartItem) {
+        // convert mutable state flow to mutable list
+
         val currentCartItemsList = _cartItems.value.toMutableList()
+        // check if the item to be added is contained in the existing cart list
 
-        val existingIndex = currentCartItemsList.indexOfFirst { it.id == item.id }
+        val itemIndex = _cartItems.value.indexOfFirst { it.id == cartItem.id }
 
-        if (existingIndex >= 0) {
-            val updated = currentCartItemsList[existingIndex].copy(
-                    counter = currentCartItemsList[existingIndex].counter + item.counter
-            )
-            currentCartItemsList[existingIndex] = updated
+        if (itemIndex >= 0) {
+            //item exists - for updating
+            val updatedItem = _cartItems.value[itemIndex].copy(counter = cartItem.counter)
+            currentCartItemsList[itemIndex] = updatedItem
         } else {
-            currentCartItemsList.add(item)
+            // we add item as a new item
+            currentCartItemsList.add(cartItem)
         }
-
-        _cartItems.value = currentCartItemsList
+        _cartItems.update { currentCartItemsList }
     }
 
-    fun updateQuantity(itemId: Long, newCount: Int) {
-        _cartItems.value = _cartItems.value.map {
-            if (it.id == itemId) it.copy(counter = newCount) else it
+    override fun removeItem(itemId: Long) {
+
+        val updatedList = cartItems.value.filterNot { it.id == itemId }
+        _cartItems.update { updatedList }
+    }
+
+    override fun updateCount(
+        cartItem: CartItem,
+        newCount: Int
+    ) {
+        _cartItems.update { list ->
+            list.mapNotNull { item ->
+
+                when {
+                    item.id == cartItem.id && cartItem.counter <= 0 -> null
+                    item.id == cartItem.id -> item.copy(counter = newCount)
+                    else -> item
+                }
+
+            }
         }
     }
 
-    fun removeItem(itemId: Long) {
-        _cartItems.value = _cartItems.value.filterNot { it.id == itemId }
-    }
-
-    fun clearCart() {
-        _cartItems.value = emptyList()
+    override fun clear() {
+        _cartItems.update { emptyList() }
     }
 }

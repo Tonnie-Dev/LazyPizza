@@ -7,8 +7,8 @@ import com.tonyxlab.lazypizza.utils.cartItemsMock
 import com.tonyxlab.lazypizza.utils.getMockAddOnItems
 
 data class CartUiState(
-    val cartItemsList: List<CartItem> = cartItemsMock,
+  //  val cartItemsList: List<CartItem> = cartItemsMock,
     val addOnItemsList: List<SideItem> = getMockAddOnItems().shuffled(),
     val pickedAddOnItemsList: List<SideItem> = emptyList(),
-    val aggregateCartAmount: Double = 1.0
+   // val aggregateCartAmount: Double = 1.0
 ) : UiState

@@ -1,36 +1,153 @@
 package com.tonyxlab.lazypizza.presentation.screens.cart
 
+import androidx.lifecycle.viewModelScope
+import com.tonyxlab.lazypizza.data.repository.CartRepositoryImpl
 import com.tonyxlab.lazypizza.domain.model.CartItem
 import com.tonyxlab.lazypizza.domain.model.SideItem
 import com.tonyxlab.lazypizza.domain.model.toCartItem
 import com.tonyxlab.lazypizza.domain.model.toSideItem
+import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartUiState
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
 typealias CartBaseViewModel = BaseViewModel<CartUiState, CartUiEvent, CartActionEvent>
 
-class CartViewModel : CartBaseViewModel() {
+
+class CartViewModel(
+    private val repository: CartRepository
+
+) : CartBaseViewModel() {
+
     override val initialState: CartUiState
         get() = CartUiState()
 
-    init {
+    // ✅ Single source of truth for cart items
+    val cartItems = repository.cartItems
 
-        val initialAggregate = currentState.cartItemsList.sumOf { it.unitPrice * it.counter }
-        updateState { it.copy(aggregateCartAmount = initialAggregate) }
+    // ✅ Derived total (reacts instantly)
+    val aggregateAmount = cartItems
+            .map { list ->
+                list.sumOf { item -> item.unitPrice * item.counter }
+            }
+            .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.Eagerly,
+                    initialValue = 0.0
+            )
+
+    // ✅ Event bridge restored (this is what was missing)
+    override fun onEvent(event: CartUiEvent) {
+        when (event) {
+
+            is CartUiEvent.IncrementQuantity -> {
+                onIncrement(event.item)
+            }
+
+            is CartUiEvent.DecrementQuantity -> {
+                onDecrement(event.item)
+            }
+
+            is CartUiEvent.RemoveItem -> {
+                onRemove(event.item)
+            }
+
+            CartUiEvent.BackToMenu -> {
+                sendActionEvent(CartActionEvent.NavigateBackToMenu)
+            }
+
+            CartUiEvent.Checkout -> {
+                // Future: trigger checkout flow
+            }
+
+            // ❌ This no longer belongs in Cart VM
+            is CartUiEvent.PickAddOn -> Unit
+        }
     }
+
+    // ✅ Repository delegations
+    private fun onIncrement(cartItem: CartItem) {
+       repository.updateCount(cartItem = cartItem, newCount = cartItem.counter +1)
+    }
+
+    private fun onDecrement(cartItem: CartItem) {
+        repository.updateCount(cartItem = cartItem, newCount =( cartItem.counter -1).coerceAtLeast(1))
+    }
+/*    private fun onIncrement(item: CartItem) {
+        repository.updateCount(
+                itemId = item.id,
+                newCount = item.counter + 1
+        )
+    }
+
+    private fun onDecrement(item: CartItem) {
+        repository.updateCount(
+                itemId = item.id,
+                newCount = (item.counter - 1).coerceAtLeast(1)
+        )
+    }*/
+
+    private fun onRemove(item: CartItem) {
+        repository.removeItem(item.id)
+    }
+}
+
+/*
+class CartViewModel (
+    private val cartRepository: CartRepositoryImpl
+)
+
+    : CartBaseViewModel(
+
+) {
+    override val initialState: CartUiState
+        get() = CartUiState()
 
     override fun onEvent(event: CartUiEvent) {
 
-        when (event) {
+      */
+/*  when (event) {
             is CartUiEvent.IncrementQuantity -> incrementCount(event.item)
             is CartUiEvent.DecrementQuantity -> decrementCount(event.item)
             is CartUiEvent.RemoveItem -> removeFromCart(event.item)
             is CartUiEvent.PickAddOn -> pickAddOn(event.sideItem)
             CartUiEvent.BackToMenu -> navigateToMenu()
             CartUiEvent.Checkout -> {}
-        }
+        }*//*
+
+    }
+
+    val cartItems = cartRepository.cartItems
+
+    val aggregateAmount = cartItems.map {
+        it.sumOf { item -> item.unitPrice * item.counter }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, 0.0)
+
+    fun onIncrement(item: CartItem) {
+        cartRepository.updateQuantity(item.id, item.counter + 1)
+    }
+
+    fun onDecrement(item: CartItem) {
+        cartRepository.updateQuantity(item.id, (item.counter - 1).coerceAtLeast(1))
+    }
+
+    fun onRemove(item: CartItem) {
+        cartRepository.removeItem(item.id)
+    }
+
+
+
+
+
+    */
+/*init {
+
+        val initialAggregate = currentState.cartItemsList.sumOf { it.unitPrice * it.counter }
+        updateState { it.copy(aggregateCartAmount = initialAggregate) }
     }
 
     private fun incrementCount(cartItem: CartItem) {
@@ -126,5 +243,7 @@ class CartViewModel : CartBaseViewModel() {
 
     private fun navigateToMenu() {
         sendActionEvent(actionEvent = CartActionEvent.NavigateBackToMenu)
-    }
+    }*//*
+
 }
+*/

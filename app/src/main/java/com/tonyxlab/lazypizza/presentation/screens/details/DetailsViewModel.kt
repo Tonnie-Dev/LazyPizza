@@ -4,6 +4,7 @@ import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.data.repository.CartRepositoryImpl
 import com.tonyxlab.lazypizza.domain.model.Topping
 import com.tonyxlab.lazypizza.domain.model.toCartItem
+import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiEvent
@@ -15,7 +16,7 @@ typealias DetailsBaseViewModel = BaseViewModel<DetailsUiState, DetailsUiEvent, D
 
 class DetailsViewModel(
     private val id: Long,
-    private val cartRepository: CartRepositoryImpl
+    private val repository: CartRepository
 ) : DetailsBaseViewModel() {
 
     init {
@@ -52,7 +53,7 @@ class DetailsViewModel(
                         .copy(
                                 toppings = currentState.selectedToppings.toList()
                         )
-                cartRepository.addItem(cartItem)
+                repository.addItem(cartItem)
                 sendActionEvent(
                         actionEvent = DetailsActionEvent.ShowSnackbar(
                                 messageRes = R.string.snack_text_item_added_to_cart

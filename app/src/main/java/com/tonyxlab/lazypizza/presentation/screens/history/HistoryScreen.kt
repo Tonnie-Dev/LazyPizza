@@ -2,7 +2,6 @@
 
 package com.tonyxlab.lazypizza.presentation.screens.history
 
-import android.app.Activity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -54,7 +53,10 @@ fun HistoryScreen(
 
         Row(modifier = Modifier.fillMaxSize()) {
 
-            AppNavigationRail(navigator = navigator)
+            AppNavigationRail(
+                    navigator = navigator,
+                    itemCount = viewModel.cartItems.collectAsState().value.size
+            )
 
             BaseContentLayout(
                     modifier = modifier,
@@ -68,7 +70,7 @@ fun HistoryScreen(
                     actionEventHandler = { _, action ->
 
                     },
-                    onBackPressed = { activity.finish()},
+                    onBackPressed = { activity.finish() },
                     containerColor = MaterialTheme.colorScheme.background
             ) {
                 HistoryScreenContent()
@@ -86,9 +88,12 @@ fun HistoryScreen(
                     )
                 },
                 bottomBar = {
-                    BottomNavBar(navigator = navigator)
+                    BottomNavBar(
+                            navigator = navigator,
+                            itemCount = viewModel.cartItems.collectAsState().value.size
+                    )
                 },
-                onBackPressed = {activity.finish()},
+                onBackPressed = { activity.finish() },
                 actionEventHandler = { _, action ->
 
                 },
@@ -103,7 +108,7 @@ fun HistoryScreen(
 private fun HistoryScreenContent(modifier: Modifier = Modifier) {
     Column(
             modifier = modifier
-                    .background(MaterialTheme.colorScheme.primary.copy(alpha =0.5f ))
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))
                     .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center

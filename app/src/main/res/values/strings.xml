@@ -46,7 +46,8 @@
     <string name="cds_text_delete">Delete Icon</string>
 
     <!--Snackbar Texts-->
-    <string name="snack_text_camera_perm_granted">Camera Permission Granted</string>
+    <string name="snack_text_item_added_to_cart">Item Added to Cart</string>
+    <string name="snack_text_ok">OK</string>
 
     <!--Toast Texts-->
     <string name="toast_text_copied">Copied to Clipboard</string>

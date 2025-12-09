@@ -36,7 +36,7 @@ fun AppSnackbarHost(
     isError: Boolean = false
 ) {
 
-    val containerColor = MaterialTheme.colorScheme.primary
+    val containerColor = MaterialTheme.colorScheme.primary.copy(alpha = .92f)
     val contentColor = contentColorFor(containerColor)
 
     val configuration = LocalWindowInfo.current.containerSize

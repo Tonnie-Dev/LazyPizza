@@ -73,7 +73,10 @@ fun HomeScreen(
 
         Row(modifier = Modifier.fillMaxSize()) {
 
-            AppNavigationRail(navigator)
+            AppNavigationRail(
+                    navigator,
+                    itemCount = viewModel.cartItems.collectAsState().value.size
+            )
 
             BaseContentLayout(
                     modifier = modifier.weight(1f),
@@ -128,7 +131,9 @@ fun HomeScreen(
                     )
                 },
                 bottomBar = {
-                    BottomNavBar(navigator = navigator)
+                    BottomNavBar(navigator = navigator,
+                            itemCount = viewModel.cartItems.collectAsState().value.size
+                            )
                 },
                 actionEventHandler = { _, action ->
                     when (action) {

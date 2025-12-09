@@ -46,20 +46,21 @@ import com.tonyxlab.lazypizza.utils.cartItemsMock
 
 @Composable
 fun CartItemList(
-    uiState: CartUiState,
+    //uiState: CartUiState,
+    cartItems: List<CartItem>,
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyCategoryList(
             modifier = modifier,
-            items = uiState.cartItemsList,
+            items = cartItems,
             key = { it.id }
     ) { item ->
 
         CardItemContent(
                 modifier = Modifier,
                 cartItem = item,
-                uiState = uiState,
+                cartItems = cartItems,
                 onEvent = onEvent
         )
     }
@@ -68,11 +69,12 @@ fun CartItemList(
 @Composable
 private fun CardItemContent(
     cartItem: CartItem,
-    uiState: CartUiState,
+   // uiState: CartUiState,
+    cartItems: List<CartItem>,
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val counter = uiState.cartItemsList.counterFor(cartItem)
+    val counter = cartItems.counterFor(cartItem)
 
     Card(
             modifier = modifier
@@ -239,7 +241,7 @@ private fun CartItemContent_Preview() {
 
     val items = cartItemsMock
     LazyPizzaTheme {
-        CartItemList(uiState = CartUiState(), onEvent = {})
+        CartItemList(cartItems = items, onEvent = {})
     }
 }
 

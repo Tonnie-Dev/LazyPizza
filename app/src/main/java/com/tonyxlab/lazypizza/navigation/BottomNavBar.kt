@@ -148,7 +148,7 @@ private fun NavItemIcon(
                     MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        if (hasBadge && itemCount > 0) {
+        if ( hasBadge && itemCount > 0) {
             Box(
                     modifier = Modifier
                             .size(badgeSize)
