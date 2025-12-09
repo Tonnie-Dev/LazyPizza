@@ -1,5 +1,6 @@
 package com.tonyxlab.lazypizza.presentation.screens.details
 
+import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.data.repository.CartRepositoryImpl
 import com.tonyxlab.lazypizza.domain.model.Topping
 import com.tonyxlab.lazypizza.domain.model.toCartItem
@@ -8,13 +9,14 @@ import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsActio
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiState
 import com.tonyxlab.lazypizza.utils.mockPizzas
+import kotlinx.coroutines.delay
 
 typealias DetailsBaseViewModel = BaseViewModel<DetailsUiState, DetailsUiEvent, DetailsActionEvent>
 
 class DetailsViewModel(
     private val id: Long,
     private val cartRepository: CartRepositoryImpl
-        ) : DetailsBaseViewModel() {
+) : DetailsBaseViewModel() {
 
     init {
         val pizzaItem = mockPizzas.first { pizza -> pizza.id == this.id }
@@ -46,11 +48,23 @@ class DetailsViewModel(
 
             DetailsUiEvent.AddToCart -> {
 
-                val cartItem = currentState.pizzaStateItem!!.toCartItem().copy(
-                        toppings = currentState.selectedToppings.toList()
-                )
+                val cartItem = currentState.pizzaStateItem!!.toCartItem()
+                        .copy(
+                                toppings = currentState.selectedToppings.toList()
+                        )
                 cartRepository.addItem(cartItem)
-                sendActionEvent(DetailsActionEvent.NavigateBackToMenu)
+                sendActionEvent(
+                        actionEvent = DetailsActionEvent.ShowSnackbar(
+                                messageRes = R.string.snack_text_item_added_to_cart
+                        )
+                )
+
+                launch {
+
+                    delay(700)
+                    sendActionEvent(actionEvent = DetailsActionEvent.NavigateBackToMenu)
+                }
+
             }
         }
     }
