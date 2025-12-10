@@ -1,7 +1,6 @@
 package com.tonyxlab.lazypizza.presentation.screens.details
 
 import com.tonyxlab.lazypizza.R
-import com.tonyxlab.lazypizza.data.repository.CartRepositoryImpl
 import com.tonyxlab.lazypizza.domain.model.Topping
 import com.tonyxlab.lazypizza.domain.model.toCartItem
 import com.tonyxlab.lazypizza.domain.repository.CartRepository

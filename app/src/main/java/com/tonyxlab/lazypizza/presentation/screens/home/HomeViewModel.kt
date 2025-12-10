@@ -2,9 +2,9 @@
 
 package com.tonyxlab.lazypizza.presentation.screens.home
 
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.viewModelScope
-import com.tonyxlab.lazypizza.data.repository.CartRepositoryImpl
 import com.tonyxlab.lazypizza.domain.model.Category
 import com.tonyxlab.lazypizza.domain.model.SideItem
 import com.tonyxlab.lazypizza.domain.model.toCartItem
@@ -16,27 +16,43 @@ import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiState
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import org.koin.core.KoinApplication.Companion.init
+import kotlinx.coroutines.flow.toCollection
 
 typealias HomeBaseViewModel = BaseViewModel<HomeUiState, HomeUiEvent, HomeActionEvent>
 
-class HomeViewModel(
-    private val repository: CartRepository
-
-) : HomeBaseViewModel() {
+class HomeViewModel(private val repository: CartRepository) : HomeBaseViewModel() {
 
     val cartItems = repository.cartItems
+
     init {
         observeSearchBarState()
+        observeBadgeCount()
     }
 
     override val initialState: HomeUiState
         get() = HomeUiState()
 
+    fun observeBadgeCount() {
+
+        val badgeCountFlow = cartItems.map { items -> items.sumOf { it.counter } }
+
+       badgeCountFlow.onEach { count ->
+
+           updateState { it.copy(badgeCount = count ) }
+
+       }.launchIn(viewModelScope)
+
+
+
+    }
     override fun onEvent(event: HomeUiEvent) {
         when (event) {
 
@@ -54,16 +70,13 @@ class HomeViewModel(
             }
 
             is HomeUiEvent.AddSideItemToCart -> {
-
                 addSideItemToCart(sideItem = event.sideItem)
-
                 val cartItem = event.sideItem.toCartItem()
                 repository.addItem(cartItem)
             }
 
             is HomeUiEvent.IncrementQuantity -> {
                 incrementCount(sideItem = event.sideItem)
-
             }
 
             is HomeUiEvent.DecrementQuantity -> {
@@ -71,7 +84,9 @@ class HomeViewModel(
                 decrementCount(sideItem = event.sideItem)
             }
 
-            is HomeUiEvent.ResetOrderStatus -> { resetOrderStatus(event.sideItem)}
+            is HomeUiEvent.ResetOrderStatus -> {
+                removeItemFromCart(event.sideItem)
+            }
         }
     }
 
@@ -147,6 +162,7 @@ class HomeViewModel(
                 .coerceAtMost(10)
         adjustPriceForSelectedSideItem(sideItem = sideItem, newCount = newCount)
         calculateItemOrderTotal()
+        repository.updateCount(sideItem.toCartItem(), newCount)
     }
 
     private fun decrementCount(sideItem: SideItem) {
@@ -156,6 +172,7 @@ class HomeViewModel(
                 .coerceAtLeast(0)
         adjustPriceForSelectedSideItem(sideItem = sideItem, newCount = newCount)
         calculateItemOrderTotal()
+        repository.updateCount(sideItem.toCartItem(), newCount)
     }
 
     private fun calculateItemOrderTotal() {
@@ -163,11 +180,19 @@ class HomeViewModel(
         updateState { it.copy(aggregateItemTotal = total) }
     }
 
-    private fun resetOrderStatus(sideItem: SideItem) {
+    private fun removeItemFromCart(sideItem: SideItem) {
+
+        /**
+         *
         val currentSet = currentState.selectedSideItems.toMutableSet()
-
         currentSet.removeIf { it.id == sideItem.id }
+         */
+        val currentSet = currentState.selectedSideItems.toMutableSet()
+        currentSet.removeIf { it.id == sideItem.id }
+        val updatedSet = currentState.selectedSideItems.filterNot {
+            it.id == sideItem.id }.toSet()
 
-        updateState { it.copy(selectedSideItems = currentSet) }
+        updateState { it.copy(selectedSideItems = updatedSet) }
+        repository.removeItem(sideItem.id)
     }
 }

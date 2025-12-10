@@ -75,7 +75,7 @@ fun HomeScreen(
 
             AppNavigationRail(
                     navigator,
-                    itemCount = viewModel.cartItems.collectAsState().value.size
+                    itemCount = uiState.badgeCount
             )
 
             BaseContentLayout(
@@ -131,9 +131,10 @@ fun HomeScreen(
                     )
                 },
                 bottomBar = {
-                    BottomNavBar(navigator = navigator,
-                            itemCount = viewModel.cartItems.collectAsState().value.size
-                            )
+                    BottomNavBar(
+                            navigator = navigator,
+                            itemCount = it.badgeCount
+                    )
                 },
                 actionEventHandler = { _, action ->
                     when (action) {

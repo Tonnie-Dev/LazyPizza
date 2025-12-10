@@ -21,5 +21,6 @@ data class HomeUiState(
     val selectedSideItems: Set<SideItem> = emptySet(),
     val searchResults: List<SearchItem> = emptyList(),
     val selectedCategory: Category = Category.PIZZA,
-    val aggregateItemTotal: Double = 0.0
+    val aggregateItemTotal: Double = 0.0,
+    val badgeCount: Int = 0
 ) : UiState

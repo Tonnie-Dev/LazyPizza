@@ -70,7 +70,7 @@ fun CartScreen(
 
             AppNavigationRail(
                     navigator = navigator,
-                    itemCount = viewModel.cartItems.collectAsState().value.size
+                    itemCount = uiState.badgeCount
             )
 
 
@@ -112,7 +112,7 @@ fun CartScreen(
                 bottomBar = {
                     BottomNavBar(
                             navigator = navigator,
-                            itemCount = viewModel.cartItems.collectAsState().value.size
+                            itemCount = it.badgeCount
                     )
                 },
                 actionEventHandler = { _, action ->
@@ -141,13 +141,13 @@ private fun CartScreenContent(
     viewModel: CartViewModel = koinViewModel()
 ) {
     // NEW → collect real cart items
-    val cartItems by viewModel.cartItems.collectAsState()
+   // val cartItems by viewModel.cartItems.collectAsState()
 
     // NEW → derive animated total from repo-backed flow
-    val aggregateAmount by viewModel.aggregateAmount.collectAsState()
+   // val aggregateAmount by viewModel.aggregateAmount.collectAsState()
 
     val animatedTotal by animateFloatAsState(
-            targetValue = aggregateAmount.toFloat(),
+            targetValue = uiState.aggregateCartAmount.toFloat(),
             animationSpec = tween(
                     durationMillis = 450,
                     easing = FastOutSlowInEasing
@@ -155,6 +155,7 @@ private fun CartScreenContent(
             label = "CheckoutTotalAnimation"
     )
 
+    val cartItems = uiState.cartItems
     Box(
             modifier = modifier
                     .background(color = MaterialTheme.colorScheme.background)
@@ -189,7 +190,7 @@ private fun CartScreenContent(
                 // AddOnItems still uses uiState list (this is correct)
                 AddOnItemsSection(
                         modifier = Modifier,
-                        items = uiState.addOnItemsList,
+                        items = uiState.addOnItemSuggestions,
                         onEvent = onEvent
                 )
 

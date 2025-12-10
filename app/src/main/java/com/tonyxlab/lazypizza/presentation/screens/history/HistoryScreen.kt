@@ -35,7 +35,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HistoryScreen(
     navigator: Navigator,
-    modifier: Modifier = Modifier, viewModel: CartViewModel = koinViewModel()
+    modifier: Modifier = Modifier, viewModel: HistoryViewModel = koinViewModel()
 ) {
 
     SetStatusBarIconsColor(darkIcons = true)
