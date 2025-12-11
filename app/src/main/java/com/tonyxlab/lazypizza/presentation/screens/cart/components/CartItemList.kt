@@ -34,7 +34,6 @@ import com.tonyxlab.lazypizza.presentation.core.components.CounterItem
 import com.tonyxlab.lazypizza.presentation.core.components.DisplayImage
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartUiEvent
-import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartUiState
 import com.tonyxlab.lazypizza.presentation.screens.home.components.LazyCategoryList
 import com.tonyxlab.lazypizza.presentation.theme.Body1Medium
 import com.tonyxlab.lazypizza.presentation.theme.Body3Regular
@@ -46,15 +45,19 @@ import com.tonyxlab.lazypizza.utils.cartItemsMock
 
 @Composable
 fun CartItemList(
-    //uiState: CartUiState,
     cartItems: List<CartItem>,
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
     LazyCategoryList(
             modifier = modifier,
             items = cartItems,
-            key = { it.id }
+            key = { item ->
+                item.id.toString() + "-" + item.toppings.map { it.id }
+                        .sorted()
+                        .joinToString()
+            }
     ) { item ->
 
         CardItemContent(
@@ -69,7 +72,7 @@ fun CartItemList(
 @Composable
 private fun CardItemContent(
     cartItem: CartItem,
-   // uiState: CartUiState,
+        // uiState: CartUiState,
     cartItems: List<CartItem>,
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier

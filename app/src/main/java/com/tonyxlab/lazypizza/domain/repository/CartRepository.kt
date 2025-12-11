@@ -7,7 +7,7 @@ interface CartRepository {
     val cartItems: StateFlow<List<CartItem>>
 
     fun addItem(cartItem: CartItem)
-    fun removeItem(itemId: Long)
+    fun removeItem(cartItem: CartItem)
     fun updateCount(cartItem: CartItem, newCount: Int)
     fun clear()
 }

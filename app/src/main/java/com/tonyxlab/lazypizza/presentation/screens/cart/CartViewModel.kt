@@ -98,8 +98,8 @@ class CartViewModel(private val repository: CartRepository) : CartBaseViewModel(
             )
         }*/
 
-    private fun onRemove(item: CartItem) {
-        repository.removeItem(item.id)
+    private fun onRemove(cartItem: CartItem) {
+        repository.removeItem(cartItem = cartItem)
     }
 }
 

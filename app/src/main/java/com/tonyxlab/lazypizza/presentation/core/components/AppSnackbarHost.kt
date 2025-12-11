@@ -36,7 +36,7 @@ fun AppSnackbarHost(
     isError: Boolean = false
 ) {
 
-    val containerColor = MaterialTheme.colorScheme.primary.copy(alpha = .92f)
+    val containerColor = MaterialTheme.colorScheme.primary
     val contentColor = contentColorFor(containerColor)
 
     val configuration = LocalWindowInfo.current.containerSize
@@ -44,7 +44,7 @@ fun AppSnackbarHost(
 
     SnackbarHost(
             modifier = modifier
-                    .padding(MaterialTheme.spacing.spaceMedium)
+                    .padding(MaterialTheme.spacing.spaceExtraSmall)
                     .navigationBarsPadding(),
             hostState = snackbarHostState
     )

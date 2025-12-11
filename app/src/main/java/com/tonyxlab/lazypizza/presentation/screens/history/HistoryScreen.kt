@@ -55,7 +55,7 @@ fun HistoryScreen(
 
             AppNavigationRail(
                     navigator = navigator,
-                    itemCount = viewModel.cartItems.collectAsState().value.size
+                    itemCount = uiState.badgeCount
             )
 
             BaseContentLayout(
@@ -90,7 +90,7 @@ fun HistoryScreen(
                 bottomBar = {
                     BottomNavBar(
                             navigator = navigator,
-                            itemCount = viewModel.cartItems.collectAsState().value.size
+                            itemCount = it.badgeCount
                     )
                 },
                 onBackPressed = { activity.finish() },

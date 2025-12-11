@@ -19,10 +19,7 @@ class DetailsViewModel(
 ) : DetailsBaseViewModel() {
 
     init {
-        val pizzaItem = mockPizzas.first { pizza -> pizza.id == this.id }
-        updateState {
-            it.copy(pizzaStateItem = pizzaItem)
-        }
+        loadPizza()
 
         calculateTotalPrice()
     }
@@ -33,63 +30,68 @@ class DetailsViewModel(
     override fun onEvent(event: DetailsUiEvent) {
         when (event) {
             is DetailsUiEvent.ClickToppingCard -> {
-                addToSelectionList(event.topping)
+                selectTopping(event.topping)
             }
 
             is DetailsUiEvent.AddExtraToppings -> {
 
-                addExtraToppings(topping = event.topping)
+                incrementTopping(topping = event.topping)
             }
 
             is DetailsUiEvent.RemoveExtraToppings -> {
 
-                removeExtraToppings(topping = event.topping)
+                decrementTopping(topping = event.topping)
             }
 
-            DetailsUiEvent.AddToCart -> {
-
-                val cartItem = currentState.pizzaStateItem!!.toCartItem()
-                        .copy(
-                                toppings = currentState.selectedToppings.toList()
-                        )
-                repository.addItem(cartItem)
-                sendActionEvent(
-                        actionEvent = DetailsActionEvent.ShowSnackbar(
-                                messageRes = R.string.snack_text_item_added_to_cart
-                        )
-                )
-
-                launch {
-
-                    delay(700)
-                    sendActionEvent(actionEvent = DetailsActionEvent.NavigateBackToMenu)
-                }
-
-            }
+            DetailsUiEvent.AddToCart -> addPizzaToCart()
         }
     }
 
-    private fun addToSelectionList(topping: Topping) {
+    private fun loadPizza() {
+
+        val pizzaItem = mockPizzas.first { it.id == this.id }
+        updateState { it.copy(pizzaStateItem = pizzaItem) }
+    }
+
+    private fun addPizzaToCart() {
+
+        val cartItem = currentState.pizzaStateItem!!.toCartItem()
+                .copy(toppings = currentState.selectedToppings.toList())
+
+        repository.addItem(cartItem)
+
+        sendActionEvent(
+                actionEvent = DetailsActionEvent.ShowSnackbar(
+                        messageRes = R.string.snack_text_item_added_to_cart
+                )
+        )
+
+        launch {
+            delay(750)
+            sendActionEvent(actionEvent = DetailsActionEvent.NavigateBackToMenu)
+        }
+    }
+
+    private fun selectTopping(topping: Topping) {
 
         if (currentState.selectedToppings.any { it.id == topping.id }) return
-
-        updateTopping(topping, 1)
+        updateSelectedToppingsList(topping, 1)
         calculateTotalPrice()
     }
 
-    private fun addExtraToppings(topping: Topping) {
+    private fun incrementTopping(topping: Topping) {
 
         val currentCount = currentState.selectedToppings
                 .find { it.id == topping.id }?.counter ?: 0
 
         val newCount = currentCount.plus(1)
                 .coerceAtMost(maximumValue = 3)
-        updateTopping(topping = topping, newCount = newCount)
+        updateSelectedToppingsList(topping = topping, newCount = newCount)
 
         calculateTotalPrice()
     }
 
-    private fun removeExtraToppings(topping: Topping) {
+    private fun decrementTopping(topping: Topping) {
 
         val currentCount = currentState.selectedToppings
                 .find { it.id == topping.id }?.counter ?: 0
@@ -97,12 +99,12 @@ class DetailsViewModel(
         val newCount = currentCount.minus(1)
                 .coerceAtLeast(minimumValue = 0)
 
-        updateTopping(topping = topping, newCount = newCount)
+        updateSelectedToppingsList(topping = topping, newCount = newCount)
         calculateTotalPrice()
 
     }
 
-    private fun updateTopping(topping: Topping, newCount: Int) {
+    private fun updateSelectedToppingsList(topping: Topping, newCount: Int) {
 
         val newSet = currentState.selectedToppings.toMutableSet()
 

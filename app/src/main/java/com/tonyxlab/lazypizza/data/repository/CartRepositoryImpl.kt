@@ -17,11 +17,12 @@ class CartRepositoryImpl : CartRepository {
         val currentCartItemsList = _cartItems.value.toMutableList()
         // check if the item to be added is contained in the existing cart list
 
-        val itemIndex = _cartItems.value.indexOfFirst { it.id == cartItem.id }
+        val itemIndex = _cartItems.value.indexOfFirst { it.isSameAs(other = cartItem) }
 
         if (itemIndex >= 0) {
             //item exists - for updating
-            val updatedItem = _cartItems.value[itemIndex].copy(counter = cartItem.counter)
+            val existingCartItem = currentCartItemsList[itemIndex]
+            val updatedItem = existingCartItem.copy(counter = cartItem.counter)
             currentCartItemsList[itemIndex] = updatedItem
         } else {
             // we add item as a new item
@@ -30,9 +31,9 @@ class CartRepositoryImpl : CartRepository {
         _cartItems.update { currentCartItemsList }
     }
 
-    override fun removeItem(itemId: Long) {
+    override fun removeItem(cartItem: CartItem) {
 
-        val updatedList = cartItems.value.filterNot { it.id == itemId }
+        val updatedList = cartItems.value.filterNot { it.isSameAs(cartItem) }
         _cartItems.update { updatedList }
     }
 
@@ -44,7 +45,7 @@ class CartRepositoryImpl : CartRepository {
             list.mapNotNull { item ->
 
                 when {
-                    item.id == cartItem.id && cartItem.counter <= 0 -> null
+                    item.isSameAs(cartItem) && newCount <= 0 -> null
                     item.id == cartItem.id -> item.copy(counter = newCount)
                     else -> item
                 }
@@ -55,5 +56,11 @@ class CartRepositoryImpl : CartRepository {
 
     override fun clear() {
         _cartItems.update { emptyList() }
+    }
+
+
+    private fun CartItem. isSameAs(other: CartItem) : Boolean {
+
+        return this.id == other.id && this.toppings.toSet() == other.toppings.toSet()
     }
 }
