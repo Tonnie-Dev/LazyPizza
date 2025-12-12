@@ -24,7 +24,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
@@ -35,7 +34,6 @@ import com.tonyxlab.lazypizza.presentation.core.components.CounterItem
 import com.tonyxlab.lazypizza.presentation.core.components.DisplayImage
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartUiEvent
-import com.tonyxlab.lazypizza.presentation.screens.home.components.LazyCategoryList
 import com.tonyxlab.lazypizza.presentation.theme.Body1Medium
 import com.tonyxlab.lazypizza.presentation.theme.Body3Regular
 import com.tonyxlab.lazypizza.presentation.theme.Body4Regular
@@ -50,20 +48,18 @@ fun CartItemList(
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    LazyCategoryList(
+    Column(
             modifier = modifier,
-            items = cartItems,
-            key = { it.uniqueKey
-            }
-    ) { item ->
-
-        CardItemContent(
-                modifier = Modifier,
-                cartItem = item,
-                cartItems = cartItems,
-                onEvent = onEvent
-        )
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceSmall)
+    ) {
+        cartItems.forEach { item ->
+            CardItemContent(
+                    modifier = modifier,
+                    cartItem = item,
+                    cartItems = cartItems,
+                    onEvent = onEvent
+            )
+        }
     }
 }
 
@@ -229,6 +225,7 @@ private fun CartItemMainContent(
         }
     }
 }
+
 private val CartItem.uniqueKey
     get() = listOf(
             id.toString(),

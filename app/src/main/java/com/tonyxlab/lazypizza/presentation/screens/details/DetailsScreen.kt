@@ -225,6 +225,7 @@ private fun DetailsScreenContent(
                             onEvent = onEvent
                     )
                 }
+
                 StickyAddToCart(
                         modifier = modifier
                                 .align(alignment = Alignment.BottomCenter)

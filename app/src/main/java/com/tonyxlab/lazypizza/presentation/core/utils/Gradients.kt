@@ -21,7 +21,7 @@ class GradientScheme(
         val StickyOverlayGradient =
             Brush.verticalGradient(
 
-                  colors = listOf(SurfaceHigher,SurfaceHigher.copy(alpha = 0f))
+                  colors = listOf(SurfaceHigher.copy(alpha = 0f),SurfaceHigher)
             )
 
         val StickyButtonGradient = Brush.horizontalGradient(

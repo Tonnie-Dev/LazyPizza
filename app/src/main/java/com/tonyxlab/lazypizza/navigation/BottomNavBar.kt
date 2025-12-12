@@ -40,8 +40,8 @@ fun BottomNavBar(
     modifier: Modifier = Modifier,
     itemCount: Int = 0
 ) {
-
     val navigationState = navigator.state
+
     NavigationBar(
             modifier = modifier,
             containerColor = MaterialTheme.colorScheme.surface,
@@ -118,7 +118,6 @@ private fun NavItemIcon(
     contentDescription: String = ""
 ) {
     val containerSize = MaterialTheme.spacing.spaceLarge
-
 
     val badgeSize =
         if (itemCount > 9)

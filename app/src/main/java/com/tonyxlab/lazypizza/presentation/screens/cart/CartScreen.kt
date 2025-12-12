@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
@@ -29,7 +30,6 @@ import com.tonyxlab.lazypizza.navigation.BottomNavBar
 import com.tonyxlab.lazypizza.navigation.MenuScreenDestination
 import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
-import com.tonyxlab.lazypizza.presentation.core.components.AppButton
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarThree
 import com.tonyxlab.lazypizza.presentation.core.components.EmptyScreenContent
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
@@ -38,6 +38,7 @@ import com.tonyxlab.lazypizza.presentation.screens.cart.components.CartItemList
 import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartUiState
+import com.tonyxlab.lazypizza.presentation.screens.details.components.StickyAddToCart
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.utils.DeviceType
 import com.tonyxlab.lazypizza.utils.SetStatusBarIconsColor
@@ -70,7 +71,7 @@ fun CartScreen(
             )
 
             BaseContentLayout(
-                    modifier = modifier.padding(MaterialTheme.spacing.spaceMedium),
+                    modifier = modifier,
                     viewModel = viewModel,
                     topBar = {
                         AppTopBarThree(
@@ -78,6 +79,7 @@ fun CartScreen(
                                 titleText = stringResource(id = R.string.topbar_text_cart)
                         )
                     },
+                    bottomBar = {},
                     actionEventHandler = { _, action ->
                         when (action) {
                             CartActionEvent.NavigateBackToMenu -> {
@@ -94,8 +96,9 @@ fun CartScreen(
         }
 
     } else {
+        
         BaseContentLayout(
-                modifier = modifier.padding(MaterialTheme.spacing.spaceMedium),
+                modifier = modifier,
                 viewModel = viewModel,
                 topBar = {
                     AppTopBarThree(
@@ -120,6 +123,7 @@ fun CartScreen(
                 containerColor = MaterialTheme.colorScheme.background
         ) {
             CartScreenContent(
+                    modifier = Modifier,
                     uiState = uiState,
                     onEvent = viewModel::onEvent
             )
@@ -132,7 +136,7 @@ private fun CartScreenContent(
     uiState: CartUiState,
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier,
-    ) {
+) {
 
     val animatedTotal by animateFloatAsState(
             targetValue = uiState.aggregateCartAmount.toFloat(),
@@ -143,55 +147,62 @@ private fun CartScreenContent(
             label = "CheckoutTotalAnimation"
     )
 
-    val cartItems = uiState.cartItems
+    if (uiState.cartItems.isEmpty()) {
+
+        EmptyScreenContent(
+                modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = MaterialTheme.spacing.spaceTwelve * 10),
+                title = stringResource(R.string.cap_text_empty_cart),
+                subTitle = stringResource(R.string.cap_text_head_back),
+                buttonText = stringResource(R.string.btn_text_back_to_menu),
+                onEvent = { onEvent(CartUiEvent.BackToMenu) }
+        )
+        return
+    }
+
     Box(
             modifier = modifier
-                    .background(color = MaterialTheme.colorScheme.background)
-                    .fillMaxSize(),
-            contentAlignment = Alignment.Center
+                    .fillMaxSize()
+                    .padding(horizontal = MaterialTheme.spacing.spaceMedium)
+                    .padding(top = MaterialTheme.spacing.spaceMedium)
     ) {
-        if (cartItems.isEmpty()) {
 
-            EmptyScreenContent(
-                    modifier = Modifier
-                            .align(alignment = Alignment.TopCenter)
-                            .padding(top = MaterialTheme.spacing.spaceTwelve * 10),
-                    title = stringResource(id = R.string.cap_text_empty_cart),
-                    subTitle = stringResource(id = R.string.cap_text_head_back),
-                    buttonText = stringResource(id = R.string.btn_text_back_to_menu),
-                    onEvent = { onEvent(CartUiEvent.BackToMenu) }
-            )
+        LazyColumn(
+                modifier = Modifier
+                        .fillMaxSize(),
 
-        } else {
-            Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+                horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
+            item {
                 CartItemList(
                         modifier = Modifier
-                                .weight(1f)
+                                .fillMaxWidth()
                                 .padding(bottom = MaterialTheme.spacing.spaceTen * 2),
-                        cartItems = cartItems,
+                        cartItems = uiState.cartItems,
                         onEvent = onEvent
                 )
+            }
 
+            item {
                 AddOnItemsSection(
-                        modifier = Modifier,
+                        modifier = Modifier.fillMaxWidth(),
                         items = uiState.suggestedAddOnItems,
                         onEvent = onEvent
                 )
-
-                AppButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        buttonText = stringResource(
-                                id = R.string.btn_text_proceed_to_checkout,
-                                animatedTotal
-                        ),
-                        onClick = { onEvent(CartUiEvent.Checkout) }
-                )
             }
         }
+        StickyAddToCart(
+                modifier = modifier
+                        .align(alignment = Alignment.BottomCenter),
+
+                buttonText = stringResource(
+                        R.string.btn_text_proceed_to_checkout,
+                        animatedTotal
+                ),
+                onEvent = { onEvent(CartUiEvent.Checkout) }
+        )
     }
 }
 
