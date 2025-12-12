@@ -27,7 +27,7 @@ fun Pizza.toCartItem(): CartItem {
     )
 }
 
-fun SideItem.toCartItem(): CartItem {
+fun AddOnItem.toCartItem(): CartItem {
 
     return CartItem(
             id = id,
@@ -41,8 +41,8 @@ fun SideItem.toCartItem(): CartItem {
     )
 }
 
-fun CartItem.toSideItem(): SideItem {
-    return SideItem(
+fun CartItem.toSideItem(): AddOnItem {
+    return AddOnItem(
             id = id,
             name = this.name,
             imageUrl = imageUrl,
