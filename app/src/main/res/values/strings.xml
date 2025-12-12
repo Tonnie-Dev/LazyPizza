@@ -8,7 +8,7 @@
     <!-- Top Bar Texts-->
     <string name="topbar_text_lazy_pizza">LazyPizza</string>
     <string name="topbar_text_cart">Cart</string>
-    <string name="topbar_text_history">History</string>
+    <string name="topbar_text_history">Order History</string>
 
 
     <!--Header Texts-->
@@ -20,16 +20,18 @@
     <string name="cap_text_empty_cart">Your Cart is Empty</string>
     <string name="cap_text_head_back">Head back to the menu and grab a pizza you love.</string>
     <string name="cap_text_item_count">%d</string>
-
+    <string name="cap_text_not_signed_in">Not Signed In</string>
+    <string name="cap_text_please_sign_in">Please sign in to view your order history.</string>
     <!--Label Texts-->
     <string name="lab_text_text">Text</string>
-
+<!---->
     <!--Button Texts-->
     <string name="btn_text_share">Share</string>
     <string name="btn_text_add_to_cart">Add to Cart </string>
-    <string name="btn_text_add_to_cart_with_price">Add to Cart for $ %.2f</string>
     <string name="btn_text_back_to_menu">Back To Menu</string>
+    <string name="btn_text_add_to_cart_with_price">Add to Cart for $ %.2f</string>
     <string name="btn_text_proceed_to_checkout">Proceed to Checkout ($%.2f)</string>
+    <string name="btn_text_sign_in">Sign In</string>
 
     <!--Text Button Texts-->
     <string name="txt_btn_no_account">Don’t have an account?</string>

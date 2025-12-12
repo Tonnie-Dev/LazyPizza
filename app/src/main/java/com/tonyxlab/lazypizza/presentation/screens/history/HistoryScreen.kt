@@ -3,13 +3,11 @@
 package com.tonyxlab.lazypizza.presentation.screens.history
 
 import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
@@ -26,7 +24,9 @@ import com.tonyxlab.lazypizza.navigation.BottomNavBar
 import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarThree
-import com.tonyxlab.lazypizza.presentation.screens.cart.CartViewModel
+import com.tonyxlab.lazypizza.presentation.core.components.EmptyScreenContent
+import com.tonyxlab.lazypizza.presentation.core.utils.spacing
+import com.tonyxlab.lazypizza.presentation.screens.history.handling.HistoryUiEvent
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.utils.DeviceType
 import com.tonyxlab.lazypizza.utils.SetStatusBarIconsColor
@@ -73,7 +73,10 @@ fun HistoryScreen(
                     onBackPressed = { activity.finish() },
                     containerColor = MaterialTheme.colorScheme.background
             ) {
-                HistoryScreenContent()
+                HistoryScreenContent(
+                        modifier = Modifier,
+                        onEvent = viewModel::onEvent
+                )
             }
         }
     } else {
@@ -99,24 +102,75 @@ fun HistoryScreen(
                 },
                 containerColor = MaterialTheme.colorScheme.background
         ) {
-            HistoryScreenContent()
+            HistoryScreenContent(
+                    modifier = Modifier,
+                    onEvent = viewModel::onEvent
+            )
         }
     }
 }
 
 @Composable
-private fun HistoryScreenContent(modifier: Modifier = Modifier) {
+private fun HistoryScreenContent(
+    onEvent: (HistoryUiEvent) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
             modifier = modifier
-                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))
                     .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Text(text = "This is the History Screen")
+        EmptyScreenContent(
+                modifier = Modifier.padding(top = MaterialTheme.spacing.spaceTwelve * 10),
+                title = stringResource(id = R.string.cap_text_not_signed_in),
+                subTitle = stringResource(id = R.string.cap_text_please_sign_in),
+                buttonText = stringResource(id = R.string.btn_text_sign_in),
+                onEvent = { onEvent(HistoryUiEvent.SignIn) }
+        )
+
     }
 }
+
+/*@Composable
+private fun EmptyHistoryBody(
+    onEvent: (CartUiEvent) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+            modifier = modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Column(
+                modifier = Modifier.padding(bottom = MaterialTheme.spacing.spaceTen * 2),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceDoubleDp * 3)
+        ) {
+
+            Text(
+                    text = stringResource(id = R.string.cap_text_empty_cart),
+                    style = MaterialTheme.typography.Title1SemiBold.copy(
+                            color = MaterialTheme.colorScheme.onSurface,
+                            textAlign = TextAlign.Center
+                    )
+            )
+
+            Text(
+                    text = stringResource(id = R.string.cap_text_head_back),
+                    style = MaterialTheme.typography.Body3Regular.copy(
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center
+                    )
+            )
+        }
+
+        AppButton(
+                onClick = { onEvent(CartUiEvent.BackToMenu) },
+                buttonText = stringResource(id = R.string.btn_text_back_to_menu)
+        )
+    }
+}*/
 
 @PreviewLightDark
 @Composable
@@ -125,7 +179,7 @@ private fun HistoryScreenContent_Preview() {
 
         Column(modifier = Modifier.fillMaxSize()) {
 
-            HistoryScreenContent()
+            HistoryScreenContent(onEvent = {})
         }
     }
 }
