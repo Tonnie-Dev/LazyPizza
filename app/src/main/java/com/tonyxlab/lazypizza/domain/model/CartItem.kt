@@ -8,26 +8,26 @@ data class CartItem(
     val counter: Int,
     val toppings: List<Topping>,
     val productType: ProductType,
+    val category: Category
 )
 
 enum class ProductType { PIZZA, SIDE_ITEM }
 
-
-fun Pizza.toCartItem(): CartItem{
+fun Pizza.toCartItem(): CartItem {
 
     return CartItem(
             id = id,
-            name =name,
+            name = name,
             imageUrl = imageUrl,
             unitPrice = price,
             counter = 1,
             toppings = listOf(),
-            productType = ProductType.PIZZA
+            productType = ProductType.PIZZA,
+            category = category
     )
 }
 
-
-fun SideItem.toCartItem(): CartItem{
+fun SideItem.toCartItem(): CartItem {
 
     return CartItem(
             id = id,
@@ -36,20 +36,20 @@ fun SideItem.toCartItem(): CartItem{
             unitPrice = price,
             counter = 1,
             toppings = emptyList(),
-            productType = ProductType.SIDE_ITEM
+            productType = ProductType.SIDE_ITEM,
+            category = category
     )
 }
 
-fun CartItem.toSideItem(): SideItem{
-   return SideItem(
-           id = id,
-           name = this.name,
-           imageUrl = imageUrl,
-           price = unitPrice,
-           counter = 1,
-           category = Category.DRINKS
+fun CartItem.toSideItem(): SideItem {
+    return SideItem(
+            id = id,
+            name = this.name,
+            imageUrl = imageUrl,
+            price = unitPrice,
+            counter = 1,
+            category = Category.DRINKS
 
-   )
-
+    )
 
 }

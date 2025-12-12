@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
@@ -53,10 +54,7 @@ fun CartItemList(
     LazyCategoryList(
             modifier = modifier,
             items = cartItems,
-            key = { item ->
-                item.id.toString() + "-" + item.toppings.map { it.id }
-                        .sorted()
-                        .joinToString()
+            key = { it.uniqueKey
             }
     ) { item ->
 
@@ -72,7 +70,6 @@ fun CartItemList(
 @Composable
 private fun CardItemContent(
     cartItem: CartItem,
-        // uiState: CartUiState,
     cartItems: List<CartItem>,
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier
@@ -112,7 +109,6 @@ private fun CardItemContent(
                     modifier = Modifier.weight(.7f),
                     cartItem = cartItem,
                     counter = counter,
-                    aggregatePrice = cartItem.unitPrice * counter,
                     onEvent = onEvent
             )
         }
@@ -123,7 +119,6 @@ private fun CardItemContent(
 private fun CartItemMainContent(
     cartItem: CartItem,
     counter: Int,
-    aggregatePrice: Double,
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -202,7 +197,7 @@ private fun CartItemMainContent(
                     onRemove = { onEvent(CartUiEvent.DecrementQuantity(item = cartItem)) },
                     counter = counter,
                     maxCount = 5,
-                    minCount = 0
+                    minCount = 1
             )
 
             Column(
@@ -213,7 +208,7 @@ private fun CartItemMainContent(
                 Text(
                         text = stringResource(
                                 id = R.string.dollar_price_tag,
-                                aggregatePrice
+                                cartItem.totalPrice()
                         ),
                         style = MaterialTheme.typography.Title1SemiBold.copy(
                                 color = MaterialTheme.colorScheme.onSurface
@@ -224,7 +219,7 @@ private fun CartItemMainContent(
                         text = stringResource(
                                 id = R.string.counter_price_tag,
                                 counter,
-                                cartItem.unitPrice
+                                cartItem.unitTotalPrice()
                         ),
                         style = MaterialTheme.typography.Body4Regular.copy(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -234,9 +229,23 @@ private fun CartItemMainContent(
         }
     }
 }
+private val CartItem.uniqueKey
+    get() = listOf(
+            id.toString(),
+            toppings
+                    .sortedBy { it.id }
+                    .joinToString(separator = "|") { "${it.id}x${it.counter}" }
+    ).joinToString("-")
 
 private fun List<CartItem>.counterFor(cartItem: CartItem): Int =
-    firstOrNull { it.id == cartItem.id }?.counter ?: 1
+    firstOrNull { it.uniqueKey == cartItem.uniqueKey }?.counter ?: 1
+
+private fun CartItem.unitTotalPrice(): Double {
+    val toppingsTotalPrice = toppings.sumOf { it.toppingPrice * it.counter }
+    return unitPrice + toppingsTotalPrice
+}
+
+private fun CartItem.totalPrice() = unitTotalPrice() * counter
 
 @PreviewLightDark
 @Composable

@@ -1,6 +1,7 @@
 package com.tonyxlab.lazypizza.utils
 
 import com.tonyxlab.lazypizza.domain.model.CartItem
+import com.tonyxlab.lazypizza.domain.model.Category
 import com.tonyxlab.lazypizza.domain.model.ProductType
 import com.tonyxlab.lazypizza.domain.model.Topping
 
@@ -17,10 +18,11 @@ val cartItemsMock = listOf(
                 toppings = listOf(
                         Topping(1L, "Extra Cheese", 1.49, "cheese.png", 1),
                         Topping(2L, "Pepperoni", 1.99, "pepperoni.png", 2),
-                      //  Topping(3L, "Olive", 2.99, "pepperoni.png", 3),
+                        //  Topping(3L, "Olive", 2.99, "pepperoni.png", 3),
 
-                        ),
-                productType = ProductType.PIZZA
+                ),
+                productType = ProductType.PIZZA,
+                category = Category.PIZZA
         ),
 
         CartItem(
@@ -32,7 +34,9 @@ val cartItemsMock = listOf(
                 toppings = listOf(
                         Topping(4L, "Extra Pepperoni", 2.49, "pepperoni.png", 2)
                 ),
-                productType = ProductType.PIZZA
+                productType = ProductType.PIZZA,
+                category = Category.PIZZA
+
         ),
 
         CartItem(
@@ -42,7 +46,8 @@ val cartItemsMock = listOf(
                 unitPrice = 10.99,
                 counter = 1,
                 toppings = emptyList(),
-                productType = ProductType.PIZZA
+                productType = ProductType.PIZZA,
+                category = Category.PIZZA
         ),
 
         CartItem(
@@ -54,7 +59,8 @@ val cartItemsMock = listOf(
                 toppings = listOf(
                         Topping(5L, "Extra Mushrooms", 1.79, "mushroom.png", 1)
                 ),
-                productType = ProductType.PIZZA
+                productType = ProductType.PIZZA,
+                category = Category.PIZZA
         ),
 
         // -------------------- DRINKS --------------------
@@ -66,7 +72,8 @@ val cartItemsMock = listOf(
                 unitPrice = 1.99,
                 counter = 2,
                 toppings = emptyList(),
-                productType = ProductType.SIDE_ITEM
+                productType = ProductType.SIDE_ITEM,
+                category = Category.DRINKS
         ),
 
         CartItem(
@@ -76,7 +83,8 @@ val cartItemsMock = listOf(
                 unitPrice = 2.49,
                 counter = 1,
                 toppings = emptyList(),
-                productType = ProductType.SIDE_ITEM
+                productType = ProductType.SIDE_ITEM,
+                category = Category.DRINKS
         ),
 
         // -------------------- SAUCES --------------------
@@ -88,7 +96,8 @@ val cartItemsMock = listOf(
                 unitPrice = 0.59,
                 counter = 3,
                 toppings = emptyList(),
-                productType = ProductType.SIDE_ITEM
+                productType = ProductType.SIDE_ITEM,
+                category = Category.SAUCE
         ),
 
         CartItem(
@@ -98,7 +107,8 @@ val cartItemsMock = listOf(
                 unitPrice = 0.89,
                 counter = 1,
                 toppings = emptyList(),
-                productType = ProductType.SIDE_ITEM
+                productType = ProductType.SIDE_ITEM,
+                category = Category.SAUCE
         ),
 
         // -------------------- ICE CREAM --------------------
@@ -110,7 +120,8 @@ val cartItemsMock = listOf(
                 unitPrice = 2.79,
                 counter = 1,
                 toppings = emptyList(),
-                productType = ProductType.SIDE_ITEM
+                productType = ProductType.SIDE_ITEM,
+                category = Category.ICE_CREAM
         ),
 
         CartItem(
@@ -120,6 +131,7 @@ val cartItemsMock = listOf(
                 unitPrice = 2.69,
                 counter = 2,
                 toppings = emptyList(),
-                productType = ProductType.SIDE_ITEM
+                productType = ProductType.SIDE_ITEM,
+                category = Category.ICE_CREAM
         )
 )

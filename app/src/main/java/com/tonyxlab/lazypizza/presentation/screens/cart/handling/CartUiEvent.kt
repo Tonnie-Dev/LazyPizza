@@ -10,5 +10,5 @@ sealed interface CartUiEvent : UiEvent {
     data class DecrementQuantity(val item: CartItem) : CartUiEvent
     data object BackToMenu : CartUiEvent
     data object Checkout : CartUiEvent
-    data class PickAddOn(val sideItem: SideItem) : CartUiEvent
+    data class SelectAddOn(val sideItem: SideItem) : CartUiEvent
 }

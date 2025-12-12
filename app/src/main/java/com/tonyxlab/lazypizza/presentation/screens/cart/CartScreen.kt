@@ -73,7 +73,6 @@ fun CartScreen(
                     itemCount = uiState.badgeCount
             )
 
-
             BaseContentLayout(
                     modifier = modifier.padding(MaterialTheme.spacing.spaceMedium),
                     viewModel = viewModel,
@@ -99,7 +98,6 @@ fun CartScreen(
         }
 
     } else {
-
         BaseContentLayout(
                 modifier = modifier.padding(MaterialTheme.spacing.spaceMedium),
                 viewModel = viewModel,
@@ -139,12 +137,7 @@ private fun CartScreenContent(
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier,
 
-) {
-    // NEW → collect real cart items
-   // val cartItems by viewModel.cartItems.collectAsState()
-
-    // NEW → derive animated total from repo-backed flow
-   // val aggregateAmount by viewModel.aggregateAmount.collectAsState()
+    ) {
 
     val animatedTotal by animateFloatAsState(
             targetValue = uiState.aggregateCartAmount.toFloat(),
@@ -162,8 +155,6 @@ private fun CartScreenContent(
                     .fillMaxSize(),
             contentAlignment = Alignment.Center
     ) {
-
-        // NEW: use REAL cart list, not uiState.cartItemsList
         if (cartItems.isEmpty()) {
             EmptyCartBody(
                     modifier = Modifier
@@ -178,7 +169,6 @@ private fun CartScreenContent(
                     horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                // UPDATED → pass in real cart list
                 CartItemList(
                         modifier = Modifier
                                 .weight(1f)
@@ -187,10 +177,9 @@ private fun CartScreenContent(
                         onEvent = onEvent
                 )
 
-                // AddOnItems still uses uiState list (this is correct)
                 AddOnItemsSection(
                         modifier = Modifier,
-                        items = uiState.addOnItemSuggestions,
+                        items = uiState.suggestedAddOnItems,
                         onEvent = onEvent
                 )
 
@@ -207,74 +196,12 @@ private fun CartScreenContent(
     }
 }
 
-/*@Composable
-private fun CartScreenContent(
-    uiState: CartUiState,
-    onEvent: (CartUiEvent) -> Unit,
-    modifier: Modifier = Modifier
-) {
-
-    val animatedTotal by animateFloatAsState(
-            targetValue = uiState.aggregateCartAmount.toFloat(),
-            animationSpec = tween(
-                    durationMillis = 450,
-                    easing = FastOutSlowInEasing
-            ),
-            label = "CheckoutTotalAnimation"
-    )
-
-    Box(
-            modifier = modifier
-                    .background(color = MaterialTheme.colorScheme.background)
-                    .fillMaxSize(), contentAlignment = Alignment.Center
-    ) {
-        if (uiState.cartItemsList.isEmpty()) {
-            EmptyCartBody(
-                    modifier = Modifier
-                            .align(alignment = Alignment.TopCenter)
-                            .padding(top = MaterialTheme.spacing.spaceTwelve * 10),
-                    onEvent = onEvent
-            )
-        } else
-            Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                CartItemList(
-                        modifier = Modifier
-                                .weight(1f)
-                                .padding(bottom = MaterialTheme.spacing.spaceTen * 2),
-                        uiState = uiState,
-                        onEvent = onEvent
-                )
-
-                AddOnItemsSection(
-                        modifier = Modifier,
-                        items = uiState.addOnItemsList,
-                        onEvent = onEvent
-                )
-
-                AppButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        buttonText = stringResource(
-                                id = R.string.btn_text_proceed_to_checkout,
-                                animatedTotal
-
-                        ), onClick = {
-                    onEvent(CartUiEvent.Checkout)
-                }
-                )
-            }
-    }
-}*/
 
 @Composable
 private fun EmptyCartBody(
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     Column(
             modifier = modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally

@@ -2,7 +2,13 @@
 
 package com.tonyxlab.lazypizza.presentation.screens.details
 
+import android.R.attr.label
 import android.app.Activity
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,8 +22,8 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,6 +50,7 @@ import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsActio
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiState
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
+import com.tonyxlab.lazypizza.presentation.theme.Title3
 import com.tonyxlab.lazypizza.presentation.theme.VerticalRoundedCornerShape16
 import com.tonyxlab.lazypizza.utils.DeviceType
 import org.koin.androidx.compose.koinViewModel
@@ -129,6 +136,17 @@ private fun DetailsScreenContent(
         DeviceType.MOBILE_PORTRAIT -> false
         else -> true
     }
+    val animatedAggregate1 by
+        animateFloatAsState(targetValue = uiState.aggregatePrice.toFloat(), animationSpec = tween())
+
+    val animatedAggregate2 by animateFloatAsState(
+            targetValue = uiState.aggregatePrice.toFloat(),
+            animationSpec = tween(
+                    durationMillis = 450,
+                    easing = FastOutSlowInEasing
+            ),
+            label = "CheckoutTotalAnimation"
+    )
 
     when {
         isDeviceWide -> {
@@ -177,7 +195,7 @@ private fun DetailsScreenContent(
                             modifier = Modifier.align(alignment = Alignment.BottomCenter),
                             buttonText = stringResource(
                                     R.string.btn_text_add_to_cart_with_price,
-                                    uiState.aggregatePrice
+                                    animatedAggregate2
                             ),
                             onEvent = onEvent
                     )
@@ -213,7 +231,7 @@ private fun DetailsScreenContent(
                                 .navigationBarsPadding(),
                         buttonText = stringResource(
                                 R.string.btn_text_add_to_cart_with_price,
-                                uiState.aggregatePrice
+                                animatedAggregate1
                         ),
                         onEvent = onEvent
                 )

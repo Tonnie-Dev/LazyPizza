@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.R
@@ -80,7 +81,6 @@ private fun AddOnItem(
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     Card(
             modifier = modifier
                     .border(
@@ -109,8 +109,11 @@ private fun AddOnItem(
 
                 Text(
                         text = sideItem.name,
-                        style = MaterialTheme.typography.Body1Regular,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        style = MaterialTheme.typography.Body1Regular.copy(
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                 )
                 Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -137,7 +140,7 @@ private fun AddOnItem(
                                             shape = MaterialTheme.shapes.small
                                     )
                                     .clickable {
-                                        onEvent(CartUiEvent.PickAddOn(sideItem = sideItem))
+                                        onEvent(CartUiEvent.SelectAddOn(sideItem = sideItem))
                                     }
                                     .padding(MaterialTheme.spacing.spaceExtraSmall),
                             contentAlignment = Alignment.Center
@@ -160,7 +163,6 @@ private fun AddOnsRow_PreviewSection() {
 
     val sideItems = getMockSideItems()
     LazyPizzaTheme {
-
         Column(
                 modifier = Modifier
                         .fillMaxSize()
@@ -168,9 +170,7 @@ private fun AddOnsRow_PreviewSection() {
                         .padding(MaterialTheme.spacing.spaceMedium),
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             AddOnItemsSection(items = sideItems, onEvent = {})
-
         }
     }
 }

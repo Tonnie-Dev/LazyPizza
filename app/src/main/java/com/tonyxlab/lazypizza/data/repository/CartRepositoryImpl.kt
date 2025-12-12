@@ -22,7 +22,8 @@ class CartRepositoryImpl : CartRepository {
         if (itemIndex >= 0) {
             //item exists - for updating
             val existingCartItem = currentCartItemsList[itemIndex]
-            val updatedItem = existingCartItem.copy(counter = cartItem.counter)
+            val updatedItem =
+                existingCartItem.copy(counter = existingCartItem.counter + cartItem.counter)
             currentCartItemsList[itemIndex] = updatedItem
         } else {
             // we add item as a new item
@@ -46,7 +47,7 @@ class CartRepositoryImpl : CartRepository {
 
                 when {
                     item.isSameAs(cartItem) && newCount <= 0 -> null
-                    item.id == cartItem.id -> item.copy(counter = newCount)
+                    item.isSameAs(cartItem) -> item.copy(counter = newCount)
                     else -> item
                 }
 
@@ -59,6 +60,20 @@ class CartRepositoryImpl : CartRepository {
     }
 
     private fun CartItem.isSameAs(other: CartItem): Boolean {
-        return this.id == other.id && this.toppings.toSet() == other.toppings.toSet()
+        if (this.id != other.id) return false
+
+        val thisToppings =
+            this.toppings
+                    .filter { it.counter > 0 }
+                    .sortedBy { it.id }
+                    .map { it.id to it.counter }
+
+        val otherToppings =
+            other.toppings
+                    .filter { it.counter > 0 }
+                    .sortedBy { it.id }
+                    .map { it.id to it.counter }
+
+        return thisToppings == otherToppings
     }
 }
