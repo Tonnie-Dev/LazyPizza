@@ -1,6 +1,7 @@
 package com.tonyxlab.lazypizza.presentation.core.components
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -63,6 +64,7 @@ fun AppButton(
                     }
                     .height(buttonHeight)
                     .clickable { onClick() }
+
                     .padding(
                             horizontal = MaterialTheme.spacing.spaceTwelve * 2,
                             vertical = MaterialTheme.spacing.spaceTen
@@ -71,7 +73,10 @@ fun AppButton(
 
         Text(
                 modifier = Modifier.animateContentSize(
-                        animationSpec = spring(stiffness = .8f)
+                        animationSpec = spring(
+                                dampingRatio = Spring.DampingRatioLowBouncy,
+                                stiffness = Spring.StiffnessHigh
+                        )
                 ),
                 text = buttonText,
                 style = MaterialTheme.typography.Title3.copy(
