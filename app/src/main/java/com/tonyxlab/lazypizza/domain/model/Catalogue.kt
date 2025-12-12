@@ -18,7 +18,7 @@ data class Topping(
     val counter: Int
 )
 
-data class SideItem(
+data class AddOnItem(
     override val id: Long,
     override val name: String,
     val price: Double,

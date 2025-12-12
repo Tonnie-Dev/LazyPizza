@@ -28,7 +28,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.CartItem
-import com.tonyxlab.lazypizza.domain.model.SideItem
+import com.tonyxlab.lazypizza.domain.model.AddOnItem
 import com.tonyxlab.lazypizza.presentation.core.components.AppButton
 import com.tonyxlab.lazypizza.presentation.core.components.CounterItem
 import com.tonyxlab.lazypizza.presentation.core.components.DisplayImage
@@ -44,14 +44,14 @@ import com.tonyxlab.lazypizza.utils.drinksMock
 
 @Composable
 fun SideItemCard(
-    sideItem: SideItem,
+    addOnItem: AddOnItem,
     uiState: HomeUiState,
     onEvent: (HomeUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
-    val counter = uiState.cartItems.counterFor(sideItem)
-    val selected = uiState.cartItems.isSelected(sideItem)
+    val counter = uiState.cartItems.counterFor(addOnItem)
+    val selected = uiState.cartItems.isSelected(addOnItem)
 
     Card(
             modifier = modifier
@@ -71,17 +71,17 @@ fun SideItemCard(
                 verticalAlignment = Alignment.CenterVertically
         ) {
             DisplayImage(
-                    imageUrl = sideItem.imageUrl,
+                    imageUrl = addOnItem.imageUrl,
                     containerSize = MaterialTheme.spacing.spaceTwelve * 10,
                     shape = MaterialTheme.shapes.VerticalRoundedCornerShape12,
                     backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
                     fallbackDrawableRes = R.drawable.drink_seven
             )
             SideItemCardContent(
-                    sideItem = sideItem,
+                    addOnItem = addOnItem,
                     counter = counter,
                     selected = selected,
-                    aggregatePrice = sideItem.price * counter,
+                    aggregatePrice = addOnItem.price * counter,
                     onEvent = onEvent
             )
         }
@@ -90,7 +90,7 @@ fun SideItemCard(
 
 @Composable
 private fun SideItemCardContent(
-    sideItem: SideItem,
+    addOnItem: AddOnItem,
     counter: Int,
     selected: Boolean,
     aggregatePrice: Double,
@@ -113,7 +113,7 @@ private fun SideItemCardContent(
         ) {
 
             Text(
-                    text = sideItem.name,
+                    text = addOnItem.name,
                     style = MaterialTheme.typography.Body1Medium.copy(
                             color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.W700
@@ -131,7 +131,7 @@ private fun SideItemCardContent(
                                 )
                                 .size(MaterialTheme.spacing.spaceDoubleDp * 11)
                                 .clickable {
-                                    onEvent(HomeUiEvent.ResetOrderStatus(sideItem = sideItem))
+                                    onEvent(HomeUiEvent.ResetOrderStatus(addOnItem = addOnItem))
                                 },
                         contentAlignment = Alignment.Center
                 ) {
@@ -156,8 +156,8 @@ private fun SideItemCardContent(
 
                 CounterItem(
                         modifier = Modifier.weight(1f),
-                        onAdd = { onEvent(HomeUiEvent.IncrementQuantity(sideItem)) },
-                        onRemove = { onEvent(HomeUiEvent.DecrementQuantity(sideItem)) },
+                        onAdd = { onEvent(HomeUiEvent.IncrementQuantity(addOnItem)) },
+                        onRemove = { onEvent(HomeUiEvent.DecrementQuantity(addOnItem)) },
                         counter = counter,
                         maxCount = 5
                 )
@@ -181,7 +181,7 @@ private fun SideItemCardContent(
                             text = stringResource(
                                     id = R.string.counter_price_tag,
                                     counter,
-                                    sideItem.price
+                                    addOnItem.price
                             ),
                             style = MaterialTheme.typography.Body4Regular.copy(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -194,7 +194,7 @@ private fun SideItemCardContent(
                         modifier = Modifier.weight(1f),
                         text = stringResource(
                                 id = R.string.dollar_price_tag,
-                                sideItem.price
+                                addOnItem.price
                         ),
                         style = MaterialTheme.typography.Title1SemiBold.copy(
                                 color = MaterialTheme.colorScheme.onSurface
@@ -203,7 +203,7 @@ private fun SideItemCardContent(
 
                 AppButton(
                         modifier = Modifier.wrapContentWidth(),
-                        onClick = { onEvent(HomeUiEvent.AddSideItemToCart(sideItem = sideItem)) },
+                        onClick = { onEvent(HomeUiEvent.AddSideItemToCart(addOnItem = addOnItem)) },
                         buttonText = stringResource(id = R.string.btn_text_add_to_cart),
                         buttonHeight = MaterialTheme.spacing.spaceTen * 4,
                         isOutlineButton = true,
@@ -236,7 +236,7 @@ private fun SideItemCard_Preview() {
 
                 SideItemCard(
                         modifier = Modifier,
-                        sideItem = item,
+                        addOnItem = item,
                         uiState = HomeUiState(),
                         onEvent = {},
                 )
@@ -245,11 +245,11 @@ private fun SideItemCard_Preview() {
     }
 }
 
-private fun List<CartItem>.counterFor(sideItem: SideItem) =
-    find { it.id == sideItem.id }?.counter ?: 0
+private fun List<CartItem>.counterFor(addOnItem: AddOnItem) =
+    find { it.id == addOnItem.id }?.counter ?: 0
 
-private fun List<CartItem>.isSelected(sideItem: SideItem): Boolean =
-    any { it.id == sideItem.id }
+private fun List<CartItem>.isSelected(addOnItem: AddOnItem): Boolean =
+    any { it.id == addOnItem.id }
 
 
 

@@ -1,24 +1,24 @@
 package com.tonyxlab.lazypizza.utils
 
 import com.tonyxlab.lazypizza.domain.model.Category
-import com.tonyxlab.lazypizza.domain.model.SideItem
+import com.tonyxlab.lazypizza.domain.model.AddOnItem
 
 // ------------------------ ALL ITEMS ------------------------
 
-fun getMockSideItems(): List<SideItem> {
+fun getMockSideItems(): List<AddOnItem> {
     return drinksMock + saucesMock + iceCreamsMock
 }
 
 // ------------------------ ADD-ON ITEMS ------------------------
 
-fun getMockAddOnItems(): List<SideItem> {
+fun getMockAddOnItems(): List<AddOnItem> {
     return drinksMock + saucesMock
 }
 
 // ------------------------ DRINKS ------------------------
 
 val drinksMock = listOf(
-        SideItem(
+        AddOnItem(
                 id = 9L,
                 name = "Mineral Water",
                 price = 1.49,
@@ -26,7 +26,7 @@ val drinksMock = listOf(
                 counter = 0,
                 category = Category.DRINKS
         ),
-        SideItem(
+        AddOnItem(
                 id = 10L,
                 name = "7-Up",
                 price = 1.89,
@@ -34,7 +34,7 @@ val drinksMock = listOf(
                 counter = 0,
                 category = Category.DRINKS
         ),
-        SideItem(
+        AddOnItem(
                 id = 11L,
                 name = "Pepsi",
                 price = 1.99,
@@ -42,7 +42,7 @@ val drinksMock = listOf(
                 counter = 0,
                 category = Category.DRINKS
         ),
-        SideItem(
+        AddOnItem(
                 id = 12L,
                 name = "Orange Juice",
                 price = 2.49,
@@ -50,7 +50,7 @@ val drinksMock = listOf(
                 counter = 0,
                 category = Category.DRINKS
         ),
-        SideItem(
+        AddOnItem(
                 id = 13L,
                 name = "Apple Juice",
                 price = 2.29,
@@ -58,7 +58,7 @@ val drinksMock = listOf(
                 counter = 0,
                 category = Category.DRINKS
         ),
-        SideItem(
+        AddOnItem(
                 id = 14L,
                 name = "Iced Tea (Lemon)",
                 price = 2.19,
@@ -71,7 +71,7 @@ val drinksMock = listOf(
 // ------------------------ SAUCES ------------------------
 
 val saucesMock = listOf(
-        SideItem(
+        AddOnItem(
                 id = 15L,
                 name = "Garlic Sauce",
                 price = 0.59,
@@ -79,7 +79,7 @@ val saucesMock = listOf(
                 counter = 0,
                 category = Category.SAUCE
         ),
-        SideItem(
+        AddOnItem(
                 id = 16L,
                 name = "BBQ Sauce",
                 price = 0.59,
@@ -87,7 +87,7 @@ val saucesMock = listOf(
                 counter = 0,
                 category = Category.SAUCE
         ),
-        SideItem(
+        AddOnItem(
                 id = 17L,
                 name = "Cheese Sauce",
                 price = 0.89,
@@ -95,7 +95,7 @@ val saucesMock = listOf(
                 counter = 0,
                 category = Category.SAUCE
         ),
-        SideItem(
+        AddOnItem(
                 id = 18L,
                 name = "Spicy Chili Sauce",
                 price = 0.59,
@@ -108,7 +108,7 @@ val saucesMock = listOf(
 // ------------------------ ICE CREAMS ------------------------
 
 val iceCreamsMock = listOf(
-        SideItem(
+        AddOnItem(
                 id = 19L,
                 name = "Vanilla Ice Cream",
                 price = 2.49,
@@ -116,7 +116,7 @@ val iceCreamsMock = listOf(
                 counter = 0,
                 category = Category.ICE_CREAM
         ),
-        SideItem(
+        AddOnItem(
                 id = 20L,
                 name = "Chocolate Ice Cream",
                 price = 2.49,
@@ -124,7 +124,7 @@ val iceCreamsMock = listOf(
                 counter = 0,
                 category = Category.ICE_CREAM
         ),
-        SideItem(
+        AddOnItem(
                 id = 21L,
                 name = "Strawberry Ice Cream",
                 price = 2.49,
@@ -132,7 +132,7 @@ val iceCreamsMock = listOf(
                 counter = 0,
                 category = Category.ICE_CREAM
         ),
-        SideItem(
+        AddOnItem(
                 id = 22L,
                 name = "Cookies Ice Cream",
                 price = 2.79,
@@ -140,7 +140,7 @@ val iceCreamsMock = listOf(
                 counter = 0,
                 category = Category.ICE_CREAM
         ),
-        SideItem(
+        AddOnItem(
                 id = 23L,
                 name = "Pistachio Ice Cream",
                 price = 2.99,
@@ -148,7 +148,7 @@ val iceCreamsMock = listOf(
                 counter = 0,
                 category = Category.ICE_CREAM
         ),
-        SideItem(
+        AddOnItem(
                 id = 24L,
                 name = "Mango Sorbet",
                 price = 2.69,

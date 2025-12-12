@@ -29,7 +29,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.R
-import com.tonyxlab.lazypizza.domain.model.SideItem
+import com.tonyxlab.lazypizza.domain.model.AddOnItem
 import com.tonyxlab.lazypizza.presentation.core.components.DisplayImage
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartUiEvent
@@ -42,7 +42,7 @@ import com.tonyxlab.lazypizza.utils.getMockSideItems
 
 @Composable
 fun AddOnItemsSection(
-    items: List<SideItem>,
+    items: List<AddOnItem>,
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -67,7 +67,7 @@ fun AddOnItemsSection(
             items(items = items, key = { it.id }) { sideItem ->
 
                 AddOnItem(
-                        sideItem = sideItem,
+                        addOnItem = sideItem,
                         onEvent = onEvent
                 )
             }
@@ -77,7 +77,7 @@ fun AddOnItemsSection(
 
 @Composable
 private fun AddOnItem(
-    sideItem: SideItem,
+    addOnItem: AddOnItem,
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -95,7 +95,7 @@ private fun AddOnItem(
         Column(modifier = Modifier.width(MaterialTheme.spacing.spaceMedium * 10)) {
 
             DisplayImage(
-                    imageUrl = sideItem.imageUrl,
+                    imageUrl = addOnItem.imageUrl,
                     imageSize = MaterialTheme.spacing.spaceTwelve * 9,
                     shape = MaterialTheme.shapes.HorizontalRoundedCornerShape12
             )
@@ -108,7 +108,7 @@ private fun AddOnItem(
             ) {
 
                 Text(
-                        text = sideItem.name,
+                        text = addOnItem.name,
                         style = MaterialTheme.typography.Body1Regular.copy(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                         ),
@@ -124,7 +124,7 @@ private fun AddOnItem(
                     Text(
                             text = stringResource(
                                     id = R.string.dollar_price_tag,
-                                    sideItem.price
+                                    addOnItem.price
                             ),
                             style = MaterialTheme.typography.Title1SemiBold.copy(
                                     color = MaterialTheme.colorScheme.onSurface
@@ -140,7 +140,7 @@ private fun AddOnItem(
                                             shape = MaterialTheme.shapes.small
                                     )
                                     .clickable {
-                                        onEvent(CartUiEvent.SelectAddOn(sideItem = sideItem))
+                                        onEvent(CartUiEvent.SelectAddOn(addOnItem = addOnItem))
                                     }
                                     .padding(MaterialTheme.spacing.spaceExtraSmall),
                             contentAlignment = Alignment.Center

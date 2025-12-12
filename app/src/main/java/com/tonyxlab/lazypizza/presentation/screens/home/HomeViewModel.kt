@@ -5,7 +5,7 @@ package com.tonyxlab.lazypizza.presentation.screens.home
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.viewModelScope
 import com.tonyxlab.lazypizza.domain.model.Category
-import com.tonyxlab.lazypizza.domain.model.SideItem
+import com.tonyxlab.lazypizza.domain.model.AddOnItem
 import com.tonyxlab.lazypizza.domain.model.toCartItem
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
@@ -63,20 +63,20 @@ class HomeViewModel(private val repository: CartRepository) : HomeBaseViewModel(
             }
 
             is HomeUiEvent.AddSideItemToCart -> {
-                addSideItemToCart(sideItem = event.sideItem)
+                addSideItemToCart(addOnItem = event.addOnItem)
             }
 
             is HomeUiEvent.IncrementQuantity -> {
-                incrementCount(sideItem = event.sideItem)
+                incrementCount(addOnItem = event.addOnItem)
             }
 
             is HomeUiEvent.DecrementQuantity -> {
 
-                decrementCount(sideItem = event.sideItem)
+                decrementCount(addOnItem = event.addOnItem)
             }
 
             is HomeUiEvent.ResetOrderStatus -> {
-                removeItemFromCart(event.sideItem)
+                removeItemFromCart(event.addOnItem)
             }
         }
     }
@@ -99,7 +99,7 @@ class HomeViewModel(private val repository: CartRepository) : HomeBaseViewModel(
         val pizzaSearchResults =
             currentState.allPizzaItems.filter { it.name.contains(query, ignoreCase = true) }
 
-        val sideItemSearchResults = currentState.allSideItems.filter {
+        val sideItemSearchResults = currentState.allAddOnItems.filter {
             it.name.contains(query, ignoreCase = true)
         }
         updateState { it.copy(searchResults = pizzaSearchResults + sideItemSearchResults) }
@@ -113,13 +113,13 @@ class HomeViewModel(private val repository: CartRepository) : HomeBaseViewModel(
                 Category.PIZZA -> it.copy(
                         selectedCategory = category,
 
-                        filteredSideItems = emptyList()
+                        filteredAddOnItems = emptyList()
                 )
 
                 Category.DRINKS, Category.SAUCE, Category.ICE_CREAM -> it.copy(
                         selectedCategory = category,
 
-                        filteredSideItems = it.allSideItems.filter { side ->
+                        filteredAddOnItems = it.allAddOnItems.filter { side ->
                             side.category == category
                         }
                 )
@@ -127,34 +127,34 @@ class HomeViewModel(private val repository: CartRepository) : HomeBaseViewModel(
         }
     }
 
-    private fun addSideItemToCart(sideItem: SideItem) {
+    private fun addSideItemToCart(addOnItem: AddOnItem) {
 
-        val cartItem = sideItem.toCartItem()
+        val cartItem = addOnItem.toCartItem()
         repository.addItem(cartItem)
 
     }
 
-    private fun incrementCount(sideItem: SideItem) {
+    private fun incrementCount(addOnItem: AddOnItem) {
 
-        val currentCount = currentState.cartItems.find { it.id == sideItem.id }?.counter ?: 0
+        val currentCount = currentState.cartItems.find { it.id == addOnItem.id }?.counter ?: 0
 
         val newCount = currentCount.plus(1)
                 .coerceAtMost(5)
-        repository.updateCount(cartItem = sideItem.toCartItem(), newCount = newCount)
+        repository.updateCount(cartItem = addOnItem.toCartItem(), newCount = newCount)
     }
 
-    private fun decrementCount(sideItem: SideItem) {
+    private fun decrementCount(addOnItem: AddOnItem) {
 
-        val currentCount = currentState.cartItems.find { it.id == sideItem.id }?.counter ?: 0
+        val currentCount = currentState.cartItems.find { it.id == addOnItem.id }?.counter ?: 0
 
         val newCount = currentCount.minus(1)
                 .coerceAtLeast(0)
-        repository.updateCount(cartItem = sideItem.toCartItem(), newCount = newCount)
+        repository.updateCount(cartItem = addOnItem.toCartItem(), newCount = newCount)
 
     }
 
-    private fun removeItemFromCart(sideItem: SideItem) {
-        repository.removeItem(sideItem.toCartItem())
+    private fun removeItemFromCart(addOnItem: AddOnItem) {
+        repository.removeItem(addOnItem.toCartItem())
 
     }
 }

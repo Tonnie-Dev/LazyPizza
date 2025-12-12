@@ -172,7 +172,7 @@ private fun HomeScreenContent(
 ) {
 
     val pizzasList = uiState.allPizzaItems
-    val sideItemsList = uiState.filteredSideItems
+    val sideItemsList = uiState.filteredAddOnItems
     val header = uiState.selectedCategory.categoryName
 
     if (isDeviceWide) {
@@ -241,7 +241,7 @@ private fun HomeScreenContent(
                             ) { sideItem ->
 
                                 SideItemCard(
-                                        sideItem = sideItem,
+                                        addOnItem = sideItem,
                                         uiState = uiState,
                                         onEvent = onEvent
                                 )
@@ -305,12 +305,12 @@ private fun HomeScreenContent(
                     } else {
                         LazyCategoryList(
                                 header = uiState.selectedCategory.categoryName,
-                                items = uiState.filteredSideItems,
+                                items = uiState.filteredAddOnItems,
                                 key = { item -> item.id },
                                 isDeviceWide = false
                         ) { sideItem ->
                             SideItemCard(
-                                    sideItem = sideItem,
+                                    addOnItem = sideItem,
                                     uiState = uiState,
                                     onEvent = onEvent
                             )

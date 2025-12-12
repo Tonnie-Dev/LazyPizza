@@ -3,7 +3,7 @@ package com.tonyxlab.lazypizza.presentation.screens.cart
 import androidx.lifecycle.viewModelScope
 import com.tonyxlab.lazypizza.domain.model.CartItem
 import com.tonyxlab.lazypizza.domain.model.ProductType
-import com.tonyxlab.lazypizza.domain.model.SideItem
+import com.tonyxlab.lazypizza.domain.model.AddOnItem
 import com.tonyxlab.lazypizza.domain.model.toCartItem
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
@@ -76,7 +76,7 @@ class CartViewModel(private val repository: CartRepository) : CartBaseViewModel(
                 sendActionEvent(CartActionEvent.NavigateBackToMenu)
             }
 
-            is CartUiEvent.SelectAddOn -> selectAddOn(event.sideItem)
+            is CartUiEvent.SelectAddOn -> selectAddOn(event.addOnItem)
 
             CartUiEvent.Checkout -> {
                 // Future Milestone
@@ -99,11 +99,11 @@ class CartViewModel(private val repository: CartRepository) : CartBaseViewModel(
         repository.removeItem(cartItem = cartItem)
     }
 
-    private fun selectAddOn(sideItem: SideItem) {
-        repository.addItem(cartItem = sideItem.toCartItem())
+    private fun selectAddOn(addOnItem: AddOnItem) {
+        repository.addItem(cartItem = addOnItem.toCartItem())
     }
 
-    private fun deriveSuggestedAddOns(cartItems: List<CartItem>): List<SideItem> {
+    private fun deriveSuggestedAddOns(cartItems: List<CartItem>): List<AddOnItem> {
         val selectedAddOnItemIds = cartItems.filterNot {
             it.productType == ProductType.PIZZA
         }
