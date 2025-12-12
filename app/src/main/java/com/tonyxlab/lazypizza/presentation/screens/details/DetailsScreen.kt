@@ -2,12 +2,9 @@
 
 package com.tonyxlab.lazypizza.presentation.screens.details
 
-import android.R.attr.label
 import android.app.Activity
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -50,7 +47,6 @@ import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsActio
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.details.handling.DetailsUiState
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
-import com.tonyxlab.lazypizza.presentation.theme.Title3
 import com.tonyxlab.lazypizza.presentation.theme.VerticalRoundedCornerShape16
 import com.tonyxlab.lazypizza.utils.DeviceType
 import org.koin.androidx.compose.koinViewModel
@@ -85,7 +81,7 @@ fun DetailsScreen(
     )
 
     BaseContentLayout(
-            modifier = modifier.fillMaxSize(),
+            modifier = modifier,
             viewModel = viewModel,
             topBar = { AppTopBarTwo(onClick = { navigator.goBack() }) },
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -106,7 +102,6 @@ fun DetailsScreen(
                 AppSnackbarHost(
                         modifier = Modifier.padding(bottom = MaterialTheme.spacing.spaceTen * 8),
                         snackbarHostState = snackbarHostState
-
                 )
             }
     ) { uiState ->
@@ -137,7 +132,7 @@ private fun DetailsScreenContent(
         else -> true
     }
     val animatedAggregate1 by
-        animateFloatAsState(targetValue = uiState.aggregatePrice.toFloat(), animationSpec = tween())
+    animateFloatAsState(targetValue = uiState.aggregatePrice.toFloat(), animationSpec = tween())
 
     val animatedAggregate2 by animateFloatAsState(
             targetValue = uiState.aggregatePrice.toFloat(),
@@ -148,96 +143,98 @@ private fun DetailsScreenContent(
             label = "CheckoutTotalAnimation"
     )
 
-    when {
-        isDeviceWide -> {
 
-            Row {
-                Column(modifier = Modifier.weight(1f)) {
+    if (isDeviceWide) {
 
-                    uiState.pizzaStateItem?.let {
+        Row {
+            Column(modifier = Modifier.weight(1f)) {
 
-                        DisplayImage(
-                                modifier = Modifier
-                                        .fillMaxWidth(),
-                                imageSize = 300.dp,
-                                imageUrl = it.imageUrl,
-                        )
+                uiState.pizzaStateItem?.let {
 
-                        PizzaMetaData(
-                                modifier = Modifier
-                                        .weight(1f)
-                                        .padding(start = MaterialTheme.spacing.spaceMedium),
-                                pizzaName = it.name,
-                                ingredients = it.ingredients
-                        )
-                    }
-                }
-
-                Box(
-                        modifier = Modifier
-                                .clip(MaterialTheme.shapes.VerticalRoundedCornerShape16)
-                                .background(MaterialTheme.colorScheme.surface)
-                                .weight(1f)
-                                .padding(horizontal = MaterialTheme.spacing.spaceMedium)
-                )
-
-                {
-                    ToppingsGrid(
+                    DisplayImage(
                             modifier = Modifier
-                                    .padding(horizontal = MaterialTheme.spacing.spaceMedium)
-                                    .padding(top = MaterialTheme.spacing.spaceTen * 2)
-                                    .padding(bottom = MaterialTheme.spacing.spaceOneHundred),
-                            uiState = uiState,
-                            onEvent = onEvent
+                                    .fillMaxWidth(),
+                            imageSize = 300.dp,
+                            imageUrl = it.imageUrl,
                     )
 
-                    StickyAddToCart(
-                            modifier = Modifier.align(alignment = Alignment.BottomCenter),
-                            buttonText = stringResource(
-                                    R.string.btn_text_add_to_cart_with_price,
-                                    animatedAggregate2
-                            ),
-                            onEvent = onEvent
+                    PizzaMetaData(
+                            modifier = Modifier
+                                    .weight(1f)
+                                    .padding(start = MaterialTheme.spacing.spaceMedium),
+                            pizzaName = it.name,
+                            ingredients = it.ingredients
                     )
                 }
             }
-        }
 
-        else -> {
+            Box(
+                    modifier = Modifier
+                            .clip(MaterialTheme.shapes.VerticalRoundedCornerShape16)
+                            .background(MaterialTheme.colorScheme.surface)
+                            .weight(1f)
+                            .padding(horizontal = MaterialTheme.spacing.spaceMedium)
+            )
 
-            Box {
-                Column {
-
-                    uiState.pizzaStateItem?.let {
-                        DisplayImage(
-                                modifier = Modifier
-                                        .fillMaxWidth(),
-                                imageSize = 300.dp,
-                                imageUrl = it.imageUrl,
-                        )
-                    }
-
-                    ToppingsCardContent(
-                            modifier = Modifier
-                                    .weight(1f)
-                                    .padding(bottom = MaterialTheme.spacing.spaceOneHundred),
-                            uiState = uiState,
-                            onEvent = onEvent
-                    )
-                }
+            {
+                ToppingsGrid(
+                        modifier = Modifier
+                                .padding(horizontal = MaterialTheme.spacing.spaceMedium)
+                                .padding(top = MaterialTheme.spacing.spaceTen * 2)
+                                .padding(bottom = MaterialTheme.spacing.spaceOneHundred),
+                        uiState = uiState,
+                        onEvent = onEvent
+                )
 
                 StickyAddToCart(
-                        modifier = modifier
-                                .align(alignment = Alignment.BottomCenter)
-                                .navigationBarsPadding(),
+                        modifier = Modifier.align(alignment = Alignment.BottomCenter),
                         buttonText = stringResource(
                                 R.string.btn_text_add_to_cart_with_price,
-                                animatedAggregate1
+                                animatedAggregate2
                         ),
                         onEvent = onEvent
                 )
             }
         }
+        return
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        Column(
+                modifier = Modifier
+                        .fillMaxWidth()
+
+        ) {
+
+            uiState.pizzaStateItem?.let {
+                DisplayImage(
+                        modifier = Modifier
+                                .fillMaxWidth(),
+                        imageSize = 300.dp,
+                        imageUrl = it.imageUrl,
+                )
+            }
+
+            ToppingsCardContent(
+                    modifier = Modifier
+                            .padding(bottom = MaterialTheme.spacing.spaceOneHundred)
+                            .navigationBarsPadding(),
+                    uiState = uiState,
+                    onEvent = onEvent
+            )
+        }
+
+        StickyAddToCart(
+                modifier = Modifier
+                        .align(alignment = Alignment.BottomCenter)
+                        .navigationBarsPadding(),
+                buttonText = stringResource(
+                        R.string.btn_text_add_to_cart_with_price,
+                        animatedAggregate1
+                ),
+                onEvent = onEvent
+        )
     }
 }
 

@@ -21,23 +21,19 @@ fun StickyAddToCart(
     onEvent: (DetailsUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     Box(
             modifier = modifier
-                    .fillMaxWidth()
+                    .background(brush = MaterialTheme.gradientScheme.stickyOverlayGradient)
                     .height(height = MaterialTheme.spacing.spaceOneHundred)
-                    .background(brush = MaterialTheme.gradientScheme.stickyOverlayGradient),
+                    .fillMaxWidth(),
             contentAlignment = Alignment.Center
     ) {
 
         AppButton(
                 modifier = Modifier
                         .fillMaxWidth()
-                        .padding(
-                                horizontal = MaterialTheme.spacing.spaceMedium,
-                                vertical = MaterialTheme.spacing.spaceSmall
-                        )
-                        .align(Alignment.Center),
+                        .padding(horizontal = MaterialTheme.spacing.spaceMedium)
+                        .padding(top = MaterialTheme.spacing.spaceSmall),
                 buttonText = buttonText,
                 onClick = { onEvent(DetailsUiEvent.AddToCart) }
         )

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
@@ -34,7 +35,9 @@ import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarThree
 import com.tonyxlab.lazypizza.presentation.core.components.EmptyScreenContent
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.cart.components.AddOnItemsSection
+import com.tonyxlab.lazypizza.presentation.screens.cart.components.CardItemContent
 import com.tonyxlab.lazypizza.presentation.screens.cart.components.CartItemList
+import com.tonyxlab.lazypizza.presentation.screens.cart.components.uniqueKey
 import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.handling.CartUiState
@@ -96,7 +99,7 @@ fun CartScreen(
         }
 
     } else {
-        
+
         BaseContentLayout(
                 modifier = modifier,
                 viewModel = viewModel,
@@ -170,21 +173,25 @@ private fun CartScreenContent(
 
         LazyColumn(
                 modifier = Modifier
-                        .fillMaxSize(),
+                        .fillMaxSize()
+                        .padding(bottom = MaterialTheme.spacing.spaceOneHundred),
 
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            item {
-                CartItemList(
+            items(
+                    items = uiState.cartItems,
+                    key = { it.uniqueKey }
+            ) { item ->
+                CardItemContent(
                         modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(bottom = MaterialTheme.spacing.spaceTen * 2),
+                                .padding(bottom = MaterialTheme.spacing.spaceSmall),
+                        cartItem = item,
                         cartItems = uiState.cartItems,
                         onEvent = onEvent
                 )
             }
-
             item {
                 AddOnItemsSection(
                         modifier = Modifier.fillMaxWidth(),
@@ -194,7 +201,7 @@ private fun CartScreenContent(
             }
         }
         StickyAddToCart(
-                modifier = modifier
+                modifier = Modifier
                         .align(alignment = Alignment.BottomCenter),
 
                 buttonText = stringResource(

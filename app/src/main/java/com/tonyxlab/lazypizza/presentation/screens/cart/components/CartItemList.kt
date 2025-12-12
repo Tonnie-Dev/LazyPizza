@@ -1,5 +1,6 @@
 package com.tonyxlab.lazypizza.presentation.screens.cart.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -64,7 +65,7 @@ fun CartItemList(
 }
 
 @Composable
-private fun CardItemContent(
+ fun CardItemContent(
     cartItem: CartItem,
     cartItems: List<CartItem>,
     onEvent: (CartUiEvent) -> Unit,
@@ -86,7 +87,7 @@ private fun CardItemContent(
     ) {
 
         Row(
-                modifier = modifier
+                modifier = Modifier
                         .fillMaxWidth()
                         .height(intrinsicSize = IntrinsicSize.Max),
                 verticalAlignment = Alignment.CenterVertically
@@ -226,7 +227,7 @@ private fun CartItemMainContent(
     }
 }
 
-private val CartItem.uniqueKey
+ val CartItem.uniqueKey
     get() = listOf(
             id.toString(),
             toppings
@@ -250,7 +251,10 @@ private fun CartItemContent_Preview() {
 
     val items = cartItemsMock
     LazyPizzaTheme {
-        CartItemList(cartItems = items, onEvent = {})
+
+        Column(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
+            CartItemList(cartItems = items, onEvent = {})
+        }
     }
 }
 
