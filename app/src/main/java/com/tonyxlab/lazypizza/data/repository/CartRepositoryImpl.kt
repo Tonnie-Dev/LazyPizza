@@ -58,9 +58,7 @@ class CartRepositoryImpl : CartRepository {
         _cartItems.update { emptyList() }
     }
 
-
-    private fun CartItem. isSameAs(other: CartItem) : Boolean {
-
+    private fun CartItem.isSameAs(other: CartItem): Boolean {
         return this.id == other.id && this.toppings.toSet() == other.toppings.toSet()
     }
 }

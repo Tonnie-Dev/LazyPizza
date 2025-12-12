@@ -213,7 +213,6 @@ private fun HomeScreenContent(
                             onEvent = onEvent
                     )
 
-
                     when {
 
                         uiState.selectedCategory == Category.PIZZA -> {
@@ -229,7 +228,6 @@ private fun HomeScreenContent(
                                         pizza = pizza,
                                         onEvent = onEvent
                                 )
-
                             }
                         }
 
@@ -305,7 +303,6 @@ private fun HomeScreenContent(
                         }
 
                     } else {
-
                         LazyCategoryList(
                                 header = uiState.selectedCategory.categoryName,
                                 items = uiState.filteredSideItems,

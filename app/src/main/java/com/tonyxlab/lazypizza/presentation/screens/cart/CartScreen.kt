@@ -138,7 +138,7 @@ private fun CartScreenContent(
     uiState: CartUiState,
     onEvent: (CartUiEvent) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: CartViewModel = koinViewModel()
+
 ) {
     // NEW → collect real cart items
    // val cartItems by viewModel.cartItems.collectAsState()

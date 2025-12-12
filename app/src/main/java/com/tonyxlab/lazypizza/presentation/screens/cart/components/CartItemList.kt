@@ -202,7 +202,7 @@ private fun CartItemMainContent(
                     onRemove = { onEvent(CartUiEvent.DecrementQuantity(item = cartItem)) },
                     counter = counter,
                     maxCount = 5,
-                    minCount = 1
+                    minCount = 0
             )
 
             Column(

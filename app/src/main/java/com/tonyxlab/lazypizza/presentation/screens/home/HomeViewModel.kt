@@ -25,8 +25,6 @@ typealias HomeBaseViewModel = BaseViewModel<HomeUiState, HomeUiEvent, HomeAction
 
 class HomeViewModel(private val repository: CartRepository) : HomeBaseViewModel() {
 
-   // val cartItems = repository.cartItems
-
     init {
         observeSearchBarState()
         observeCart()
@@ -38,19 +36,14 @@ class HomeViewModel(private val repository: CartRepository) : HomeBaseViewModel(
     fun observeCart() {
 
         repository.cartItems.map { items ->
-
-
+            val count = items.sumOf { it.counter }
+            items to count
         }
+                .onEach { (items, count) ->
 
-        val badgeCountFlow = cartItems.map { items -> items.sumOf { it.counter } }
-
-        badgeCountFlow.onEach { count ->
-
-            updateState { it.copy(badgeCount = count) }
-
-        }
+                    updateState { it.copy(cartItems = items, badgeCount = count) }
+                }
                 .launchIn(viewModelScope)
-
     }
 
     override fun onEvent(event: HomeUiEvent) {
@@ -71,8 +64,6 @@ class HomeViewModel(private val repository: CartRepository) : HomeBaseViewModel(
 
             is HomeUiEvent.AddSideItemToCart -> {
                 addSideItemToCart(sideItem = event.sideItem)
-                val cartItem = event.sideItem.toCartItem()
-                repository.addItem(cartItem)
             }
 
             is HomeUiEvent.IncrementQuantity -> {
@@ -137,65 +128,33 @@ class HomeViewModel(private val repository: CartRepository) : HomeBaseViewModel(
     }
 
     private fun addSideItemToCart(sideItem: SideItem) {
-        if (currentState.selectedSideItems.any { it.id == sideItem.id }) return
-        updateSelectedAddOnsList(sideItem = sideItem, newCount = 1)
-        calculateItemOrderTotal()
-    }
 
-    private fun updateSelectedAddOnsList(sideItem: SideItem, newCount: Int) {
-        val newSet = currentState.selectedSideItems.toMutableSet()
-        newSet.removeIf { it.id == sideItem.id }
+        val cartItem = sideItem.toCartItem()
+        repository.addItem(cartItem)
 
-        if (newCount > 0) {
-            newSet.add(sideItem.copy(counter = newCount))
-        }
-        updateState { it.copy(selectedSideItems = newSet) }
-        calculateItemOrderTotal()
     }
 
     private fun incrementCount(sideItem: SideItem) {
 
-        val currentCount = currentState.selectedSideItems
-                .find { it.id == sideItem.id }?.counter ?: 0
+        val currentCount = currentState.cartItems.find { it.id == sideItem.id }?.counter ?: 0
 
         val newCount = currentCount.plus(1)
-                .coerceAtMost(10)
-        updateSelectedAddOnsList(sideItem = sideItem, newCount = newCount)
-        calculateItemOrderTotal()
-        repository.updateCount(sideItem.toCartItem(), newCount)
+                .coerceAtMost(5)
+        repository.updateCount(cartItem = sideItem.toCartItem(), newCount = newCount)
     }
 
     private fun decrementCount(sideItem: SideItem) {
-        val currentCount = currentState.selectedSideItems
-                .find { it.id == sideItem.id }?.counter ?: 0
+
+        val currentCount = currentState.cartItems.find { it.id == sideItem.id }?.counter ?: 0
+
         val newCount = currentCount.minus(1)
                 .coerceAtLeast(0)
+        repository.updateCount(cartItem = sideItem.toCartItem(), newCount = newCount)
 
-        updateSelectedAddOnsList(sideItem = sideItem, newCount = newCount)
-
-        calculateItemOrderTotal()
-        repository.updateCount(sideItem.toCartItem(), newCount)
-    }
-
-    private fun calculateItemOrderTotal() {
-        val total = currentState.selectedSideItems.sumOf { it.counter * it.price }
-        updateState { it.copy(aggregateItemTotal = total) }
     }
 
     private fun removeItemFromCart(sideItem: SideItem) {
-
-        /**
-         *
-        val currentSet = currentState.selectedSideItems.toMutableSet()
-        currentSet.removeIf { it.id == sideItem.id }
-         */
-
-        val updatedSet = currentState.selectedSideItems.filterNot {
-            it.id == sideItem.id
-        }
-                .toSet()
-
-        updateState { it.copy(selectedSideItems = updatedSet) }
         repository.removeItem(sideItem.toCartItem())
+
     }
 }

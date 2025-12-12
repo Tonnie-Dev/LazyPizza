@@ -81,7 +81,7 @@ class CartViewModel(private val repository: CartRepository) : CartBaseViewModel(
     private fun onDecrement(cartItem: CartItem) {
         repository.updateCount(
                 cartItem = cartItem,
-                newCount = (cartItem.counter - 1).coerceAtLeast(1)
+                newCount = (cartItem.counter - 1).coerceAtLeast(0)
         )
     }
     /*    private fun onIncrement(item: CartItem) {

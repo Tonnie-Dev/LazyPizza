@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.R
+import com.tonyxlab.lazypizza.domain.model.CartItem
 import com.tonyxlab.lazypizza.domain.model.SideItem
 import com.tonyxlab.lazypizza.presentation.core.components.AppButton
 import com.tonyxlab.lazypizza.presentation.core.components.CounterItem
@@ -49,8 +50,9 @@ fun SideItemCard(
     modifier: Modifier = Modifier
 ) {
 
-    val counter = uiState.selectedSideItems.counterFor(sideItem)
-    val selected = uiState.selectedSideItems.isSelected(sideItem)
+    val counter = uiState.cartItems.counterFor(sideItem)
+    val selected = uiState.cartItems.isSelected(sideItem)
+
     Card(
             modifier = modifier
                     .fillMaxWidth()
@@ -68,7 +70,6 @@ fun SideItemCard(
                 modifier = modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
         ) {
-
             DisplayImage(
                     imageUrl = sideItem.imageUrl,
                     containerSize = MaterialTheme.spacing.spaceTwelve * 10,
@@ -83,7 +84,6 @@ fun SideItemCard(
                     aggregatePrice = sideItem.price * counter,
                     onEvent = onEvent
             )
-
         }
     }
 }
@@ -120,7 +120,6 @@ private fun SideItemCardContent(
                     )
             )
 
-
             if (selected) {
                 Box(
                         modifier = Modifier
@@ -153,68 +152,67 @@ private fun SideItemCardContent(
                 verticalAlignment = Alignment.CenterVertically
         ) {
 
-                if (selected) {
+            if (selected) {
 
-                    CounterItem(
-                            modifier = Modifier.weight(1f),
-                            onAdd = { onEvent(HomeUiEvent.IncrementQuantity(sideItem)) },
-                            onRemove = { onEvent(HomeUiEvent.DecrementQuantity(sideItem)) },
-                            counter = counter,
-                            maxCount = 5
-                    )
+                CounterItem(
+                        modifier = Modifier.weight(1f),
+                        onAdd = { onEvent(HomeUiEvent.IncrementQuantity(sideItem)) },
+                        onRemove = { onEvent(HomeUiEvent.DecrementQuantity(sideItem)) },
+                        counter = counter,
+                        maxCount = 5
+                )
 
-                    Column(
-                            modifier = Modifier.weight(1f),
-                            horizontalAlignment = Alignment.End
-                    ) {
-
-                        Text(
-                                text = stringResource(
-                                        id = R.string.dollar_price_tag,
-                                        aggregatePrice
-                                ),
-                                style = MaterialTheme.typography.Title1SemiBold.copy(
-                                        color = MaterialTheme.colorScheme.onSurface
-                                )
-                        )
-
-                        Text(
-                                text = stringResource(
-                                        id = R.string.counter_price_tag,
-                                        counter,
-                                        sideItem.price
-                                ),
-                                style = MaterialTheme.typography.Body4Regular.copy(
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                        )
-                    }
-                } else {
+                Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.End
+                ) {
 
                     Text(
-                            modifier = Modifier.weight(1f),
                             text = stringResource(
                                     id = R.string.dollar_price_tag,
-                                    sideItem.price
+                                    aggregatePrice
                             ),
                             style = MaterialTheme.typography.Title1SemiBold.copy(
                                     color = MaterialTheme.colorScheme.onSurface
                             )
                     )
 
-                    AppButton(
-                            modifier = Modifier.wrapContentWidth(),
-                            onClick = { onEvent(HomeUiEvent.AddSideItemToCart(sideItem = sideItem)) },
-                            buttonText = stringResource(id = R.string.btn_text_add_to_cart),
-                            buttonHeight = MaterialTheme.spacing.spaceTen * 4,
-                            isOutlineButton = true,
-                            contentColor = MaterialTheme.colorScheme.primary
+                    Text(
+                            text = stringResource(
+                                    id = R.string.counter_price_tag,
+                                    counter,
+                                    sideItem.price
+                            ),
+                            style = MaterialTheme.typography.Body4Regular.copy(
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                     )
                 }
+            } else {
+
+                Text(
+                        modifier = Modifier.weight(1f),
+                        text = stringResource(
+                                id = R.string.dollar_price_tag,
+                                sideItem.price
+                        ),
+                        style = MaterialTheme.typography.Title1SemiBold.copy(
+                                color = MaterialTheme.colorScheme.onSurface
+                        )
+                )
+
+                AppButton(
+                        modifier = Modifier.wrapContentWidth(),
+                        onClick = { onEvent(HomeUiEvent.AddSideItemToCart(sideItem = sideItem)) },
+                        buttonText = stringResource(id = R.string.btn_text_add_to_cart),
+                        buttonHeight = MaterialTheme.spacing.spaceTen * 4,
+                        isOutlineButton = true,
+                        contentColor = MaterialTheme.colorScheme.primary
+                )
             }
         }
     }
-
+}
 
 @PreviewLightDark
 @Composable
@@ -247,12 +245,11 @@ private fun SideItemCard_Preview() {
     }
 }
 
-private fun Set<SideItem>.isSelected(sideItem: SideItem): Boolean {
-    return any { it.id == sideItem.id }
-}
+private fun List<CartItem>.counterFor(sideItem: SideItem) =
+    find { it.id == sideItem.id }?.counter ?: 0
 
-private fun Set<SideItem>.counterFor(sideItem: SideItem): Int {
-    return firstOrNull { it.id == sideItem.id }?.counter ?: 0
-}
+private fun List<CartItem>.isSelected(sideItem: SideItem): Boolean =
+    any { it.id == sideItem.id }
+
 
 

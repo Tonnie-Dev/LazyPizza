@@ -2,6 +2,7 @@ package com.tonyxlab.lazypizza.presentation.screens.home.handling
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Stable
+import com.tonyxlab.lazypizza.domain.model.CartItem
 import com.tonyxlab.lazypizza.domain.model.Category
 import com.tonyxlab.lazypizza.domain.model.Pizza
 import com.tonyxlab.lazypizza.domain.model.SearchItem
@@ -18,7 +19,7 @@ data class HomeUiState(
     val allPizzaItems: List<Pizza> = mockPizzas,
     val allSideItems: List<SideItem> = getMockSideItems(),
     val filteredSideItems: List<SideItem> = emptyList(),
-    val selectedSideItems: Set<SideItem> = emptySet(),
+    val cartItems: List<CartItem> = emptyList(),
     val searchResults: List<SearchItem> = emptyList(),
     val selectedCategory: Category = Category.PIZZA,
     val aggregateItemTotal: Double = 0.0,
