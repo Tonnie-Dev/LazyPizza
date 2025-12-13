@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -147,7 +148,7 @@ private fun NavItemIcon(
                     MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        if ( hasBadge && itemCount > 0) {
+        if (hasBadge && itemCount > 0) {
             Box(
                     modifier = Modifier
                             .size(badgeSize)
@@ -157,7 +158,8 @@ private fun NavItemIcon(
                             .background(
                                     color = MaterialTheme.colorScheme.primary,
                                     shape = CircleShape
-                            ).animateContentSize(),
+                            )
+                            .animateContentSize(),
                     contentAlignment = Alignment.Center
 
             ) {
@@ -184,7 +186,10 @@ fun AppNavigationRail(
 
     val navigationState = navigator.state
 
-    NavigationRail(modifier = modifier, containerColor = MaterialTheme.colorScheme.surface) {
+    NavigationRail(
+            modifier = modifier,
+            containerColor = MaterialTheme.colorScheme.surface
+    ) {
         Spacer(modifier = Modifier.weight(1f))
         NavigationRailItem(
                 modifier = Modifier.animateContentSize(),
@@ -199,11 +204,16 @@ fun AppNavigationRail(
                     )
                 },
                 label = { Text(text = "Menu") },
-                colors = NavigationRailItemDefaults.colors(selectedIconColor = MaterialTheme.colorScheme.primary)
+                colors = NavigationRailItemDefaults.colors(
+                        selectedIconColor = MaterialTheme.colorScheme.primary
+                )
         )
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceExtraSmall))
 
         NavigationRailItem(
-                modifier = Modifier.animateContentSize(),
+                modifier = Modifier
+                        .animateContentSize()
+                        .padding(MaterialTheme.spacing.spaceDoubleDp),
                 selected = navigationState.topLevelRoute == CartScreenDestination,
                 onClick = { navigator.navigate(CartScreenDestination) },
                 icon = {
@@ -218,9 +228,12 @@ fun AppNavigationRail(
 
                 },
                 label = { Text(text = "Cart") },
-                colors = NavigationRailItemDefaults.colors(selectedIconColor = MaterialTheme.colorScheme.primary)
+                colors = NavigationRailItemDefaults.colors(
+                        selectedIconColor = MaterialTheme.colorScheme.primary
+                )
         )
 
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceExtraSmall))
 
         NavigationRailItem(
                 modifier = Modifier.animateContentSize(),
@@ -239,7 +252,6 @@ fun AppNavigationRail(
 
         Spacer(modifier = Modifier.weight(1f))
     }
-
 }
 
 @PreviewLightDark

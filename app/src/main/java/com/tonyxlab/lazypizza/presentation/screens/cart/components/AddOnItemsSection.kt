@@ -44,7 +44,8 @@ import com.tonyxlab.lazypizza.utils.getMockSideItems
 fun AddOnItemsSection(
     items: List<AddOnItem>,
     onEvent: (CartUiEvent) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isWide: Boolean = true
 ) {
     Column(
             modifier = modifier
@@ -52,13 +53,15 @@ fun AddOnItemsSection(
                     .padding(bottom = MaterialTheme.spacing.spaceTen * 2)
     ) {
 
-        Text(
-                modifier = Modifier.padding(bottom = MaterialTheme.spacing.spaceSmall),
-                text = stringResource(R.string.header_text_recommended_options),
-                style = MaterialTheme.typography.Label2SemiBold.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-        )
+        if (isWide.not()) {
+            Text(
+                    modifier = Modifier.padding(bottom = MaterialTheme.spacing.spaceSmall),
+                    text = stringResource(R.string.header_text_recommended_options),
+                    style = MaterialTheme.typography.Label2SemiBold.copy(
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+            )
+        }
         LazyRow(
                 modifier = Modifier,
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceSmall)

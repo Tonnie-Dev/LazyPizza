@@ -100,7 +100,7 @@ private fun SideItemCardContent(
     Column(
             modifier = modifier
                     .padding(
-                            horizontal = MaterialTheme.spacing.spaceMedium,
+                            horizontal = MaterialTheme.spacing.spaceTwelve,
                             vertical = MaterialTheme.spacing.spaceTwelve
                     ),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceTen * 3)
