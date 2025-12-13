@@ -1,6 +1,6 @@
 package com.tonyxlab.lazypizza.presentation.core.components
 
-import android.R.attr.onClick
+import android.R.attr.contentDescription
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -37,12 +37,15 @@ import com.tonyxlab.lazypizza.presentation.theme.Body1Medium
 import com.tonyxlab.lazypizza.presentation.theme.Body1Regular
 import com.tonyxlab.lazypizza.presentation.theme.Body3Medium
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
+import com.tonyxlab.lazypizza.presentation.theme.Primary8
 import com.tonyxlab.lazypizza.presentation.theme.TextSecondary8
+import com.tonyxlab.lazypizza.utils.ifThen
 
 @Composable
 fun AppTopBarOne(
     phoneNumber: String,
     onCallClick: () -> Unit,
+    signedIn: Boolean,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -77,10 +80,7 @@ fun AppTopBarOne(
         Row(
                 modifier = Modifier
                         .weight(1f)
-                        .clickable {
-
-                            onCallClick()
-                        },
+                        .clickable { onCallClick() },
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
         ) {
@@ -97,6 +97,41 @@ fun AppTopBarOne(
                             color = MaterialTheme.colorScheme.onSurface
                     )
             )
+
+            Spacer(modifier = Modifier.width(MaterialTheme.spacing.spaceDoubleDp * 3))
+
+            Box(
+                    modifier = Modifier
+                            .clip(CircleShape)
+                            .size(MaterialTheme.spacing.spaceLarge)
+                            .ifThen(signedIn) {
+                                background(
+                                        color = Primary8,
+                                        shape = CircleShape
+                                )
+                            }
+                            .ifThen(signedIn.not()) {
+
+                                background(
+                                        color = TextSecondary8,
+                                        shape = CircleShape
+                                )
+                            },
+                    contentAlignment = Alignment.Center
+            ) {
+
+                val (painterRes, tint) = if (signedIn)
+                    R.drawable.ic_log_out to MaterialTheme.colorScheme.primary
+                else
+                    R.drawable.ic_user to MaterialTheme.colorScheme.onSurfaceVariant
+                Icon(
+                        modifier = Modifier.size(MaterialTheme.spacing.spaceMedium),
+                        painter = painterResource(painterRes),
+                        contentDescription = stringResource(R.string.blank_text),
+                        tint = tint
+                )
+
+            }
         }
     }
 }
@@ -104,7 +139,8 @@ fun AppTopBarOne(
 @Composable
 fun AppTopBarTwo(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier) {
+    modifier: Modifier = Modifier
+) {
 
     Row(
             modifier = modifier
@@ -122,7 +158,7 @@ fun AppTopBarTwo(
                         .clip(CircleShape)
                         .background(color = TextSecondary8)
                         .size(MaterialTheme.spacing.spaceDoubleDp * 22)
-                        .clickable{ onClick()}
+                        .clickable { onClick() }
                         .padding(all = MaterialTheme.spacing.spaceSmall),
                 contentAlignment = Alignment.Center
         ) {
@@ -136,11 +172,11 @@ fun AppTopBarTwo(
     }
 }
 
-
 @Composable
 fun AppTopBarThree(
-    titleText:String,
-    modifier: Modifier = Modifier) {
+    titleText: String,
+    modifier: Modifier = Modifier
+) {
 
     Row(
             modifier = modifier
@@ -177,7 +213,8 @@ private fun AppTopBar_Preview() {
                         .padding(MaterialTheme.spacing.spaceMedium)
         ) {
 
-            AppTopBarOne(phoneNumber = "0723 445 813", onCallClick = {})
+            AppTopBarOne(phoneNumber = "0723 445 813", onCallClick = {}, signedIn = false)
+            AppTopBarOne(phoneNumber = "0723 445 813", onCallClick = {}, signedIn = true)
             AppTopBarTwo(onClick = {})
             AppTopBarThree(titleText = "Cart")
 

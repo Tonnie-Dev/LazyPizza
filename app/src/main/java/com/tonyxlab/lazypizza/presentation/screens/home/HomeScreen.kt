@@ -87,7 +87,8 @@ fun HomeScreen(
                                 phoneNumber = uiState.phoneNumber,
                                 onCallClick = {
                                     viewModel.onEvent(HomeUiEvent.PlaceCall)
-                                }
+                                },
+                                signedIn = false
                         )
                     },
                     bottomBar = {},
@@ -127,7 +128,8 @@ fun HomeScreen(
                             phoneNumber = uiState.phoneNumber,
                             onCallClick = {
                                 viewModel.onEvent(HomeUiEvent.PlaceCall)
-                            }
+                            },
+                            signedIn = true
                     )
                 },
                 bottomBar = {

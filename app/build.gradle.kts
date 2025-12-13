@@ -113,7 +113,7 @@ dependencies {
 
     // Firebase
     implementation(platform(Google.firebase.bom))
-    implementation(Google.firebase.authenticationKtx)
+    implementation(Google.firebase.authentication)
 
 
     // Testing
