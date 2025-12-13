@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp.plugin)
     alias(libs.plugins.kotlin.serializer.plugin)
+    alias(libs.plugins.firebase.plugin)
 }
 
 
@@ -109,6 +110,11 @@ dependencies {
 
     // Logging
     implementation(JakeWharton.timber)
+
+    // Firebase
+    implementation(platform(Google.firebase.bom))
+    implementation(Google.firebase.authenticationKtx)
+
 
     // Testing
     testImplementation(libs.junit)

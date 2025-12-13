@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.tonyxlab.lazypizza" />
+                  <option name="mobileSdkAppId" value="1:22689171322:android:da594c4474166ade5e78c3" />
+                  <option name="projectId" value="lazypizza-88454" />
+                  <option name="projectNumber" value="22689171322" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
