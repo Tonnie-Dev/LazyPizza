@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.tonyxlab.lazypizza.presentation.core.components
 
 import androidx.compose.foundation.background
@@ -20,7 +22,6 @@ import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.presentation.theme.Title1Medium
 import com.tonyxlab.lazypizza.presentation.theme.Title3
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppDialog(
     onDismiss: () -> Unit,
@@ -28,8 +29,8 @@ fun AppDialog(
     dialogTitle: String,
     dialogText: String,
     positiveButtonText: String,
-    negativeButtonText: String? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    negativeButtonText: String? = null
 ) {
     AlertDialog(
             modifier = modifier,

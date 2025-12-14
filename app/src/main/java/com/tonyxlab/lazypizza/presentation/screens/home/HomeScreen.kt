@@ -117,8 +117,9 @@ fun HomeScreen(
                 )
             }
         }
+        return
 
-    } else {
+    }
         BaseContentLayout(
                 modifier = modifier,
                 viewModel = viewModel,
@@ -129,7 +130,7 @@ fun HomeScreen(
                             onCallClick = {
                                 viewModel.onEvent(HomeUiEvent.PlaceCall)
                             },
-                            signedIn = true
+                            signedIn = false
                     )
                 },
                 bottomBar = {
@@ -163,7 +164,7 @@ fun HomeScreen(
             )
         }
     }
-}
+
 
 @Composable
 private fun HomeScreenContent(
