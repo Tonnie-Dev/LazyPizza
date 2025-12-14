@@ -247,9 +247,7 @@ private fun HomeScreenContent(
                                         uiState = uiState,
                                         onEvent = onEvent
                                 )
-
                             }
-
                         }
                     }
                 }

@@ -22,9 +22,10 @@
     <string name="cap_text_item_count">%d</string>
     <string name="cap_text_not_signed_in">Not Signed In</string>
     <string name="cap_text_please_sign_in">Please sign in to view your order history.</string>
+
     <!--Label Texts-->
     <string name="lab_text_text">Text</string>
-<!---->
+
     <!--Button Texts-->
     <string name="btn_text_share">Share</string>
     <string name="btn_text_add_to_cart">Add to Cart </string>
@@ -32,9 +33,10 @@
     <string name="btn_text_add_to_cart_with_price">Add to Cart for $ %.2f</string>
     <string name="btn_text_proceed_to_checkout">Proceed to Checkout ($%.2f)</string>
     <string name="btn_text_sign_in">Sign In</string>
+    <string name="btn_text_log_out">Log Out</string>
 
     <!--Text Button Texts-->
-    <string name="txt_btn_no_account">Don’t have an account?</string>
+    <string name="txt_btn_cancel">Cancel</string>
 
     <!--Content Description Texts-->
     <string name="cds_text_pizza_logo">Pizza Logo</string>
@@ -55,7 +57,7 @@
     <string name="toast_text_copied">Copied to Clipboard</string>
 
     <!--Dialog Texts-->
-    <string name="dialog_text_camera_required">Camera Required</string>
+    <string name="dialog_text_title">Are you sure you want to log out?</string>
 
     <!--Supporting Texts-->
     <string name="sup_text_def_username">Use between 3 and 20 characters for your username.</string>
