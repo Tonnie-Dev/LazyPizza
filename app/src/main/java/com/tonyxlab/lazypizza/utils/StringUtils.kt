@@ -6,5 +6,8 @@ fun Double.toPrice():String {
         "$${this.toInt()}"
     else
         "$${"%.2f".format(this)}"
+}
 
+fun String.isValidInternationalPhone(): Boolean {
+    return Regex("^\\+[1-9]\\d{7,14}$").matches(this)
 }

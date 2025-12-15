@@ -85,7 +85,13 @@ object ExtendedTypography {
             lineHeight = 22.sp,
             letterSpacing = 0.sp
     )
-
+    val Body2Regular = TextStyle(
+            fontFamily = InstrumentSansFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize =15.sp,
+            lineHeight = 22.sp,
+            letterSpacing = 0.sp
+    )
     val Body3Regular = TextStyle(
             fontFamily = InstrumentSansFamily,
             fontWeight = FontWeight.Normal,
@@ -142,6 +148,10 @@ val Typography.Body1Regular
 val Typography.Body1Medium
     @Composable
     get() = ExtendedTypography.Body1Medium
+
+val Typography.Body2Regular
+    @Composable
+    get() = ExtendedTypography.Body2Regular
 
 val Typography.Body3Regular
     @Composable
