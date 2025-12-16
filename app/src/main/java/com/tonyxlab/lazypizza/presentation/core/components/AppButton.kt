@@ -1,8 +1,12 @@
 package com.tonyxlab.lazypizza.presentation.core.components
 
+import android.R.attr.enabled
+import android.R.attr.onClick
+import android.R.attr.text
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -13,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,15 +28,62 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.presentation.core.utils.gradientScheme
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.presentation.theme.Primary8
 import com.tonyxlab.lazypizza.presentation.theme.RoundedCornerShape100
+import com.tonyxlab.lazypizza.presentation.theme.TextPrimary8
 import com.tonyxlab.lazypizza.presentation.theme.Title3
 import com.tonyxlab.lazypizza.utils.ifThen
+/*
+@Composable
+fun AppButton(
 
+    text: String,
+    modifier: Modifier = Modifier,
+    isOutlineButton: Boolean = false,
+    enabled: Boolean = true,
+    buttonShape: Shape = MaterialTheme.shapes.RoundedCornerShape100,
+    buttonHeight: Dp = MaterialTheme.spacing.spaceTwelve * 4,
+
+    onClick: () -> Unit
+) {
+
+    Surface(
+            modifier = modifier.height(buttonHeight),
+            enabled = enabled,
+            shape = buttonShape,
+            color = buttonBackgroundColor(
+                    isOutlineButton = isOutlineButton,
+                    enabled = enabled
+            ),
+            border = buttonBorder(
+                    isOutlineButton = isOutlineButton,
+                    enabled = enabled
+            ),
+            onClick = onClick
+    ) {
+        Text(
+                modifier = Modifier
+                       // .padding(vertical = 14.dp, horizontal = 24.dp),
+                ,text = text,
+                style = MaterialTheme.typography.labelLarge,
+                color = when {
+                    !enabled ->
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    isOutlineButton ->
+                        MaterialTheme.colorScheme.primary
+                    else ->
+                        MaterialTheme.colorScheme.onPrimary
+                }
+        )
+    }
+}
+
+*/
 @Composable
 fun AppButton(
     onClick: () -> Unit,
@@ -43,32 +95,41 @@ fun AppButton(
     buttonHeight: Dp = MaterialTheme.spacing.spaceTwelve * 4,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary,
 ) {
+
+    val backgroundModifier = when {
+
+        isOutlineButton -> Modifier
+                .background(
+                color = Color.Transparent,
+                shape = buttonShape
+        )
+                .border(
+                        width = MaterialTheme.spacing.spaceDoubleDp,
+                        color = Primary8,
+                        shape = buttonShape
+                )
+
+        enabled  -> {
+
+            Modifier
+                    . background(
+                    brush = MaterialTheme.gradientScheme.stickyButtonGradient,
+                    shape = buttonShape
+            )
+
+        }
+
+        else ->
+
+            Modifier.background(
+                    color = TextPrimary8,
+                    shape = buttonShape
+            )
+    }
     Box(
             modifier = modifier
                     .clip(shape = buttonShape)
-                    .ifThen(flag = isOutlineButton) {
-                        background(
-                                color = Color.Transparent,
-                                shape = buttonShape
-                        )
-                                .border(
-                                        width = MaterialTheme.spacing.spaceDoubleDp,
-                                        color = Primary8,
-                                        shape = buttonShape
-                                )
-                    }
-                    .ifThen(flag = isOutlineButton.not()) {
-                        background(
-                                brush = MaterialTheme.gradientScheme.stickyButtonGradient,
-                                shape = buttonShape
-                        )
-                    }
-                    .ifThen(enabled.not()){
-                        background(
-                                color = Primary8,
-                                shape = buttonShape
-                        )
-                    }
+                    .then(backgroundModifier)
                     .height(buttonHeight)
                     .clickable { onClick() }
                     .padding(
@@ -122,3 +183,34 @@ private fun AppButton_Preview() {
         }
     }
 }
+
+@Composable
+private fun buttonBackgroundColor(
+    isOutlineButton: Boolean,
+    enabled: Boolean
+): Color {
+    return when {
+        isOutlineButton -> Color.Transparent
+        enabled -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.surfaceVariant
+    }
+}
+
+@Composable
+private fun buttonBorder(
+    isOutlineButton: Boolean,
+    enabled: Boolean
+): BorderStroke? {
+    return if (isOutlineButton) {
+        BorderStroke(
+                width = 1.dp,
+                color = if (enabled)
+                    MaterialTheme.colorScheme.primary
+                else
+                    MaterialTheme.colorScheme.outlineVariant
+        )
+    } else {
+        null
+    }
+}
+
