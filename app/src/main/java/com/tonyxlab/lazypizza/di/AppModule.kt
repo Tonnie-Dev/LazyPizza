@@ -1,11 +1,13 @@
 package com.tonyxlab.lazypizza.di
 
+import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.tonyxlab.lazypizza.data.repository.AuthRepositoryImpl
 import com.tonyxlab.lazypizza.data.repository.CartRepositoryImpl
 import com.tonyxlab.lazypizza.domain.repository.AuthRepository
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
+import com.tonyxlab.lazypizza.presentation.screens.auth.AuthViewModel
 import com.tonyxlab.lazypizza.presentation.screens.cart.CartViewModel
 import com.tonyxlab.lazypizza.presentation.screens.details.DetailsViewModel
 import com.tonyxlab.lazypizza.presentation.screens.history.HistoryViewModel
@@ -18,6 +20,7 @@ val viewModelModule = module {
     viewModelOf(::DetailsViewModel)
     viewModelOf(::CartViewModel)
     viewModelOf(::HistoryViewModel)
+    viewModelOf(::AuthViewModel)
 }
 
 val firebaseModule = module {

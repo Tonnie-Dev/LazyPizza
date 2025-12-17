@@ -33,6 +33,7 @@ import androidx.core.net.toUri
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.Category
 import com.tonyxlab.lazypizza.navigation.AppNavigationRail
+import com.tonyxlab.lazypizza.navigation.AuthScreenDestination
 import com.tonyxlab.lazypizza.navigation.BottomNavBar
 import com.tonyxlab.lazypizza.navigation.DetailScreenDestination
 import com.tonyxlab.lazypizza.navigation.Navigator
@@ -85,9 +86,7 @@ fun HomeScreen(
                         AppTopBarOne(
                                 modifier = Modifier.padding(horizontal = MaterialTheme.spacing.spaceMedium),
                                 phoneNumber = uiState.phoneNumber,
-                                onCallClick = {
-                                    viewModel.onEvent(HomeUiEvent.PlaceCall)
-                                },
+                                onEvent = { viewModel.onEvent(it) },
                                 signedIn = false
                         )
                     },
@@ -99,6 +98,10 @@ fun HomeScreen(
                                     data = "tel:${uiState.phoneNumber}".toUri()
                                 }
                                 context.startActivity(dialIntent)
+                            }
+
+                            HomeActionEvent.NavigateToAuthScreen -> {
+                                navigator.navigate(AuthScreenDestination)
                             }
 
                             is HomeActionEvent.NavigateToDetailsScreen -> {
@@ -127,9 +130,7 @@ fun HomeScreen(
                     AppTopBarOne(
                             modifier = Modifier.padding(horizontal = MaterialTheme.spacing.spaceMedium),
                             phoneNumber = uiState.phoneNumber,
-                            onCallClick = {
-                                viewModel.onEvent(HomeUiEvent.PlaceCall)
-                            },
+                            onEvent = { viewModel.onEvent(it) },
                             signedIn = false
                     )
                 },
@@ -147,7 +148,9 @@ fun HomeScreen(
                             }
                             context.startActivity(dialIntent)
                         }
-
+                        HomeActionEvent.NavigateToAuthScreen -> {
+                            navigator.navigate(AuthScreenDestination)
+                        }
                         is HomeActionEvent.NavigateToDetailsScreen -> {
                             navigator.navigate(DetailScreenDestination(id = action.id))
                         }

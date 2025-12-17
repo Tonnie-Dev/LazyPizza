@@ -78,6 +78,11 @@ class HomeViewModel(private val repository: CartRepository) : HomeBaseViewModel(
             is HomeUiEvent.ResetOrderStatus -> {
                 removeItemFromCart(event.addOnItem)
             }
+
+            HomeUiEvent.SignIn -> {
+
+                sendActionEvent(HomeActionEvent.NavigateToAuthScreen)
+            }
         }
     }
 

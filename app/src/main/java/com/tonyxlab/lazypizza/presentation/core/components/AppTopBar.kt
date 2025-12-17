@@ -1,6 +1,5 @@
 package com.tonyxlab.lazypizza.presentation.core.components
 
-import android.R.attr.contentDescription
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
+import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiEvent
 import com.tonyxlab.lazypizza.presentation.theme.Body1Medium
 import com.tonyxlab.lazypizza.presentation.theme.Body1Regular
 import com.tonyxlab.lazypizza.presentation.theme.Body3Medium
@@ -44,7 +44,7 @@ import com.tonyxlab.lazypizza.utils.ifThen
 @Composable
 fun AppTopBarOne(
     phoneNumber: String,
-    onCallClick: () -> Unit,
+    onEvent: (HomeUiEvent) -> Unit,
     signedIn: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -80,7 +80,7 @@ fun AppTopBarOne(
         Row(
                 modifier = Modifier
                         .weight(1f)
-                        .clickable { onCallClick() },
+                        .clickable { onEvent(HomeUiEvent.PlaceCall) },
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
         ) {
@@ -111,11 +111,12 @@ fun AppTopBarOne(
                                 )
                             }
                             .ifThen(signedIn.not()) {
-
                                 background(
                                         color = TextSecondary8,
                                         shape = CircleShape
                                 )
+                            }.clickable{
+                                onEvent(HomeUiEvent.SignIn)
                             },
                     contentAlignment = Alignment.Center
             ) {
@@ -213,8 +214,8 @@ private fun AppTopBar_Preview() {
                         .padding(MaterialTheme.spacing.spaceMedium)
         ) {
 
-            AppTopBarOne(phoneNumber = "0723 445 813", onCallClick = {}, signedIn = false)
-            AppTopBarOne(phoneNumber = "0723 445 813", onCallClick = {}, signedIn = true)
+            AppTopBarOne(phoneNumber = "0723 445 813", onEvent = {}, signedIn = false)
+            AppTopBarOne(phoneNumber = "0723 445 813", onEvent = {}, signedIn = true)
             AppTopBarTwo(onClick = {})
             AppTopBarThree(titleText = "Cart")
 

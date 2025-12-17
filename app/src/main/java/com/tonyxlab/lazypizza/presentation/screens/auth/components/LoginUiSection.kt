@@ -4,11 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +28,7 @@ import com.tonyxlab.lazypizza.presentation.theme.Body3Regular
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.presentation.theme.RoundedCornerShape100
 import com.tonyxlab.lazypizza.presentation.theme.Title1Medium
+import com.tonyxlab.lazypizza.presentation.theme.Title3
 
 @Composable
 fun LoginUiSection(
@@ -51,7 +54,7 @@ fun LoginUiSection(
 
         Text(
                 modifier = Modifier.padding(bottom = MaterialTheme.spacing.spaceTen * 2),
-                text = stringResource(id = R.string.cap_text_welcome),
+                text = stringResource(id = R.string.cap_text_enter_phone_number),
                 style = MaterialTheme.typography.Body3Regular.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -76,10 +79,21 @@ fun LoginUiSection(
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceMedium))
 
         AppButton(
-                modifier = Modifier.height(MaterialTheme.spacing.spaceTen * 4),
+                modifier = Modifier
+                        .height(MaterialTheme.spacing.spaceTen * 4)
+                        .fillMaxWidth(),
                 onClick = { onEvent(AuthUiEvent.ContinueToLoginIn) },
-                buttonText = stringResource(id = R.string.btn_text_continue)
+                buttonText = stringResource(id = R.string.btn_text_continue),
+                enabled = uiState.continueToLogin
         )
+
+        TextButton(
+                onClick = { onEvent(AuthUiEvent.ContinueWithoutLogin) }) {
+            Text(
+                    text = stringResource(id = R.string.txt_btn_continue_without_sign_in),
+                    style = MaterialTheme.typography.Title3
+            )
+        }
     }
 }
 

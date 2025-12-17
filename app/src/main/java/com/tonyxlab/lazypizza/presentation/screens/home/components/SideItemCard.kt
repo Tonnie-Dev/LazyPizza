@@ -27,8 +27,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.R
-import com.tonyxlab.lazypizza.domain.model.CartItem
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
+import com.tonyxlab.lazypizza.domain.model.CartItem
 import com.tonyxlab.lazypizza.presentation.core.components.AppButton
 import com.tonyxlab.lazypizza.presentation.core.components.CounterItem
 import com.tonyxlab.lazypizza.presentation.core.components.DisplayImage
@@ -206,8 +206,7 @@ private fun SideItemCardContent(
                         onClick = { onEvent(HomeUiEvent.AddSideItemToCart(addOnItem = addOnItem)) },
                         buttonText = stringResource(id = R.string.btn_text_add_to_cart),
                         buttonHeight = MaterialTheme.spacing.spaceTen * 4,
-                        isOutlineButton = true,
-                        contentColor = MaterialTheme.colorScheme.primary
+                        isOutlineButton = true
                 )
             }
         }

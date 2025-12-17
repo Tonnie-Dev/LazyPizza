@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
+import com.tonyxlab.lazypizza.presentation.screens.auth.AuthScreen
 import com.tonyxlab.lazypizza.presentation.screens.cart.CartScreen
 import com.tonyxlab.lazypizza.presentation.screens.details.DetailsScreen
 import com.tonyxlab.lazypizza.presentation.screens.history.HistoryScreen
@@ -43,6 +44,10 @@ fun NavRoot() {
 
         entry<DetailScreenDestination> {
             DetailsScreen(id = it.id, navigator = navigator)
+        }
+
+        entry< AuthScreenDestination> {
+            AuthScreen()
         }
     }
 

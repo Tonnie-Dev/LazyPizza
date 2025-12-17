@@ -15,3 +15,6 @@ data object CartScreenDestination : NavKey
 @Serializable
 data object HistoryScreenDestination : NavKey
 
+@Serializable
+data object AuthScreenDestination: NavKey
+

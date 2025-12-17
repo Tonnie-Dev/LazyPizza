@@ -7,5 +7,4 @@ data class AuthUiState(
     val isSignedIn: Boolean = false,
     val textFieldState: TextFieldState = TextFieldState(),
     val continueToLogin: Boolean = false
-
 ) : UiState

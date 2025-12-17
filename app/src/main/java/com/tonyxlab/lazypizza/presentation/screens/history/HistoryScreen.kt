@@ -37,11 +37,9 @@ fun HistoryScreen(
     navigator: Navigator,
     modifier: Modifier = Modifier, viewModel: HistoryViewModel = koinViewModel()
 ) {
-
     SetStatusBarIconsColor(darkIcons = true)
 
     val uiState by viewModel.uiState.collectAsState()
-    val context = LocalContext.current
 
     val activity = LocalActivity.current ?: return
     val windowClass = calculateWindowSizeClass(activity)
@@ -131,46 +129,6 @@ private fun HistoryScreenContent(
 
     }
 }
-
-/*@Composable
-private fun EmptyHistoryBody(
-    onEvent: (CartUiEvent) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-            modifier = modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Column(
-                modifier = Modifier.padding(bottom = MaterialTheme.spacing.spaceTen * 2),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceDoubleDp * 3)
-        ) {
-
-            Text(
-                    text = stringResource(id = R.string.cap_text_empty_cart),
-                    style = MaterialTheme.typography.Title1SemiBold.copy(
-                            color = MaterialTheme.colorScheme.onSurface,
-                            textAlign = TextAlign.Center
-                    )
-            )
-
-            Text(
-                    text = stringResource(id = R.string.cap_text_head_back),
-                    style = MaterialTheme.typography.Body3Regular.copy(
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.Center
-                    )
-            )
-        }
-
-        AppButton(
-                onClick = { onEvent(CartUiEvent.BackToMenu) },
-                buttonText = stringResource(id = R.string.btn_text_back_to_menu)
-        )
-    }
-}*/
 
 @PreviewLightDark
 @Composable

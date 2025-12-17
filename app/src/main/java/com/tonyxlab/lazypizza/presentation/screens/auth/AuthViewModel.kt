@@ -43,6 +43,5 @@ class AuthViewModel : AuthBaseViewModel() {
                     updateState { it.copy(continueToLogin = isValidNumber) }
                 }
                 .launchIn(viewModelScope)
-
     }
 }

@@ -6,4 +6,5 @@ sealed interface HomeActionEvent: ActionEvent{
 
     data object LaunchDialingPad: HomeActionEvent
     data class NavigateToDetailsScreen(val id: Long): HomeActionEvent
+    data object NavigateToAuthScreen: HomeActionEvent
 }
