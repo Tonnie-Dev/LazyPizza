@@ -22,7 +22,7 @@ fun NavRoot() {
     }
 
     val navigationState = rememberNavigationState(
-            startRoute = CartScreenDestination,
+            startRoute = MenuScreenDestination,
             topLevelRoutes = topLevelRoutes
     )
 

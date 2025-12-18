@@ -1,5 +1,7 @@
 package com.tonyxlab.lazypizza.presentation.core.components
 
+import android.R.attr.text
+import android.text.TextUtils.replace
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -97,6 +100,11 @@ fun InputField(
                     ),
                     cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                     keyboardOptions = keyboardOptions,
+                    outputTransformation = if (isSearchField.not()) {
+                        OutputTransformation {
+                            val formatted = formatKenyaPhone(textFieldState.text.toString())
+                            replace(0, length, formatted)
+                        }}else null,
                     decorator = { innerTextField ->
                         TextDecorator(
                                 isEmpty = textFieldState.text.isEmpty(),
@@ -141,4 +149,39 @@ fun TextDecorator(
     }
 }
 
+
+private fun formatInternationalPhone(raw: String): String {
+    val cleaned = raw.replace(" ", "")
+
+    if (!cleaned.startsWith("+")) return cleaned
+
+    val countryCode = cleaned.take(2) // simple assumption: +1, +2, +3…
+    val rest = cleaned.drop(2)
+
+    val grouped = rest.chunked(3).joinToString(" ")
+
+    return "$countryCode $grouped"
+}
+
+fun formatKenyaPhone(raw: String): String {
+    val cleaned = raw.replace(" ", "")
+
+    // Only format Kenya numbers
+    if (!cleaned.startsWith("+254")) return cleaned
+
+    val localNumber = cleaned.removePrefix("+254")
+
+    // Guard: Kenya numbers should have up to 9 digits
+    val trimmed = localNumber.take(9)
+
+    val grouped = trimmed.chunked(3).joinToString(" ")
+
+    return buildString {
+        append("+254")
+        if (grouped.isNotEmpty()) {
+            append(" ")
+            append(grouped)
+        }
+    }
+}
 
