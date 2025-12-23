@@ -24,6 +24,8 @@
     <string name="cap_text_please_sign_in">Please sign in to view your order history.</string>
     <string name="cap_text_welcome">Welcome to LazyPizza</string>
     <string name="cap_text_enter_phone_number">Enter your phone number</string>
+    <string name="cap_text_enter_code">Enter code </string>
+    <string name="cap_text_request_code_in">You can request a new code in %s </string>
 
     <!--Label Texts-->
     <string name="lab_text_text">Text</string>
@@ -37,6 +39,7 @@
     <string name="btn_text_sign_in">Sign In</string>
     <string name="btn_text_log_out">Log Out</string>
     <string name="btn_text_continue">Continue</string>
+    <string name="btn_text_confirm">Confirm</string>
 
     <!--Text Button Texts-->
     <string name="txt_btn_cancel">Cancel</string>

@@ -20,12 +20,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.navigation.AppNavigationRail
+import com.tonyxlab.lazypizza.navigation.AuthScreenDestination
 import com.tonyxlab.lazypizza.navigation.BottomNavBar
 import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarThree
 import com.tonyxlab.lazypizza.presentation.core.components.EmptyScreenContent
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
+import com.tonyxlab.lazypizza.presentation.screens.history.handling.HistoryActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.history.handling.HistoryUiEvent
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.utils.DeviceType
@@ -67,6 +69,10 @@ fun HistoryScreen(
                     },
                     actionEventHandler = { _, action ->
 
+                        when(action){
+                            HistoryActionEvent.NavigateToAuth -> navigator.navigate(
+                                    AuthScreenDestination)
+                        }
                     },
                     onBackPressed = { activity.finish() },
                     containerColor = MaterialTheme.colorScheme.background
@@ -96,7 +102,10 @@ fun HistoryScreen(
                 },
                 onBackPressed = { activity.finish() },
                 actionEventHandler = { _, action ->
-
+                    when(action){
+                        HistoryActionEvent.NavigateToAuth -> navigator.navigate(
+                                AuthScreenDestination)
+                    }
                 },
                 containerColor = MaterialTheme.colorScheme.background
         ) {
@@ -134,9 +143,7 @@ private fun HistoryScreenContent(
 @Composable
 private fun HistoryScreenContent_Preview() {
     LazyPizzaTheme {
-
         Column(modifier = Modifier.fillMaxSize()) {
-
             HistoryScreenContent(onEvent = {})
         }
     }

@@ -47,7 +47,7 @@ fun NavRoot() {
         }
 
         entry< AuthScreenDestination> {
-            AuthScreen()
+            AuthScreen(navigator = navigator)
         }
     }
 

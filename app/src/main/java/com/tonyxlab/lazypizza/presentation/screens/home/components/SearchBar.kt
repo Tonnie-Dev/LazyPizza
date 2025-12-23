@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.tonyxlab.lazypizza.R
-import com.tonyxlab.lazypizza.presentation.core.components.InputField
+import com.tonyxlab.lazypizza.presentation.core.components.AppInputField
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiState
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
@@ -37,7 +37,7 @@ fun SearchComponent(
     SearchBar(
             modifier = modifier.wrapContentHeight(),
             inputField = {
-                InputField(
+                AppInputField(
                         textFieldState = uiState.textFieldState,
                         placeholderText = stringResource(R.string.placeholder_text_search),
                         isSearchField = true

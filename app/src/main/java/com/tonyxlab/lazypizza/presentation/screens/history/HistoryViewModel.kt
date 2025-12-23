@@ -24,7 +24,11 @@ class HistoryViewModel(private val repository: CartRepository) : HistoryBaseView
         get() = HistoryUiState()
 
     override fun onEvent(event: HistoryUiEvent) {
-        TODO("Not yet implemented")
+      when(event){
+          HistoryUiEvent.SignIn -> {
+              sendActionEvent(actionEvent = HistoryActionEvent.NavigateToAuth)
+          }
+      }
     }
 
     private fun observeCount() {
