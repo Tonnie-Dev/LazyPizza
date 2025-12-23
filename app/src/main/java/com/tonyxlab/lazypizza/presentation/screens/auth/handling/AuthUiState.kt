@@ -1,10 +1,31 @@
 package com.tonyxlab.lazypizza.presentation.screens.auth.handling
 
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.runtime.Stable
 import com.tonyxlab.lazypizza.presentation.core.base.handling.UiState
 
 data class AuthUiState(
     val isSignedIn: Boolean = false,
-    val textFieldState: TextFieldState = TextFieldState(),
-    val continueToLogin: Boolean = false
-) : UiState
+    val phoneInputState: PhoneInputState = PhoneInputState(),
+    val otpInputState: OtpInputState = OtpInputState(),
+    val authScreenStep: AuthScreenStep = AuthScreenStep.PhoneInputStep
+) : UiState {
+
+    @Stable
+    data class PhoneInputState(
+        val textFieldState: TextFieldState = TextFieldState(),
+        val continueEnabled: Boolean = false
+    )
+
+    @Stable
+    data class OtpInputState(
+        val textFieldState: TextFieldState = TextFieldState(),
+        val secondsRemaining: Int = 60,
+        val resend: Boolean = false,
+        val confirmEnabled: Boolean = false
+    )
+
+    @Stable
+    enum class AuthScreenStep { PhoneInputStep, OtpInputStep }
+}
+

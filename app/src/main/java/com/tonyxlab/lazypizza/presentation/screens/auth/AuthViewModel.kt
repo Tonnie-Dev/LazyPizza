@@ -1,5 +1,8 @@
+@file:OptIn(FlowPreview::class)
+
 package com.tonyxlab.lazypizza.presentation.screens.auth
 
+import android.R.attr.text
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.viewModelScope
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
@@ -22,17 +25,28 @@ class AuthViewModel : AuthBaseViewModel() {
         get() = AuthUiState()
 
     init {
-        observeTextField()
+        observePhoneTextField()
+        observeOtpInputField()
     }
 
     override fun onEvent(event: AuthUiEvent) {
-        TODO("Not yet implemented")
+        when (event) {
+            AuthUiEvent.ContinueToLoginIn -> {
+               switchScreenSection(authScreenStep = AuthUiState.AuthScreenStep.OtpInputStep)
+                sendActionEvent(actionEvent = AuthActionEvent.NavigateToOtp)
+            }
+
+            AuthUiEvent.ContinueWithoutLogin -> {
+                sendActionEvent(actionEvent = AuthActionEvent.NavigateBackToMenu)
+            }
+        }
     }
 
-    @OptIn(FlowPreview::class)
-    private fun observeTextField() {
+    private fun observePhoneTextField() {
 
-        val textFlow = snapshotFlow { currentState.textFieldState.text.toString() }
+        val textFlow = snapshotFlow {
+            currentState.phoneInputState.textFieldState.text.toString()
+        }
 
         textFlow
                 .map { it.trim() }
@@ -40,8 +54,48 @@ class AuthViewModel : AuthBaseViewModel() {
                 .distinctUntilChanged()
                 .onEach { input ->
                     val isValidNumber = input.isValidInternationalPhone()
-                    updateState { it.copy(continueToLogin = isValidNumber) }
+                    updateState {
+                        it.copy(
+                                phoneInputState = currentState.phoneInputState.copy(
+                                        continueEnabled = isValidNumber
+                                )
+                        )
+                    }
                 }
                 .launchIn(viewModelScope)
+    }
+
+    private fun observeOtpInputField() {
+
+        val textFlow = snapshotFlow {
+            currentState.otpInputState.textFieldState.text.toString()
+        }
+
+        textFlow
+                .map { rawText ->
+
+                    rawText.filter { it.isDigit() }.take(6)
+                }
+                .  debounce(300)
+                .distinctUntilChanged()
+                .onEach { text ->
+
+                    updateState {
+                        it.copy(
+                                otpInputState = currentState.otpInputState.copy(
+                                        confirmEnabled =text.length ==6
+                                )
+                        )
+                    }
+
+                }
+                .launchIn(viewModelScope)
+    }
+    private fun switchScreenSection(authScreenStep: AuthUiState.AuthScreenStep) {
+
+        updateState { it.copy(
+                authScreenStep = authScreenStep
+        ) }
+
     }
 }
