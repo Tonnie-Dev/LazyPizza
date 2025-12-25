@@ -13,7 +13,7 @@ data class AuthUiState(
 
     @Stable
     data class PhoneInputState(
-        val textFieldState: TextFieldState = TextFieldState(),
+        val textFieldState: TextFieldState = TextFieldState(initialText = "+254723445813"),
         val continueEnabled: Boolean = false
     )
 
@@ -22,7 +22,8 @@ data class AuthUiState(
         val textFieldState: TextFieldState = TextFieldState(),
         val secondsRemaining: Int = 60,
         val resend: Boolean = false,
-        val confirmEnabled: Boolean = false
+        val confirmEnabled: Boolean = false,
+        val error: Boolean = false
     )
 
     @Stable

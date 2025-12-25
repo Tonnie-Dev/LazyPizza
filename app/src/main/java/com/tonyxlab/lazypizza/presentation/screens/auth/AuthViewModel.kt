@@ -2,7 +2,6 @@
 
 package com.tonyxlab.lazypizza.presentation.screens.auth
 
-import android.R.attr.text
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.viewModelScope
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
@@ -76,18 +75,23 @@ class AuthViewModel : AuthBaseViewModel() {
 
                     rawText.filter { it.isDigit() }.take(6)
                 }
-                .  debounce(300)
+
                 .distinctUntilChanged()
-                .onEach { text ->
+                .onEach { sanitized ->
 
                     updateState {
                         it.copy(
                                 otpInputState = currentState.otpInputState.copy(
-                                        confirmEnabled =text.length ==6
+                                        confirmEnabled = sanitized.length == 6
                                 )
                         )
-                    }
 
+                    }
+                    if (sanitized != currentState.otpInputState.textFieldState.text.toString()) {
+                        currentState.otpInputState.textFieldState.edit {
+                            replace(0, length, sanitized)
+                        }
+                    }
                 }
                 .launchIn(viewModelScope)
     }

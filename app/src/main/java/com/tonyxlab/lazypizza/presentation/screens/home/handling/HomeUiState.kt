@@ -2,11 +2,11 @@ package com.tonyxlab.lazypizza.presentation.screens.home.handling
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Stable
+import com.tonyxlab.lazypizza.domain.model.AddOnItem
 import com.tonyxlab.lazypizza.domain.model.CartItem
 import com.tonyxlab.lazypizza.domain.model.Category
 import com.tonyxlab.lazypizza.domain.model.Pizza
 import com.tonyxlab.lazypizza.domain.model.SearchItem
-import com.tonyxlab.lazypizza.domain.model.AddOnItem
 import com.tonyxlab.lazypizza.presentation.core.base.handling.UiState
 import com.tonyxlab.lazypizza.utils.getMockSideItems
 import com.tonyxlab.lazypizza.utils.mockPizzas

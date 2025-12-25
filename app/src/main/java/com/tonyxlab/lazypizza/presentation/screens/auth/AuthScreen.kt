@@ -86,7 +86,6 @@ private fun AuthScreenContent(
                         uiState = uiState,
                         onEvent = onEvent
                 )
-
             }
 
             AuthUiState.AuthScreenStep.OtpInputStep -> {
@@ -102,7 +101,6 @@ private fun AuthScreenContent(
             }
         }
     }
-
 }
 
 @PreviewLightDark

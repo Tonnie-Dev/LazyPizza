@@ -79,7 +79,8 @@ fun OtpInputSection(
                modifier = Modifier.padding(
                        bottom = MaterialTheme.spacing.spaceMedium
                ),
-                textFieldState = uiState.otpInputState.textFieldState
+                textFieldState = uiState.otpInputState.textFieldState,
+               error = uiState.otpInputState.error
         )
 
         AppButton(
@@ -87,7 +88,7 @@ fun OtpInputSection(
                         .height(MaterialTheme.spacing.spaceTen * 4)
                         .fillMaxWidth(),
                 onClick = { onEvent(AuthUiEvent.ContinueToLoginIn) },
-                buttonText = stringResource(id = R.string.btn_text_continue),
+                buttonText = stringResource(id = R.string.btn_text_confirm),
                 enabled = uiState.otpInputState.confirmEnabled
         )
 

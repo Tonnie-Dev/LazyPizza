@@ -8,10 +8,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -23,10 +21,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.theme.Body2Regular
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
@@ -35,20 +32,28 @@ import com.tonyxlab.lazypizza.utils.ifThen
 @Composable
 fun OtpInput(
     textFieldState: TextFieldState,
+    error: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val textStyle = if (textFieldState.text.isBlank())
+        MaterialTheme.typography.Body2Regular.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+        ) else
 
-    val isEmpty = textFieldState.text.isBlank()
-    val otp = textFieldState.text
+        MaterialTheme.typography.Body2Regular.copy(
+                color = MaterialTheme.colorScheme.onSurface
+        )
     BasicTextField(
             modifier = modifier.fillMaxWidth(),
             state = textFieldState,
-            decorator = { innerTextField ->
+            keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.NumberPassword
+            ),
+            decorator = {
                 TextDecorator(
-                        otp =textFieldState.text.toString(),
-                        empty = isEmpty,
-                        innerTextField = innerTextField,
-                        error = true
+                        otp = textFieldState.text.toString(),
+                        error = error,
+                        textStyle = textStyle
                 )
             }
     )
@@ -57,40 +62,52 @@ fun OtpInput(
 @Composable
 private fun TextDecorator(
     otp: String,
-    empty: Boolean,
     error: Boolean,
-    innerTextField: @Composable () -> Unit
+    textStyle: TextStyle
 ) {
-val otpCode = otp.ifBlank { "000000" }
+
     Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        repeat(6) {
-            Box(
-                    modifier = Modifier
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
-                            .ifThen(error) {
-                                border(
-                                        width = MaterialTheme.spacing.spaceSingleDp,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        shape = CircleShape
-                                )
-                            }
-                            .height(MaterialTheme.spacing.spaceTwelve * 4)
-                            .widthIn(min = MaterialTheme.spacing.spaceTwelve * 4),
-                    contentAlignment = Alignment.Center
-            ) {
+        repeat(6) { i ->
 
-                Text(
-                        text = "${otpCode[it]}",
-                        style = MaterialTheme.typography.Body2Regular.copy(
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                )
-            }
+            val char = otp.getOrNull(i) ?: 0
+            OtpDigitBox(
+                    digit = char.toString(),
+                    textStyle = textStyle,
+                    error = error
+            )
         }
+    }
+}
+
+@Composable
+private fun OtpDigitBox(
+    digit: String,
+    error: Boolean,
+    textStyle: TextStyle
+) {
+    Box(
+            modifier = Modifier
+                    .size(MaterialTheme.spacing.spaceTwelve * 4)
+                    .ifThen(error) {
+                        border(
+                                width = MaterialTheme.spacing.spaceSingleDp,
+                                color = MaterialTheme.colorScheme.primary,
+                                shape = CircleShape
+                        )
+                    }
+                    .background(
+                            color = MaterialTheme.colorScheme.surfaceVariant,
+                            shape = RoundedCornerShape(40)
+                    ),
+            contentAlignment = Alignment.Center
+    ) {
+        Text(
+                text = digit,
+                style = textStyle
+        )
     }
 }
 
@@ -105,57 +122,18 @@ private fun OtpInput_Preview() {
                         .fillMaxSize()
                         .padding(MaterialTheme.spacing.spaceMedium)
         ) {
-            OtpInput(textFieldState = textFieldState)
+
+            OtpInput(
+                    textFieldState = textFieldState,
+                    error = false
+            )
+
+            OtpInput(
+                    textFieldState = textFieldState,
+                    error = false
+            )
         }
     }
 }
 
-@Composable
-private fun OtpInputField(
-    otp: String,
-    onOtpChange: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    BasicTextField(
-            value = otp,
-            onValueChange = { newValue ->
-                if (newValue.length <= 6 && newValue.all { it.isDigit() }) {
-                    onOtpChange(newValue)
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.NumberPassword
-            ),
-            decorationBox = {
-                Row(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    repeat(6) { index ->
-                        OtpDigitBox(
-                                digit = otp.getOrNull(index)
-                                        ?.toString() ?: ""
-                        )
-                    }
-                }
-            },
-            modifier = modifier
-    )
-}
 
-@Composable
-fun OtpDigitBox(digit: String) {
-    Box(
-            modifier = Modifier
-                    .size(48.dp)
-                    .background(
-                            color = MaterialTheme.colorScheme.surfaceVariant,
-                            shape = RoundedCornerShape(50)
-                    ),
-            contentAlignment = Alignment.Center
-    ) {
-        Text(
-                text = digit,
-                style = MaterialTheme.typography.titleMedium
-        )
-    }
-}
