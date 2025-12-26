@@ -4,6 +4,7 @@ package com.tonyxlab.lazypizza.presentation.screens.auth
 
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.viewModelScope
+import com.tonyxlab.lazypizza.domain.CountdownTimer
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.auth.handling.AuthActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.auth.handling.AuthUiEvent
@@ -20,6 +21,8 @@ typealias AuthBaseViewModel = BaseViewModel<AuthUiState, AuthUiEvent, AuthAction
 
 class AuthViewModel : AuthBaseViewModel() {
 
+    private var timer: CountdownTimer? = null
+
     override val initialState: AuthUiState
         get() = AuthUiState()
 
@@ -31,13 +34,19 @@ class AuthViewModel : AuthBaseViewModel() {
     override fun onEvent(event: AuthUiEvent) {
         when (event) {
             AuthUiEvent.ContinueToLoginIn -> {
-               switchScreenSection(authScreenStep = AuthUiState.AuthScreenStep.OtpInputStep)
+                switchScreenSection(authScreenStep = AuthUiState.AuthScreenStep.OtpInputStep)
                 sendActionEvent(actionEvent = AuthActionEvent.NavigateToOtp)
             }
 
             AuthUiEvent.ContinueWithoutLogin -> {
                 sendActionEvent(actionEvent = AuthActionEvent.NavigateBackToMenu)
             }
+
+            AuthUiEvent.ConfirmOtp -> {
+                startTimer()
+            }
+
+
         }
     }
 
@@ -73,7 +82,8 @@ class AuthViewModel : AuthBaseViewModel() {
         textFlow
                 .map { rawText ->
 
-                    rawText.filter { it.isDigit() }.take(6)
+                    rawText.filter { it.isDigit() }
+                            .take(6)
                 }
 
                 .distinctUntilChanged()
@@ -95,11 +105,34 @@ class AuthViewModel : AuthBaseViewModel() {
                 }
                 .launchIn(viewModelScope)
     }
+
     private fun switchScreenSection(authScreenStep: AuthUiState.AuthScreenStep) {
 
-        updateState { it.copy(
-                authScreenStep = authScreenStep
-        ) }
+        updateState {
+            it.copy(
+                    authScreenStep = authScreenStep
+            )
+        }
+
+    }
+
+    private fun startTimer() {
+        timer?.stop() // Clean up the old timer
+        timer = CountdownTimer().also { timer ->
+
+            timer.start()
+            timer.remainingSecs.onEach { secs ->
+
+                updateState {
+                    it.copy(
+                            otpInputState = currentState.otpInputState.copy(
+                                    secondsRemaining = secs,
+                                    resend = secs ==0
+                            )
+                    )
+                }
+            }.launchIn(viewModelScope)
+        }
 
     }
 }

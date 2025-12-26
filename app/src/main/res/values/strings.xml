@@ -25,7 +25,7 @@
     <string name="cap_text_welcome">Welcome to LazyPizza</string>
     <string name="cap_text_enter_phone_number">Enter your phone number</string>
     <string name="cap_text_enter_code">Enter code </string>
-    <string name="cap_text_request_code_in">You can request a new code in %s </string>
+    <string name="cap_text_request_code_in">You can request a new code in %02d </string>
 
     <!--Label Texts-->
     <string name="lab_text_text">Text</string>

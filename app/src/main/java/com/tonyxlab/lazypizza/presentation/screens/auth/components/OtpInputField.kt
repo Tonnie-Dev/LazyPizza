@@ -35,13 +35,11 @@ fun OtpInput(
     error: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val textStyle = if (textFieldState.text.isBlank())
-        MaterialTheme.typography.Body2Regular.copy(
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-        ) else
-
-        MaterialTheme.typography.Body2Regular.copy(
-                color = MaterialTheme.colorScheme.onSurface
+   val textStyle = MaterialTheme.typography.Body2Regular.copy(
+            color = if (textFieldState.text.isBlank())
+                MaterialTheme.colorScheme.onSurfaceVariant
+            else
+                MaterialTheme.colorScheme.onSurface
         )
     BasicTextField(
             modifier = modifier.fillMaxWidth(),

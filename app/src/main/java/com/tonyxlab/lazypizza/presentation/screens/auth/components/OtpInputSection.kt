@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.presentation.core.components.AppButton
@@ -33,9 +34,8 @@ import com.tonyxlab.lazypizza.presentation.theme.Title3
 fun OtpInputSection(
     uiState: AuthUiState,
     modifier: Modifier = Modifier,
-     onEvent:(AuthUiEvent)-> Unit
+    onEvent: (AuthUiEvent) -> Unit
 ) {
-
     Column(
             modifier = modifier
                     .fillMaxSize()
@@ -75,19 +75,19 @@ fun OtpInputSection(
                 shape = MaterialTheme.shapes.RoundedCornerShape100,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
         )
-       OtpInput(
-               modifier = Modifier.padding(
-                       bottom = MaterialTheme.spacing.spaceMedium
-               ),
+        OtpInput(
+                modifier = Modifier.padding(
+                        bottom = MaterialTheme.spacing.spaceMedium
+                ),
                 textFieldState = uiState.otpInputState.textFieldState,
-               error = uiState.otpInputState.error
+                error = uiState.otpInputState.error
         )
 
         AppButton(
                 modifier = Modifier
                         .height(MaterialTheme.spacing.spaceTen * 4)
                         .fillMaxWidth(),
-                onClick = { onEvent(AuthUiEvent.ContinueToLoginIn) },
+                onClick = { onEvent(AuthUiEvent.ConfirmOtp) },
                 buttonText = stringResource(id = R.string.btn_text_confirm),
                 enabled = uiState.otpInputState.confirmEnabled
         )
@@ -101,14 +101,19 @@ fun OtpInputSection(
         }
 
         Text(
-                modifier = Modifier.padding(bottom = MaterialTheme.spacing.spaceTen * 2),
-                text = stringResource(id = R.string.cap_text_request_code_in, "00:59"),
+                modifier = Modifier
+                        .padding(bottom = MaterialTheme.spacing.spaceTen * 2),
+                text = stringResource(
+                        id = R.string.cap_text_request_code_in,
+                        uiState.otpInputState.secondsRemaining
+                ),
                 style = MaterialTheme.typography.Body3Regular.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
+                        fontFeatureSettings = "tnum"
                 )
         )
     }
-
 }
 
 @PreviewLightDark
