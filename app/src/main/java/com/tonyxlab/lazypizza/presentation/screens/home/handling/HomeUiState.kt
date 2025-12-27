@@ -13,6 +13,8 @@ import com.tonyxlab.lazypizza.utils.mockPizzas
 
 @Stable
 data class HomeUiState(
+    val isUserSignedIn: Boolean = false,
+    val showLogoutDialog: Boolean = false,
     val phoneNumber: String = "+1 (555) 321-7890",
     val textFieldState: TextFieldState = TextFieldState(),
     val isTextEmpty: Boolean = false,
@@ -23,5 +25,5 @@ data class HomeUiState(
     val searchResults: List<SearchItem> = emptyList(),
     val selectedCategory: Category = Category.PIZZA,
     val aggregateItemTotal: Double = 0.0,
-    val badgeCount: Int = 0
-) : UiState
+    val badgeCount: Int = 0,
+  ) : UiState

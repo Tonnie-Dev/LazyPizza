@@ -38,6 +38,7 @@ import com.tonyxlab.lazypizza.navigation.BottomNavBar
 import com.tonyxlab.lazypizza.navigation.DetailScreenDestination
 import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
+import com.tonyxlab.lazypizza.presentation.core.components.AppDialog
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarOne
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.home.components.CategoryTabs
@@ -87,7 +88,7 @@ fun HomeScreen(
                                 modifier = Modifier.padding(horizontal = MaterialTheme.spacing.spaceMedium),
                                 phoneNumber = uiState.phoneNumber,
                                 onEvent = { viewModel.onEvent(it) },
-                                signedIn = false
+                                signedIn = uiState.isUserSignedIn
                         )
                     },
                     bottomBar = {},
@@ -123,51 +124,52 @@ fun HomeScreen(
         return
 
     }
-        BaseContentLayout(
-                modifier = modifier,
-                viewModel = viewModel,
-                topBar = {
-                    AppTopBarOne(
-                            modifier = Modifier.padding(horizontal = MaterialTheme.spacing.spaceMedium),
-                            phoneNumber = uiState.phoneNumber,
-                            onEvent = { viewModel.onEvent(it) },
-                            signedIn = false
-                    )
-                },
-                bottomBar = {
-                    BottomNavBar(
-                            navigator = navigator,
-                            itemCount = it.badgeCount
-                    )
-                },
-                actionEventHandler = { _, action ->
-                    when (action) {
-                        HomeActionEvent.LaunchDialingPad -> {
-                            val dialIntent = Intent(Intent.ACTION_DIAL).apply {
-                                data = "tel:${uiState.phoneNumber}".toUri()
-                            }
-                            context.startActivity(dialIntent)
+    BaseContentLayout(
+            modifier = modifier,
+            viewModel = viewModel,
+            topBar = {
+                AppTopBarOne(
+                        modifier = Modifier.padding(horizontal = MaterialTheme.spacing.spaceMedium),
+                        phoneNumber = uiState.phoneNumber,
+                        onEvent = { viewModel.onEvent(it) },
+                        signedIn = uiState.isUserSignedIn
+                )
+            },
+            bottomBar = {
+                BottomNavBar(
+                        navigator = navigator,
+                        itemCount = it.badgeCount
+                )
+            },
+            actionEventHandler = { _, action ->
+                when (action) {
+                    HomeActionEvent.LaunchDialingPad -> {
+                        val dialIntent = Intent(Intent.ACTION_DIAL).apply {
+                            data = "tel:${uiState.phoneNumber}".toUri()
                         }
-                        HomeActionEvent.NavigateToAuthScreen -> {
-                            navigator.navigate(AuthScreenDestination)
-                        }
-                        is HomeActionEvent.NavigateToDetailsScreen -> {
-                            navigator.navigate(DetailScreenDestination(id = action.id))
-                        }
+                        context.startActivity(dialIntent)
                     }
-                },
-                onBackPressed = { activity.finish() },
-                containerColor = MaterialTheme.colorScheme.background
-        ) { state ->
-            HomeScreenContent(
-                    modifier = modifier,
-                    uiState = state,
-                    onEvent = viewModel::onEvent,
-                    isDeviceWide = false
-            )
-        }
-    }
 
+                    HomeActionEvent.NavigateToAuthScreen -> {
+                        navigator.navigate(AuthScreenDestination)
+                    }
+
+                    is HomeActionEvent.NavigateToDetailsScreen -> {
+                        navigator.navigate(DetailScreenDestination(id = action.id))
+                    }
+                }
+            },
+            onBackPressed = { activity.finish() },
+            containerColor = MaterialTheme.colorScheme.background
+    ) { state ->
+        HomeScreenContent(
+                modifier = modifier,
+                uiState = state,
+                onEvent = viewModel::onEvent,
+                isDeviceWide = false
+        )
+    }
+}
 
 @Composable
 private fun HomeScreenContent(
@@ -180,7 +182,17 @@ private fun HomeScreenContent(
     val pizzasList = uiState.allPizzaItems
     val sideItemsList = uiState.filteredAddOnItems
     val header = uiState.selectedCategory.categoryName
+    if (uiState.showLogoutDialog) {
 
+        AppDialog(
+                onDismiss = { onEvent(HomeUiEvent.DismissLogoutDialog) },
+                onConfirm = { onEvent(HomeUiEvent.ConfirmLogoutDialog) },
+                dialogTitle = stringResource(id = R.string.dialog_text_title),
+                dialogText = stringResource(id = R.string.dialog_text_title),
+                positiveButtonText = stringResource(id = R.string.btn_text_log_out),
+                negativeButtonText = stringResource(id = R.string.txt_btn_cancel),
+        )
+    }
     if (isDeviceWide) {
         Column(
                 modifier = modifier

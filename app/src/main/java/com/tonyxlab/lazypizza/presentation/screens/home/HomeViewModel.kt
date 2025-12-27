@@ -4,9 +4,11 @@ package com.tonyxlab.lazypizza.presentation.screens.home
 
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.viewModelScope
-import com.tonyxlab.lazypizza.domain.model.Category
+import com.tonyxlab.lazypizza.domain.firebase.AuthState
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
+import com.tonyxlab.lazypizza.domain.model.Category
 import com.tonyxlab.lazypizza.domain.model.toCartItem
+import com.tonyxlab.lazypizza.domain.repository.AuthRepository
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeActionEvent
@@ -23,19 +25,43 @@ import kotlinx.coroutines.flow.onEach
 
 typealias HomeBaseViewModel = BaseViewModel<HomeUiState, HomeUiEvent, HomeActionEvent>
 
-class HomeViewModel(private val repository: CartRepository) : HomeBaseViewModel() {
+class HomeViewModel(
+    private val cartRepository: CartRepository,
+    private val authRepository: AuthRepository
+) : HomeBaseViewModel() {
 
     init {
         observeSearchBarState()
         observeCart()
+        observeAuthState()
     }
 
     override val initialState: HomeUiState
         get() = HomeUiState()
 
-    fun observeCart() {
+    private fun observeAuthState() {
 
-        repository.cartItems.map { items ->
+        authRepository.authState.onEach { authState ->
+            updateState { it.copy(isUserSignedIn = authState is AuthState.Authenticated) }
+
+        }
+                .launchIn(viewModelScope)
+    }
+
+    private fun observeSearchBarState() {
+        val textFlow = snapshotFlow { currentState.textFieldState.text }
+        textFlow.debounce(300)
+                .distinctUntilChanged()
+                .onEach { text ->
+                    updateState { it.copy(isTextEmpty = text.isEmpty()) }
+                    onSearchQueryChange(text.toString())
+                }
+                .launchIn(viewModelScope)
+    }
+
+    private fun observeCart() {
+
+        cartRepository.cartItems.map { items ->
             val count = items.sumOf { it.counter }
             items to count
         }
@@ -83,18 +109,11 @@ class HomeViewModel(private val repository: CartRepository) : HomeBaseViewModel(
 
                 sendActionEvent(HomeActionEvent.NavigateToAuthScreen)
             }
-        }
-    }
 
-    private fun observeSearchBarState() {
-        val textFlow = snapshotFlow { currentState.textFieldState.text }
-        textFlow.debounce(300)
-                .distinctUntilChanged()
-                .onEach { text ->
-                    updateState { it.copy(isTextEmpty = text.isEmpty()) }
-                    onSearchQueryChange(text.toString())
-                }
-                .launchIn(viewModelScope)
+            HomeUiEvent.ShowLogoutDialog -> showLogoutDialog()
+            HomeUiEvent.DismissLogoutDialog -> dismissLogoutDialog()
+            HomeUiEvent.ConfirmLogoutDialog -> confirmLogout()
+        }
     }
 
     private fun onSearchQueryChange(newQuery: String) {
@@ -135,7 +154,7 @@ class HomeViewModel(private val repository: CartRepository) : HomeBaseViewModel(
     private fun addSideItemToCart(addOnItem: AddOnItem) {
 
         val cartItem = addOnItem.toCartItem()
-        repository.addItem(cartItem)
+        cartRepository.addItem(cartItem)
 
     }
 
@@ -145,7 +164,7 @@ class HomeViewModel(private val repository: CartRepository) : HomeBaseViewModel(
 
         val newCount = currentCount.plus(1)
                 .coerceAtMost(5)
-        repository.updateCount(cartItem = addOnItem.toCartItem(), newCount = newCount)
+        cartRepository.updateCount(cartItem = addOnItem.toCartItem(), newCount = newCount)
     }
 
     private fun decrementCount(addOnItem: AddOnItem) {
@@ -154,12 +173,26 @@ class HomeViewModel(private val repository: CartRepository) : HomeBaseViewModel(
 
         val newCount = currentCount.minus(1)
                 .coerceAtLeast(0)
-        repository.updateCount(cartItem = addOnItem.toCartItem(), newCount = newCount)
+        cartRepository.updateCount(cartItem = addOnItem.toCartItem(), newCount = newCount)
 
     }
 
     private fun removeItemFromCart(addOnItem: AddOnItem) {
-        repository.removeItem(addOnItem.toCartItem())
+        cartRepository.removeItem(addOnItem.toCartItem())
+    }
 
+    private fun dismissLogoutDialog() {
+        updateState { it.copy(showLogoutDialog = false) }
+    }
+
+    private fun showLogoutDialog() {
+        updateState {
+            it.copy(showLogoutDialog = true)
+        }
+    }
+
+    private fun confirmLogout() {
+        authRepository.logout()
+        updateState { it.copy(showLogoutDialog = false) }
     }
 }

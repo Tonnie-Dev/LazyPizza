@@ -115,8 +115,12 @@ fun AppTopBarOne(
                                         color = TextSecondary8,
                                         shape = CircleShape
                                 )
-                            }.clickable{
-                                onEvent(HomeUiEvent.SignIn)
+                            }
+                            .clickable {
+                                if (signedIn)
+                                    onEvent(HomeUiEvent.ShowLogoutDialog)
+                                else
+                                    onEvent(HomeUiEvent.SignIn)
                             },
                     contentAlignment = Alignment.Center
             ) {
