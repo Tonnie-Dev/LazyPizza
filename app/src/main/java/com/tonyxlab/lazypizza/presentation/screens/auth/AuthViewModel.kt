@@ -5,6 +5,8 @@ package com.tonyxlab.lazypizza.presentation.screens.auth
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.viewModelScope
 import com.tonyxlab.lazypizza.domain.CountdownTimer
+import com.tonyxlab.lazypizza.domain.firebase.AuthState
+import com.tonyxlab.lazypizza.domain.repository.AuthRepository
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.auth.handling.AuthActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.auth.handling.AuthUiEvent
@@ -16,12 +18,16 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import timber.log.Timber
 
 typealias AuthBaseViewModel = BaseViewModel<AuthUiState, AuthUiEvent, AuthActionEvent>
 
-class AuthViewModel : AuthBaseViewModel() {
+class AuthViewModel(
+    private val authRepository: AuthRepository
+) : AuthBaseViewModel() {
 
     private var timer: CountdownTimer? = null
+    private var verificationId: String? = null
 
     override val initialState: AuthUiState
         get() = AuthUiState()
@@ -29,13 +35,20 @@ class AuthViewModel : AuthBaseViewModel() {
     init {
         observePhoneTextField()
         observeOtpInputField()
+        observeAuthState()
     }
 
     override fun onEvent(event: AuthUiEvent) {
         when (event) {
-            AuthUiEvent.ContinueToLoginIn -> {
+            is AuthUiEvent.ContinueToLoginIn -> {
+
+                val phoneNumber = currentState.phoneInputState.textFieldState.text.toString()
+
+                authRepository.startLogin(
+                        phoneNumber = phoneNumber,
+                        activity = event.activity
+                )
                 switchScreenSection(authScreenStep = AuthUiState.AuthScreenStep.OtpInputStep)
-                sendActionEvent(actionEvent = AuthActionEvent.NavigateToOtp)
             }
 
             AuthUiEvent.ContinueWithoutLogin -> {
@@ -43,10 +56,15 @@ class AuthViewModel : AuthBaseViewModel() {
             }
 
             AuthUiEvent.ConfirmOtp -> {
+
+                val otpCode = currentState.otpInputState.textFieldState.text
+                        .filter(Char::isDigit)
+                        .take(6)
+                        .toString()
+                val id = verificationId ?: return
+                authRepository.verifyCode(otpCode = otpCode, verificationId = id)
                 startTimer()
             }
-
-
         }
     }
 
@@ -75,32 +93,16 @@ class AuthViewModel : AuthBaseViewModel() {
 
     private fun observeOtpInputField() {
 
-        val textFlow = snapshotFlow {
-            currentState.otpInputState.textFieldState.text.toString()
-        }
-
-        textFlow
-                .map { rawText ->
-
-                    rawText.filter { it.isDigit() }
-                            .take(6)
-                }
-
+        snapshotFlow { currentState.otpInputState.textFieldState.text.toString() }
                 .distinctUntilChanged()
-                .onEach { sanitized ->
-
+                .onEach { text ->
                     updateState {
                         it.copy(
-                                otpInputState = currentState.otpInputState.copy(
-                                        confirmEnabled = sanitized.length == 6
+                                otpInputState = it.otpInputState.copy(
+                                        confirmEnabled = text.length == 6,
+                                        error = false
                                 )
                         )
-
-                    }
-                    if (sanitized != currentState.otpInputState.textFieldState.text.toString()) {
-                        currentState.otpInputState.textFieldState.edit {
-                            replace(0, length, sanitized)
-                        }
                     }
                 }
                 .launchIn(viewModelScope)
@@ -113,11 +115,10 @@ class AuthViewModel : AuthBaseViewModel() {
                     authScreenStep = authScreenStep
             )
         }
-
     }
 
     private fun startTimer() {
-        timer?.stop() // Clean up the old timer
+        timer?.stop()
         timer = CountdownTimer().also { timer ->
 
             timer.start()
@@ -127,12 +128,57 @@ class AuthViewModel : AuthBaseViewModel() {
                     it.copy(
                             otpInputState = currentState.otpInputState.copy(
                                     secondsRemaining = secs,
-                                    resend = secs ==0
+                                    resend = secs == 0
                             )
                     )
                 }
-            }.launchIn(viewModelScope)
+            }
+                    .launchIn(viewModelScope)
         }
 
+    }
+
+    private fun observeAuthState() {
+
+        authRepository.authState.onEach { authState ->
+            when (authState) {
+                AuthState.Unauthenticated -> Unit
+                is AuthState.OtpCodeSent -> {
+                    verificationId = authState.verificationId
+                    Timber.tag("AuthViewModel")
+                            .i("OtpCode sent: $verificationId")
+                }
+
+                AuthState.Loading -> {
+                    updateState { it.copy(isLoading = true) }
+                }
+
+                AuthState.Authenticated -> {
+                    updateState {
+                        it.copy(
+                                isLoading = false, isSignedIn = true
+                                /* otpInputState = currentState.otpInputState.copy(
+                                         error = true,
+                                         resend = true
+                                 )*/
+                        )
+                    }
+                    sendActionEvent(actionEvent = AuthActionEvent.NavigateBackToMenu)
+                }
+
+                is AuthState.Error -> {
+                    updateState {
+                        it.copy(
+                                otpInputState = currentState.otpInputState.copy(
+                                        error = true,
+                                        resend = true
+                                )
+                        )
+                    }
+                }
+            }
+
+        }
+                .launchIn(viewModelScope)
     }
 }

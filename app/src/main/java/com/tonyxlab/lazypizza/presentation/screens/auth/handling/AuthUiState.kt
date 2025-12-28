@@ -5,6 +5,7 @@ import androidx.compose.runtime.Stable
 import com.tonyxlab.lazypizza.presentation.core.base.handling.UiState
 
 data class AuthUiState(
+    val isLoading: Boolean =false,
     val isSignedIn: Boolean = false,
     val phoneInputState: PhoneInputState = PhoneInputState(),
     val otpInputState: OtpInputState = OtpInputState(),

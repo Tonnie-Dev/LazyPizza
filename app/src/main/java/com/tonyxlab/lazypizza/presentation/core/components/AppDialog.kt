@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.window.DialogProperties
 import com.tonyxlab.lazypizza.R
+import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.presentation.theme.Title1Medium
 import com.tonyxlab.lazypizza.presentation.theme.Title3
@@ -38,7 +39,8 @@ fun AppDialog(
             confirmButton = {
                 AppButton(
                         onClick = onConfirm,
-                        buttonText = positiveButtonText
+                        buttonText = positiveButtonText,
+                        buttonHeight = MaterialTheme.spacing.spaceTen * 4
                 )
             },
             dismissButton = {

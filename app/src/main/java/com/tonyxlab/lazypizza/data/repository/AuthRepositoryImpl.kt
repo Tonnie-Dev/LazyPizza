@@ -1,5 +1,6 @@
 package com.tonyxlab.lazypizza.data.repository
 
+import android.app.Activity
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
@@ -12,6 +13,7 @@ import com.tonyxlab.lazypizza.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepository {
@@ -22,11 +24,9 @@ class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepositor
     override val currentUser: AuthUser?
         get() = firebaseAuth.currentUser?.toAuthUser()
 
-    init {
-        observeAuthState()
-    }
+    init { observeAuthState() }
 
-    override fun startLogin(phoneNumber: String) {
+    override fun startLogin(phoneNumber: String, activity: Activity) {
 
         _authState.update { AuthState.Loading }
 
@@ -49,6 +49,8 @@ class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepositor
             }
 
             override fun onVerificationFailed(e: FirebaseException) {
+
+                Timber.tag("AuthRepositoryImpl").i("Exception: $e")
                 _authState.update {
                     AuthState.Error(e.localizedMessage ?: "Verification Failed")
                 }
@@ -58,6 +60,7 @@ class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepositor
         val options = PhoneAuthOptions.newBuilder(firebaseAuth)
                 .setPhoneNumber(phoneNumber)
                 .setTimeout(60L, TimeUnit.SECONDS)
+                .setActivity(activity)
                 .setCallbacks(callbacks)
                 .build()
 
@@ -83,7 +86,6 @@ class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepositor
 
     override fun logout() {
         firebaseAuth.signOut()
-
         _authState.update { AuthState.Unauthenticated }
     }
 
@@ -98,7 +100,7 @@ class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepositor
         }
     }
 
-    private fun observeAuthState2() {
+   /* private fun observeAuthState2() {
 
         if (firebaseAuth.currentUser != null) {
 
@@ -106,5 +108,5 @@ class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepositor
         } else {
             _authState.value = AuthState.Unauthenticated
         }
-    }
+    }*/
 }

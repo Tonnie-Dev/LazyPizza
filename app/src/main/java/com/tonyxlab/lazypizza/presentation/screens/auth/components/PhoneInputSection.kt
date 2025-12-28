@@ -1,5 +1,6 @@
 package com.tonyxlab.lazypizza.presentation.screens.auth.components
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -36,7 +37,7 @@ fun PhoneInputSection(
     uiState: AuthUiState,
     onEvent: (AuthUiEvent) -> Unit,
 ) {
-
+    val activity = LocalActivity.current ?: return
     Column(
             modifier = modifier
                     .fillMaxSize()
@@ -82,7 +83,7 @@ fun PhoneInputSection(
                 modifier = Modifier
                         .height(MaterialTheme.spacing.spaceTen * 4)
                         .fillMaxWidth(),
-                onClick = { onEvent(AuthUiEvent.ContinueToLoginIn) },
+                onClick = { onEvent(AuthUiEvent.ContinueToLoginIn(activity = activity)) },
                 buttonText = stringResource(id = R.string.btn_text_continue),
                 enabled = uiState.phoneInputState.continueEnabled
         )
