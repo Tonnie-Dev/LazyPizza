@@ -1,10 +1,13 @@
 package com.tonyxlab.lazypizza.presentation.screens.auth.components
 
+import android.app.Activity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
@@ -34,8 +37,11 @@ import com.tonyxlab.lazypizza.presentation.theme.Title3
 fun OtpInputSection(
     uiState: AuthUiState,
     modifier: Modifier = Modifier,
-    onEvent: (AuthUiEvent) -> Unit
+    onEvent: (AuthUiEvent) -> Unit,
+    activity: Activity
 ) {
+
+
     Column(
             modifier = modifier
                     .fillMaxSize()
@@ -100,25 +106,40 @@ fun OtpInputSection(
             )
         }
 
-        Text(
-                modifier = Modifier
-                        .padding(bottom = MaterialTheme.spacing.spaceTen * 2),
-                text = stringResource(
-                        id = R.string.cap_text_request_code_in,
-                        uiState.otpInputState.secondsRemaining
-                ),
-                style = MaterialTheme.typography.Body3Regular.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        textAlign = TextAlign.Center,
-                        fontFeatureSettings = "tnum"
+        if (uiState.otpInputState.resend) {
+            TextButton(
+                    modifier = Modifier.offset(y = -(MaterialTheme.spacing.spaceMedium)),
+                    onClick = { onEvent(AuthUiEvent.ResendOtp(activity = activity)) }
+            ) {
+                Text(
+                        text = stringResource(id = R.string.txt_btn_resend),
+                        style = MaterialTheme.typography.Title3
                 )
-        )
+            }
+
+        } else {
+
+            Text(
+                    modifier = Modifier
+                            .padding(bottom = MaterialTheme.spacing.spaceTen * 2),
+                    text = stringResource(
+                            id = R.string.cap_text_request_code_in,
+                            uiState.otpInputState.secondsRemaining
+                    ),
+                    style = MaterialTheme.typography.Body3Regular.copy(
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center,
+                            fontFeatureSettings = "tnum"
+                    )
+            )
+        }
     }
 }
 
 @PreviewLightDark
 @Composable
 private fun OtpInputSection_Preview() {
+    val activity = LocalActivity.current ?: return
     LazyPizzaTheme {
         Column(
                 modifier = Modifier
@@ -127,7 +148,11 @@ private fun OtpInputSection_Preview() {
                         .padding(MaterialTheme.spacing.spaceMedium)
         ) {
 
-            OtpInputSection(uiState = AuthUiState()) { }
+            OtpInputSection(
+                    uiState = AuthUiState(),
+                    activity = activity,
+                    onEvent = {}
+            )
         }
     }
 }

@@ -95,8 +95,9 @@ private fun AuthScreenContent(
                                 .align(alignment = Alignment.TopCenter)
                                 .widthIn(max = maxWidth)
                                 .padding(top = MaterialTheme.spacing.spaceTwoHundred),
-                                uiState = uiState,
-                        onEvent = onEvent
+                        uiState = uiState,
+                        onEvent = onEvent,
+                        activity = activity
                 )
             }
         }

@@ -8,12 +8,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class CountdownTimer {
+class CountdownTimer(val totalTime: Long ) {
 
     private val _remainingSecs = MutableStateFlow(0)
     val remainingSecs = _remainingSecs.asStateFlow()
 
-    private var totalSeconds = 60L
+    private var totalSeconds = totalTime
     private var lastTimeStamp = 0L
 
     private var job: Job? = null
@@ -46,8 +46,8 @@ class CountdownTimer {
     private fun resetTimer() {
         job?.cancel()
         job = null
-        totalSeconds = 60L
+        totalSeconds = totalTime
         lastTimeStamp = 0L
-        _remainingSecs.value = 60
+        _remainingSecs.value = totalTime.toInt()
     }
 }

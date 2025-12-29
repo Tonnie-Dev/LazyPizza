@@ -8,4 +8,5 @@ sealed interface AuthUiEvent: UiEvent{
     data class ContinueToLoginIn(val activity: Activity): AuthUiEvent
     data object ContinueWithoutLogin: AuthUiEvent
     data object ConfirmOtp: AuthUiEvent
+    data class ResendOtp(val activity: Activity): AuthUiEvent
 }

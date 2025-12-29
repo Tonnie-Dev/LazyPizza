@@ -50,7 +50,7 @@ class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepositor
 
             override fun onVerificationFailed(e: FirebaseException) {
 
-                Timber.tag("AuthRepositoryImpl").i("Exception: $e")
+
                 _authState.update {
                     AuthState.Error(e.localizedMessage ?: "Verification Failed")
                 }
@@ -82,6 +82,50 @@ class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepositor
                         )
                     }
                 }
+    }
+
+    override fun resendOtp(
+        phoneNumber: String,
+        resendToken: PhoneAuthProvider.ForceResendingToken,
+        activity: Activity
+    ) {
+        _authState.update { AuthState.Loading }
+
+        val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+            override fun onCodeSent(
+                verificationId: String,
+                token: PhoneAuthProvider.ForceResendingToken
+            ) {
+                _authState.update {
+                    AuthState.OtpCodeSent(
+                            verificationId = verificationId,
+                            resendToken = token
+                    )
+                }
+            }
+
+            override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+                firebaseAuth.signInWithCredential(credential)
+            }
+
+            override fun onVerificationFailed(e: FirebaseException) {
+                _authState.update {
+                    AuthState.Error(e.localizedMessage ?: "Resend failed")
+                }
+            }
+
+        }
+
+        val options = PhoneAuthOptions.newBuilder(firebaseAuth)
+                .setPhoneNumber(phoneNumber)
+                .setTimeout(60L, TimeUnit.SECONDS)
+                .setActivity(activity)
+                .setCallbacks(callbacks)
+                .setForceResendingToken(resendToken) // ⭐ THIS is the magic
+                .build()
+
+        PhoneAuthProvider.verifyPhoneNumber(options)
     }
 
     override fun logout() {

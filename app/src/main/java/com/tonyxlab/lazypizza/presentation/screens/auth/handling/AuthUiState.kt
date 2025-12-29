@@ -21,7 +21,7 @@ data class AuthUiState(
     @Stable
     data class OtpInputState(
         val textFieldState: TextFieldState = TextFieldState(),
-        val secondsRemaining: Int = 60,
+        val secondsRemaining: Int = 10,
         val resend: Boolean = false,
         val confirmEnabled: Boolean = false,
         val error: Boolean = false

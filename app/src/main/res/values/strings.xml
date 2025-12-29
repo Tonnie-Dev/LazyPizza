@@ -44,6 +44,7 @@
     <!--Text Button Texts-->
     <string name="txt_btn_cancel">Cancel</string>
     <string name="txt_btn_continue_without_sign_in">Continue without signing in</string>
+    <string name="txt_btn_resend">Resend</string>
 
     <!--Content Description Texts-->
     <string name="cds_text_pizza_logo">Pizza Logo</string>

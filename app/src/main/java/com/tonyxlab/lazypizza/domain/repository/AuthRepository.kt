@@ -1,6 +1,7 @@
 package com.tonyxlab.lazypizza.domain.repository
 
 import android.app.Activity
+import com.google.firebase.auth.PhoneAuthProvider
 import com.tonyxlab.lazypizza.domain.firebase.AuthState
 import com.tonyxlab.lazypizza.domain.model.AuthUser
 import kotlinx.coroutines.flow.StateFlow
@@ -12,5 +13,10 @@ interface AuthRepository {
 
     fun startLogin(phoneNumber:String, activity: Activity)
     fun verifyCode(otpCode:String,verificationId: String)
+    fun resendOtp(
+        phoneNumber: String,
+        resendToken: PhoneAuthProvider.ForceResendingToken,
+        activity: Activity
+    )
     fun logout()
 }
