@@ -84,6 +84,7 @@ fun OtpInput(
             decorator = {
                 TextDecorator(
                         otp = textFieldState.text.toString(),
+                        selectionIndex = textFieldState.selection.start,
                         error = error,
                         textStyle = textStyle,
                         isFocused = isFocused,
@@ -101,7 +102,7 @@ fun OtpInput(
                                     selection = TextRange(safeIndex, safeIndex + 1)
                                 } else {
                                     // ✔ Placing cursor at end / empty box
-                                    selection = TextRange(safeIndex, safeIndex)
+                                    selection = TextRange(safeIndex)
                                 }
                             }
                         }
@@ -114,11 +115,15 @@ fun OtpInput(
 private fun TextDecorator(
     otp: String,
     error: Boolean,
+    selectionIndex: Int,
     textStyle: TextStyle,
     isFocused: Boolean,
     onBoxClick: (Int) -> Unit,
 ) {
-    val activeIndex = otp.length.coerceIn(0, 5)
+    val activeIndex = when {
+        isFocused -> selectionIndex.coerceIn(0,5)
+        else -> -1
+    }
 
     Row(
             modifier = Modifier.fillMaxWidth(),
