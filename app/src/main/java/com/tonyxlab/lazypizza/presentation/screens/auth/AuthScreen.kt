@@ -74,6 +74,7 @@ private fun AuthScreenContent(
         MaterialTheme.spacing.spaceTwoHundred * 2
     else
         Dp.Unspecified
+
     Box(modifier = modifier.fillMaxSize()) {
         when (uiState.authScreenStep) {
 
@@ -102,7 +103,7 @@ private fun AuthScreenContent(
                 )
             }
         }
-        /*if (uiState.isLoading) {
+        if (uiState.isLoading) {
             Box(
                     modifier = Modifier
                             .fillMaxSize()
@@ -111,7 +112,7 @@ private fun AuthScreenContent(
             ) {
                 CircularProgressIndicator()
             }
-        }*/
+        }
 
     }
 }
