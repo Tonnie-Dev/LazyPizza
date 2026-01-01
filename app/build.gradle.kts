@@ -115,6 +115,8 @@ dependencies {
     implementation(platform(Google.firebase.bom))
     implementation(Google.firebase.authentication)
 
+    // Play Services
+    implementation(Google.android.playServices.auth.apiPhone)
 
     // Testing
     testImplementation(libs.junit)

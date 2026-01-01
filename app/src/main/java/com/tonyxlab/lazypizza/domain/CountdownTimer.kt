@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class CountdownTimer(val totalTime: Long ) {
+class CountdownTimer(private val totalTime: Long ) {
 
     private val _remainingSecs = MutableStateFlow(0)
     val remainingSecs = _remainingSecs.asStateFlow()

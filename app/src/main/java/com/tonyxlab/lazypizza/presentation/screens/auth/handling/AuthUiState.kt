@@ -7,6 +7,7 @@ import com.tonyxlab.lazypizza.presentation.core.base.handling.UiState
 data class AuthUiState(
     val isLoading: Boolean =false,
     val isSignedIn: Boolean = false,
+    val otpRequestId: Int = 0,
     val phoneInputState: PhoneInputState = PhoneInputState(),
     val otpInputState: OtpInputState = OtpInputState(),
     val authScreenStep: AuthScreenStep = AuthScreenStep.PhoneInputStep

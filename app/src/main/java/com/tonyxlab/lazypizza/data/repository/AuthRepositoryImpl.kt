@@ -45,6 +45,10 @@ class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepositor
             }
 
             override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+
+                credential.smsCode?.let { code ->
+                    _authState.update { AuthState.AutoVerified(code) }
+                }
                 firebaseAuth.signInWithCredential(credential)
             }
 
@@ -59,7 +63,7 @@ class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepositor
 
         val options = PhoneAuthOptions.newBuilder(firebaseAuth)
                 .setPhoneNumber(phoneNumber)
-                .setTimeout(60L, TimeUnit.SECONDS)
+                .setTimeout(0L, TimeUnit.SECONDS)
                 .setActivity(activity)
                 .setCallbacks(callbacks)
                 .build()
@@ -119,7 +123,7 @@ class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepositor
 
         val options = PhoneAuthOptions.newBuilder(firebaseAuth)
                 .setPhoneNumber(phoneNumber)
-                .setTimeout(60L, TimeUnit.SECONDS)
+                .setTimeout(0L, TimeUnit.SECONDS)
                 .setActivity(activity)
                 .setCallbacks(callbacks)
                 .setForceResendingToken(resendToken) // ⭐ THIS is the magic
@@ -133,6 +137,7 @@ class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepositor
         _authState.update { AuthState.Unauthenticated }
     }
 
+
     private fun observeAuthState() {
 
         firebaseAuth.addAuthStateListener { auth ->
@@ -144,13 +149,5 @@ class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepositor
         }
     }
 
-   /* private fun observeAuthState2() {
 
-        if (firebaseAuth.currentUser != null) {
-
-            _authState.value = AuthState.Authenticated
-        } else {
-            _authState.value = AuthState.Unauthenticated
-        }
-    }*/
 }

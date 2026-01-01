@@ -1,6 +1,7 @@
 package com.tonyxlab.lazypizza.domain.repository
 
 import android.app.Activity
+import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import com.tonyxlab.lazypizza.domain.firebase.AuthState
 import com.tonyxlab.lazypizza.domain.model.AuthUser
@@ -18,5 +19,7 @@ interface AuthRepository {
         resendToken: PhoneAuthProvider.ForceResendingToken,
         activity: Activity
     )
+
+
     fun logout()
 }

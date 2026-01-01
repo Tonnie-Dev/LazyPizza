@@ -3,7 +3,9 @@
 package com.tonyxlab.lazypizza.presentation.screens.auth
 
 import android.app.Activity
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.text.TextRange
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.PhoneAuthProvider
 import com.tonyxlab.lazypizza.domain.CountdownTimer
@@ -71,6 +73,20 @@ class AuthViewModel(
             }
 
             is AuthUiEvent.ResendOtp -> resendOtp(activity = event.activity)
+            is AuthUiEvent.FillOtp -> {
+
+                val code = event.otp.filter(Char::isDigit).take(6)
+
+                if (code.length == 6){
+                    currentState.otpInputState.textFieldState.edit {
+                        replace(0, length, code)
+                    }
+                    // TODO: select(TextRange(code.length))
+
+                   val id = verificationId ?: return
+                    authRepository.verifyCode(otpCode = code, verificationId = id)
+                }
+            }
         }
     }
 
@@ -124,6 +140,8 @@ class AuthViewModel(
                     verificationId = authState.verificationId
                     resendToken = authState.resendToken
 
+                    updateState { it.copy(otpRequestId = it.otpRequestId +1) }
+
                     if (currentState.authScreenStep == AuthUiState.AuthScreenStep.OtpInputStep) {
                         startTimer()
                     }
@@ -140,6 +158,16 @@ class AuthViewModel(
                         it.copy(isLoading = false, isSignedIn = true)
                     }
                     sendActionEvent(actionEvent = AuthActionEvent.NavigateBackToMenu)
+                }
+
+                is AuthState.AutoVerified -> {
+                    Timber.tag("AuthViewModel")
+                            .i("Auto-Verification Fired!!")
+                    updateState { it.copy(
+                            otpInputState = currentState.otpInputState.copy(
+                                    textFieldState = buildTextFieldState(value = authState.code)
+                            )
+                    ) }
                 }
 
                 is AuthState.Error -> {
@@ -200,5 +228,11 @@ class AuthViewModel(
                     )
             )
         }
+    }
+
+    private fun buildTextFieldState(value: String): TextFieldState {
+
+        return TextFieldState(initialText = value)
+
     }
 }

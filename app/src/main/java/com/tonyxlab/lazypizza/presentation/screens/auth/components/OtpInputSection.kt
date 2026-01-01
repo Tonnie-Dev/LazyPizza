@@ -1,7 +1,10 @@
 package com.tonyxlab.lazypizza.presentation.screens.auth.components
 
 import android.app.Activity
+import android.content.IntentFilter
 import androidx.activity.compose.LocalActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,13 +17,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.core.content.ContextCompat
+import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.tonyxlab.lazypizza.R
+import com.tonyxlab.lazypizza.platform.SmsConsentReceiver
 import com.tonyxlab.lazypizza.presentation.core.components.AppButton
 import com.tonyxlab.lazypizza.presentation.core.components.AppInputField
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
@@ -32,6 +41,8 @@ import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.presentation.theme.RoundedCornerShape100
 import com.tonyxlab.lazypizza.presentation.theme.Title1Medium
 import com.tonyxlab.lazypizza.presentation.theme.Title3
+import kotlinx.coroutines.delay
+import timber.log.Timber
 
 @Composable
 fun OtpInputSection(
@@ -40,6 +51,56 @@ fun OtpInputSection(
     onEvent: (AuthUiEvent) -> Unit,
     activity: Activity
 ) {
+val context = LocalContext.current
+
+
+    val consentLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode != Activity.RESULT_OK) {
+            // User denied or cancelled → do nothing
+            return@rememberLauncherForActivityResult
+        }
+
+        val message =
+            result.data?.getStringExtra(SmsRetriever.EXTRA_SMS_MESSAGE)
+
+        Timber.tag("SmsConsentReceiver").i("Result Code is ${result.resultCode}")
+        val otp = extractOtp(message)
+
+        if (otp != null) {
+            onEvent(AuthUiEvent.FillOtp(otp))
+        }
+    }
+
+    DisposableEffect(Unit) {
+        val receiver = SmsConsentReceiver { consentIntent ->
+            consentLauncher.launch(consentIntent)
+        }
+
+        val filter = IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
+
+        ContextCompat.registerReceiver(
+                context,
+                receiver,
+                filter,
+                ContextCompat.RECEIVER_NOT_EXPORTED
+        )
+
+        // 3) Start listening for ONE incoming message (from any sender)
+        SmsRetriever.getClient(context).startSmsUserConsent(null)
+
+        onDispose {
+            runCatching { context.unregisterReceiver(receiver) }
+        }
+    }
+
+    LaunchedEffect(uiState.otpRequestId) {
+
+        if (uiState.otpRequestId == 0) return@LaunchedEffect
+       // delay(5000)
+        SmsRetriever.getClient(context).startSmsUserConsent(null)
+    }
 
 
     Column(
@@ -135,6 +196,15 @@ fun OtpInputSection(
         }
     }
 }
+private fun extractOtp(message: String?): String? {
+
+    Timber.tag("SmsConsentReceiver").i("OtpInputSection - extractOtp() called with $message")
+    if (message.isNullOrBlank()) return null
+
+    val match = Regex("""\b(\d{6})\b""").find(message)
+    return match?.groupValues?.get(1)
+}
+
 
 @PreviewLightDark
 @Composable

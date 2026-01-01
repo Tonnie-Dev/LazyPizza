@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
@@ -101,6 +102,17 @@ private fun AuthScreenContent(
                 )
             }
         }
+        /*if (uiState.isLoading) {
+            Box(
+                    modifier = Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.6f)),
+                    contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }*/
+
     }
 }
 
