@@ -1,7 +1,6 @@
 package com.tonyxlab.lazypizza.presentation.screens.auth.components
 
 import android.R.attr.textStyle
-import android.text.Selection.setSelection
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -25,7 +24,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.selectAll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,16 +36,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.coerceIn
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.theme.Body2Regular
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
-
-
-import androidx.compose.ui.text.TextRange
-import kotlinx.coroutines.NonCancellable.isActive
 
 @Composable
 fun OtpInput(
@@ -64,12 +61,13 @@ fun OtpInput(
     val focusRequester = remember { FocusRequester() }
     var isFocused by remember { mutableStateOf(false) }
 
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     BasicTextField(
             modifier = modifier
                     .fillMaxWidth()
                     .focusRequester(focusRequester)
-                    .onFocusChanged{ isFocused = it.isFocused}
-                    ,
+                    .onFocusChanged { isFocused = it.isFocused },
             state = textFieldState,
             keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.NumberPassword
@@ -78,8 +76,9 @@ fun OtpInput(
                 val filtered = originalText.filter(Char::isDigit)
                         .take(6)
                 if (filtered != originalText) {
-                    replace(0, filtered.length, filtered)
+                    replace(0, originalText.length, filtered)
                 }
+
             },
             decorator = {
                 TextDecorator(
@@ -88,10 +87,9 @@ fun OtpInput(
                         error = error,
                         textStyle = textStyle,
                         isFocused = isFocused,
-                        onBoxClick = {
-
-                            index ->
+                        onBoxClick = { index ->
                             focusRequester.requestFocus()
+                            keyboardController?.show()
 
                             val textLength = textFieldState.text.length
                             val safeIndex = index.coerceAtMost(textLength)
@@ -121,7 +119,7 @@ private fun TextDecorator(
     onBoxClick: (Int) -> Unit,
 ) {
     val activeIndex = when {
-        isFocused -> selectionIndex.coerceIn(0,5)
+        isFocused -> selectionIndex.coerceIn(0, 5)
         else -> -1
     }
 
@@ -137,7 +135,7 @@ private fun TextDecorator(
                     isActive = isFocused && index == activeIndex,
                     error = error,
                     textStyle = textStyle,
-                    onClick = { onBoxClick(index)}
+                    onClick = { onBoxClick(index) }
             )
         }
     }
@@ -149,7 +147,7 @@ private fun OtpDigitBox(
     isActive: Boolean,
     error: Boolean,
     textStyle: TextStyle,
-    onClick:() -> Unit
+    onClick: () -> Unit
 ) {
     val cursorAlpha by rememberInfiniteTransition().animateFloat(
             initialValue = 0f,
@@ -163,7 +161,7 @@ private fun OtpDigitBox(
     Box(
             modifier = Modifier
                     .size(MaterialTheme.spacing.spaceTwelve * 4)
-                    .clickable{ onClick()}
+                    .clickable { onClick() }
                     .border(
                             width = MaterialTheme.spacing.spaceSingleDp,
                             color = when {

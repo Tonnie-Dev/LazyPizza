@@ -5,6 +5,7 @@ package com.tonyxlab.lazypizza.presentation.screens.auth
 import android.app.Activity
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.text.TextRange
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.PhoneAuthProvider
 import com.tonyxlab.lazypizza.domain.CountdownTimer
@@ -21,7 +22,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import timber.log.Timber
 
 typealias AuthBaseViewModel = BaseViewModel<AuthUiState, AuthUiEvent, AuthActionEvent>
 
@@ -118,10 +118,20 @@ class AuthViewModel(
         snapshotFlow { currentState.otpInputState.textFieldState.text.toString() }
                 .distinctUntilChanged()
                 .onEach { text ->
+
+                    val limitedText = text.take(6)
+
+                    if (text.length > 6) {
+                        currentState.otpInputState.textFieldState.edit {
+                            replace(0, length, limitedText)
+                            selection = TextRange(limitedText.length)
+                        }
+                    }
+
                     updateState {
                         it.copy(
                                 otpInputState = it.otpInputState.copy(
-                                        confirmEnabled = text.length == 6,
+                                        confirmEnabled = limitedText.length == 6,
                                         error = false
                                 )
                         )
@@ -145,8 +155,7 @@ class AuthViewModel(
                     if (currentState.authScreenStep == AuthUiState.AuthScreenStep.OtpInputStep) {
                         startTimer()
                     }
-                    Timber.tag("AuthViewModel")
-                            .i("Otp Sent - V-Id is: $verificationId \n R-Token is: $resendToken")
+
                 }
 
                 AuthState.Loading -> {
@@ -161,8 +170,7 @@ class AuthViewModel(
                 }
 
                 is AuthState.AutoVerified -> {
-                    Timber.tag("AuthViewModel")
-                            .i("Auto-Verification Fired!!")
+
                     updateState {
                         it.copy(
                                 isLoading = false,
