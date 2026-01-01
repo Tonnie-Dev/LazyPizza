@@ -5,6 +5,10 @@ import android.content.IntentFilter
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -41,7 +45,8 @@ import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.presentation.theme.RoundedCornerShape100
 import com.tonyxlab.lazypizza.presentation.theme.Title1Medium
 import com.tonyxlab.lazypizza.presentation.theme.Title3
-import kotlinx.coroutines.delay
+import com.tonyxlab.lazypizza.presentation.theme.Title4
+import com.tonyxlab.lazypizza.utils.ifThen
 import timber.log.Timber
 
 @Composable
@@ -51,8 +56,7 @@ fun OtpInputSection(
     onEvent: (AuthUiEvent) -> Unit,
     activity: Activity
 ) {
-val context = LocalContext.current
-
+    val context = LocalContext.current
 
     val consentLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.StartActivityForResult()
@@ -65,7 +69,8 @@ val context = LocalContext.current
         val message =
             result.data?.getStringExtra(SmsRetriever.EXTRA_SMS_MESSAGE)
 
-        Timber.tag("SmsConsentReceiver").i("Result Code is ${result.resultCode}")
+        Timber.tag("SmsConsentReceiver")
+                .i("Result Code is ${result.resultCode}")
         val otp = extractOtp(message)
 
         if (otp != null) {
@@ -88,7 +93,8 @@ val context = LocalContext.current
         )
 
         // 3) Start listening for ONE incoming message (from any sender)
-        SmsRetriever.getClient(context).startSmsUserConsent(null)
+        SmsRetriever.getClient(context)
+                .startSmsUserConsent(null)
 
         onDispose {
             runCatching { context.unregisterReceiver(receiver) }
@@ -98,8 +104,9 @@ val context = LocalContext.current
     LaunchedEffect(uiState.otpRequestId) {
 
         if (uiState.otpRequestId == 0) return@LaunchedEffect
-       // delay(5000)
-        SmsRetriever.getClient(context).startSmsUserConsent(null)
+        // delay(5000)
+        SmsRetriever.getClient(context)
+                .startSmsUserConsent(null)
     }
 
 
@@ -142,13 +149,44 @@ val context = LocalContext.current
                 shape = MaterialTheme.shapes.RoundedCornerShape100,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
         )
+
         OtpInput(
-                modifier = Modifier.padding(
-                        bottom = MaterialTheme.spacing.spaceMedium
-                ),
+                modifier = Modifier
+                        .ifThen(uiState.otpInputState.error) {
+                            padding(
+                                    bottom = MaterialTheme.spacing.spaceSmall
+                            )
+
+                        }
+                        .ifThen(!uiState.otpInputState.error) {
+
+                            padding(
+                                    bottom = MaterialTheme.spacing.spaceMedium
+                            )
+                        },
+
                 textFieldState = uiState.otpInputState.textFieldState,
                 error = uiState.otpInputState.error
         )
+
+        AnimatedVisibility(
+                visible = uiState.otpInputState.error,
+                enter = fadeIn() + slideInVertically(initialOffsetY = { it / 2 }),
+                exit = fadeOut()
+        ) {
+
+            Text(
+                    modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = MaterialTheme.spacing.spaceMedium)
+                            .padding(bottom = MaterialTheme.spacing.spaceMedium),
+                    text = stringResource(id = R.string.cap_text_incorrect_code),
+                    style = MaterialTheme.typography.Title4.copy(
+                            color = MaterialTheme.colorScheme.primary,
+                            textAlign = TextAlign.Start
+                    )
+            )
+        }
 
         AppButton(
                 modifier = Modifier
@@ -161,6 +199,7 @@ val context = LocalContext.current
 
         TextButton(
                 onClick = { onEvent(AuthUiEvent.ContinueWithoutLogin) }) {
+
             Text(
                     text = stringResource(id = R.string.txt_btn_continue_without_sign_in),
                     style = MaterialTheme.typography.Title3
@@ -196,15 +235,16 @@ val context = LocalContext.current
         }
     }
 }
+
 private fun extractOtp(message: String?): String? {
 
-    Timber.tag("SmsConsentReceiver").i("OtpInputSection - extractOtp() called with $message")
+    Timber.tag("SmsConsentReceiver")
+            .i("OtpInputSection - extractOtp() called with $message")
     if (message.isNullOrBlank()) return null
 
     val match = Regex("""\b(\d{6})\b""").find(message)
     return match?.groupValues?.get(1)
 }
-
 
 @PreviewLightDark
 @Composable
