@@ -1,6 +1,8 @@
 package com.tonyxlab.lazypizza.presentation.screens.history
 
 import androidx.lifecycle.viewModelScope
+import com.tonyxlab.lazypizza.domain.firebase.AuthState
+import com.tonyxlab.lazypizza.domain.repository.AuthRepository
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.history.handling.HistoryActionEvent
@@ -12,12 +14,16 @@ import kotlinx.coroutines.flow.onEach
 
 typealias HistoryBaseViewModel = BaseViewModel<HistoryUiState, HistoryUiEvent, HistoryActionEvent>
 
-class HistoryViewModel(private val repository: CartRepository) : HistoryBaseViewModel() {
+class HistoryViewModel(
+    private val cartRepository: CartRepository,
+    private val authRepository: AuthRepository
+) : HistoryBaseViewModel() {
 
-    val cartItems = repository.cartItems
+    val cartItems = cartRepository.cartItems
 
     init {
         observeCount()
+        observerAuthState()
     }
 
     override val initialState: HistoryUiState
@@ -28,16 +34,28 @@ class HistoryViewModel(private val repository: CartRepository) : HistoryBaseView
           HistoryUiEvent.SignIn -> {
               sendActionEvent(actionEvent = HistoryActionEvent.NavigateToAuth)
           }
+
+          HistoryUiEvent.GoToMenu -> {
+              sendActionEvent(actionEvent = HistoryActionEvent.NavigateToMenu)
+          }
       }
     }
 
     private fun observeCount() {
 
-        repository.cartItems.map { items -> items.sumOf { it.counter } }
+        cartRepository.cartItems.map { items -> items.sumOf { it.counter } }
                 .onEach { count ->
                     updateState { it.copy(badgeCount = count) }
-
                 }
                 .launchIn(viewModelScope)
     }
+    private fun observerAuthState() {
+        authRepository.authState
+                .onEach { authState ->
+
+                  updateState { it.copy(isSignedIn = authState is AuthState.Authenticated) }
+
+        }.launchIn(viewModelScope)
+    }
+
 }

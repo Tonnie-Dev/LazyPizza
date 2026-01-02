@@ -5,4 +5,5 @@ import com.tonyxlab.lazypizza.presentation.core.base.handling.UiEvent
 sealed interface HistoryUiEvent: UiEvent{
 
     data object SignIn: HistoryUiEvent
+    data object GoToMenu: HistoryUiEvent
 }

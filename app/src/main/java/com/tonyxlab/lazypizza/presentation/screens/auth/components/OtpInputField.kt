@@ -73,8 +73,10 @@ fun OtpInput(
                     keyboardType = KeyboardType.NumberPassword
             ),
             inputTransformation = {
-                val filtered = originalText.filter(Char::isDigit)
+                val filtered = originalText
+                        .filter(Char::isDigit)
                         .take(6)
+
                 if (filtered != originalText) {
                     replace(0, originalText.length, filtered)
                 }

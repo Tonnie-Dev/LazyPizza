@@ -15,13 +15,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.navigation.AppNavigationRail
 import com.tonyxlab.lazypizza.navigation.AuthScreenDestination
 import com.tonyxlab.lazypizza.navigation.BottomNavBar
+import com.tonyxlab.lazypizza.navigation.MenuScreenDestination
 import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarThree
@@ -29,6 +29,7 @@ import com.tonyxlab.lazypizza.presentation.core.components.EmptyScreenContent
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.history.handling.HistoryActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.history.handling.HistoryUiEvent
+import com.tonyxlab.lazypizza.presentation.screens.history.handling.HistoryUiState
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.utils.DeviceType
 import com.tonyxlab.lazypizza.utils.SetStatusBarIconsColor
@@ -69,9 +70,14 @@ fun HistoryScreen(
                     },
                     actionEventHandler = { _, action ->
 
-                        when(action){
-                            HistoryActionEvent.NavigateToAuth -> navigator.navigate(
-                                    AuthScreenDestination)
+                        when (action) {
+                            HistoryActionEvent.NavigateToAuth -> {
+                                navigator.navigate(route = AuthScreenDestination)
+                            }
+
+                            HistoryActionEvent.NavigateToMenu -> {
+                                navigator.navigate(MenuScreenDestination)
+                            }
                         }
                     },
                     onBackPressed = { activity.finish() },
@@ -79,6 +85,7 @@ fun HistoryScreen(
             ) {
                 HistoryScreenContent(
                         modifier = Modifier,
+                        uiState = uiState,
                         onEvent = viewModel::onEvent
                 )
             }
@@ -102,15 +109,21 @@ fun HistoryScreen(
                 },
                 onBackPressed = { activity.finish() },
                 actionEventHandler = { _, action ->
-                    when(action){
-                        HistoryActionEvent.NavigateToAuth -> navigator.navigate(
-                                AuthScreenDestination)
+                    when (action) {
+                        HistoryActionEvent.NavigateToAuth -> {
+                            navigator.navigate(route = AuthScreenDestination)
+                        }
+
+                        HistoryActionEvent.NavigateToMenu -> {
+                            navigator.navigate(MenuScreenDestination)
+                        }
                     }
                 },
                 containerColor = MaterialTheme.colorScheme.background
         ) {
             HistoryScreenContent(
                     modifier = Modifier,
+                    uiState = uiState,
                     onEvent = viewModel::onEvent
             )
         }
@@ -119,6 +132,7 @@ fun HistoryScreen(
 
 @Composable
 private fun HistoryScreenContent(
+    uiState: HistoryUiState,
     onEvent: (HistoryUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -127,7 +141,16 @@ private fun HistoryScreenContent(
                     .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
+        if (uiState.isSignedIn) {
+            EmptyScreenContent(
+                    modifier = Modifier.padding(top = MaterialTheme.spacing.spaceTwelve * 10),
+                    title = stringResource(id = R.string.cap_text_no_orders_yet),
+                    subTitle = stringResource(id = R.string.cap_text_orders_will_appear_here),
+                    buttonText = stringResource(id = R.string.btn_text_go_to_menu),
+                    onEvent = { onEvent(HistoryUiEvent.GoToMenu) }
+            )
+            return
+        }
         EmptyScreenContent(
                 modifier = Modifier.padding(top = MaterialTheme.spacing.spaceTwelve * 10),
                 title = stringResource(id = R.string.cap_text_not_signed_in),
@@ -135,7 +158,6 @@ private fun HistoryScreenContent(
                 buttonText = stringResource(id = R.string.btn_text_sign_in),
                 onEvent = { onEvent(HistoryUiEvent.SignIn) }
         )
-
     }
 }
 
@@ -144,7 +166,10 @@ private fun HistoryScreenContent(
 private fun HistoryScreenContent_Preview() {
     LazyPizzaTheme {
         Column(modifier = Modifier.fillMaxSize()) {
-            HistoryScreenContent(onEvent = {})
+            HistoryScreenContent(
+                    uiState = HistoryUiState(),
+                    onEvent = {}
+            )
         }
     }
 }
