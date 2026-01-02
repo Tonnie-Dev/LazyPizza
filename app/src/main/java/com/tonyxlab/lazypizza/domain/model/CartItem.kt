@@ -11,7 +11,7 @@ data class CartItem(
     val category: Category
 )
 
-enum class ProductType { PIZZA, SIDE_ITEM }
+enum class ProductType { PIZZA, ADD_ON_ITEM }
 
 fun Pizza.toCartItem(): CartItem {
 
@@ -36,7 +36,7 @@ fun AddOnItem.toCartItem(): CartItem {
             unitPrice = price,
             counter = 1,
             toppings = emptyList(),
-            productType = ProductType.SIDE_ITEM,
+            productType = ProductType.ADD_ON_ITEM,
             category = category
     )
 }
@@ -49,7 +49,5 @@ fun CartItem.toSideItem(): AddOnItem {
             price = unitPrice,
             counter = 1,
             category = Category.DRINKS
-
     )
-
 }
