@@ -22,7 +22,7 @@ val cartItemsMock = listOf(
 
                 ),
                 productType = ProductType.PIZZA,
-                category = Category.PIZZA
+
         ),
 
         CartItem(
@@ -35,7 +35,7 @@ val cartItemsMock = listOf(
                         Topping(4L, "Extra Pepperoni", 2.49, "pepperoni.png", 2)
                 ),
                 productType = ProductType.PIZZA,
-                category = Category.PIZZA
+
 
         ),
 
@@ -47,7 +47,7 @@ val cartItemsMock = listOf(
                 counter = 1,
                 toppings = emptyList(),
                 productType = ProductType.PIZZA,
-                category = Category.PIZZA
+
         ),
 
         CartItem(
@@ -60,7 +60,7 @@ val cartItemsMock = listOf(
                         Topping(5L, "Extra Mushrooms", 1.79, "mushroom.png", 1)
                 ),
                 productType = ProductType.PIZZA,
-                category = Category.PIZZA
+
         ),
 
         // -------------------- DRINKS --------------------
@@ -73,7 +73,7 @@ val cartItemsMock = listOf(
                 counter = 2,
                 toppings = emptyList(),
                 productType = ProductType.ADD_ON_ITEM,
-                category = Category.DRINKS
+
         ),
 
         CartItem(
@@ -84,7 +84,7 @@ val cartItemsMock = listOf(
                 counter = 1,
                 toppings = emptyList(),
                 productType = ProductType.ADD_ON_ITEM,
-                category = Category.DRINKS
+
         ),
 
         // -------------------- SAUCES --------------------
@@ -97,7 +97,7 @@ val cartItemsMock = listOf(
                 counter = 3,
                 toppings = emptyList(),
                 productType = ProductType.ADD_ON_ITEM,
-                category = Category.SAUCE
+
         ),
 
         CartItem(
@@ -108,7 +108,7 @@ val cartItemsMock = listOf(
                 counter = 1,
                 toppings = emptyList(),
                 productType = ProductType.ADD_ON_ITEM,
-                category = Category.SAUCE
+
         ),
 
         // -------------------- ICE CREAM --------------------
@@ -121,7 +121,7 @@ val cartItemsMock = listOf(
                 counter = 1,
                 toppings = emptyList(),
                 productType = ProductType.ADD_ON_ITEM,
-                category = Category.ICE_CREAM
+
         ),
 
         CartItem(
@@ -132,6 +132,6 @@ val cartItemsMock = listOf(
                 counter = 2,
                 toppings = emptyList(),
                 productType = ProductType.ADD_ON_ITEM,
-                category = Category.ICE_CREAM
+
         )
 )

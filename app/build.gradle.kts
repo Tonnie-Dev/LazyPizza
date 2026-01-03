@@ -7,7 +7,6 @@ plugins {
     alias(libs.plugins.firebase.plugin)
 }
 
-
 android {
     namespace = "com.tonyxlab.lazypizza"
     compileSdk {

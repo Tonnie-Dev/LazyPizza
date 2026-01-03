@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.Pizza
 import com.tonyxlab.lazypizza.presentation.core.components.DisplayImage
+import com.tonyxlab.lazypizza.presentation.core.components.LazyListComponent
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiEvent
 import com.tonyxlab.lazypizza.presentation.theme.Body1Medium
@@ -120,7 +121,7 @@ private fun PizzaCard_Preview() {
                         .padding(MaterialTheme.spacing.spaceMedium)
         ) {
 
-            LazyCategoryList(
+            LazyListComponent(
                     header = "Pizza", items = pizzas,
                     key = { it.id },
                     isDeviceWide = false
