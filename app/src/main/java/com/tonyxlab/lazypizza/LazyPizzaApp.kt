@@ -1,6 +1,7 @@
 package com.tonyxlab.lazypizza
 
 import android.app.Application
+import com.tonyxlab.lazypizza.di.databaseModule
 import com.tonyxlab.lazypizza.di.firebaseModule
 import com.tonyxlab.lazypizza.di.repositoryModule
 import com.tonyxlab.lazypizza.di.viewModelModule
@@ -17,7 +18,12 @@ class LazyPizzaApp : Application() {
         startKoin {
             androidContext(androidContext = this@LazyPizzaApp)
             modules(
-                    listOf(viewModelModule, repositoryModule, firebaseModule)
+                    listOf(
+                            viewModelModule,
+                            repositoryModule,
+                            firebaseModule,
+                            databaseModule
+                    )
             )
         }
     }

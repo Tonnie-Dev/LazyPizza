@@ -1,22 +1,46 @@
-package com.tonyxlab.lazypizza.data.local.entity
+package com.tonyxlab.lazypizza.data.local.database.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
+
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 import com.tonyxlab.lazypizza.domain.model.ProductType
 
-@Entity(tableName = "cart_items_table")
+@Entity(tableName = "cart_table")
+data class CartEntity(
+    @PrimaryKey
+    @ColumnInfo(name = "cart_id")
+    val cartId: String,
+    @ColumnInfo(name = "cart_owner_type")
+    val ownerType: CartOwnerType
+)
+
+enum class CartOwnerType {
+    GUEST, AUTHENTICATED
+}
+
+@Entity(
+        tableName = "cart_items_table",
+        foreignKeys = [ForeignKey(
+                entity = CartEntity::class,
+                parentColumns = arrayOf("cart_id"),
+                childColumns = arrayOf("cart_id"),
+                onUpdate = ForeignKey.CASCADE,
+                onDelete = ForeignKey.CASCADE
+        )
+        ]
+)
 data class CartItemEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "cart_item_id")
     val cartItemId: Long = 0L,
+    @ColumnInfo(name = "cart_id")
+    val cartId: String,
     @ColumnInfo(name = "product_id")
     val productId: Long = 0L,
-    @ColumnInfo(name = "is_guest")
-    val isGuest: Boolean,
     @ColumnInfo(name = "name")
     val name: String,
     @ColumnInfo(name = "image_url")
@@ -34,7 +58,7 @@ data class CartItemEntity(
         foreignKeys = [ForeignKey(
                 entity = CartItemEntity::class,
                 parentColumns = arrayOf("cart_item_id"),
-                childColumns = arrayOf("topping_id"),
+                childColumns = arrayOf("cart_item_id"),
                 onUpdate = ForeignKey.CASCADE,
                 onDelete = ForeignKey.CASCADE
         )]
@@ -43,7 +67,7 @@ data class CartItemEntity(
 data class ToppingEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "topping_id")
-    val toppingId: Long,
+    val toppingId: Long= 0L,
     @ColumnInfo(name = "cart_item_id")
     val cartItemId: Long,
     @ColumnInfo(name = "topping_product_id")
@@ -65,6 +89,6 @@ data class CartItemWithTopping(
             parentColumn = "cart_item_id",
             entityColumn = "cart_item_id"
     )
-    val topping: ToppingEntity
+    val toppings: List<ToppingEntity>
 )
 
