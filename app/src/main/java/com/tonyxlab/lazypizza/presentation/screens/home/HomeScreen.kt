@@ -42,7 +42,7 @@ import com.tonyxlab.lazypizza.presentation.core.components.AppDialog
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarOne
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.home.components.CategoryTabs
-import com.tonyxlab.lazypizza.presentation.screens.home.components.LazyCategoryList
+import com.tonyxlab.lazypizza.presentation.core.components.LazyListComponent
 import com.tonyxlab.lazypizza.presentation.screens.home.components.PizzaCard
 import com.tonyxlab.lazypizza.presentation.screens.home.components.SearchComponent
 import com.tonyxlab.lazypizza.presentation.screens.home.components.SideItemCard
@@ -235,7 +235,7 @@ private fun HomeScreenContent(
 
                         uiState.selectedCategory == Category.PIZZA -> {
 
-                            LazyCategoryList(
+                            LazyListComponent(
                                     header = header,
                                     items = pizzasList,
                                     key = { item -> item.id },
@@ -251,7 +251,7 @@ private fun HomeScreenContent(
 
                         else -> {
 
-                            LazyCategoryList(
+                            LazyListComponent(
                                     header = header,
                                     items = sideItemsList,
                                     key = { item -> item.id },
@@ -306,7 +306,7 @@ private fun HomeScreenContent(
                     )
 
                     if (uiState.selectedCategory == Category.PIZZA) {
-                        LazyCategoryList(
+                        LazyListComponent(
                                 header = header,
                                 items = pizzasList,
                                 key = { item -> item.id },
@@ -319,7 +319,7 @@ private fun HomeScreenContent(
                         }
 
                     } else {
-                        LazyCategoryList(
+                        LazyListComponent(
                                 header = uiState.selectedCategory.categoryName,
                                 items = uiState.filteredAddOnItems,
                                 key = { item -> item.id },

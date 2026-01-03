@@ -32,6 +32,7 @@ import com.tonyxlab.lazypizza.domain.model.CartItem
 import com.tonyxlab.lazypizza.presentation.core.components.AppButton
 import com.tonyxlab.lazypizza.presentation.core.components.CounterItem
 import com.tonyxlab.lazypizza.presentation.core.components.DisplayImage
+import com.tonyxlab.lazypizza.presentation.core.components.LazyListComponent
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiState
@@ -227,7 +228,7 @@ private fun SideItemCard_Preview() {
                         .padding(MaterialTheme.spacing.spaceMedium)
         ) {
 
-            LazyCategoryList(
+            LazyListComponent(
                     header = "Drinks", items = sideItems,
                     key = { it.id },
                     isDeviceWide = false

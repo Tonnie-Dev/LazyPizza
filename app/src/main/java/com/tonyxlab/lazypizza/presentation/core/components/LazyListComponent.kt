@@ -1,4 +1,4 @@
-package com.tonyxlab.lazypizza.presentation.screens.home.components
+package com.tonyxlab.lazypizza.presentation.core.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +22,7 @@ import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.theme.Label2SemiBold
 
 @Composable
-fun <T> LazyCategoryList(
+fun <T> LazyListComponent(
     items: List<T>,
     key: (T) -> Any,
     header: String = "",

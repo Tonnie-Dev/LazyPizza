@@ -8,6 +8,7 @@ val Primary = Color(0xFFF36B50)
 val Primary8 = Color(0x14F36B50) // 8% opacity of #F36B50
 
 val TextPrimary = Color(0xFF03131F)
+val TextPrimaryAlternate = Color(0xFF101C28)
 val TextPrimary8 = Color(0x1403131F) //8% opacity of #03131F
 val TextSecondary = Color(0xFF627686)
 val TextSecondary8 = Color(0x14627686) // 8% opacity of #627686
@@ -25,3 +26,8 @@ val PrimaryGradientEnd = Color(0xFFF36B50)
 
 val ToppingCircleBackground = Color(0xFFFEF4F1)
 
+val Success = Color(0xFF2E7D32)
+val Warning = Color(0xFFF9A825)
+
+
+ 

@@ -77,7 +77,13 @@ object ExtendedTypography {
             lineHeight = 22.sp,
             letterSpacing = 0.sp
     )
-
+    val Label3SemiBold = TextStyle(
+            fontFamily = InstrumentSansFamily,
+            fontWeight = FontWeight.Medium,
+            fontSize = 10.sp,
+            lineHeight = 14.sp,
+            letterSpacing = 0.sp
+    )
     val Body1Medium = TextStyle(
             fontFamily = InstrumentSansFamily,
             fontWeight = FontWeight.Medium,
@@ -140,6 +146,10 @@ val Typography.Title4
 val Typography.Label2SemiBold
     @Composable
     get() = ExtendedTypography.Label2SemiBold
+
+val Typography.Label3SemiBold
+    @Composable
+    get() = ExtendedTypography.Label3SemiBold
 
 val Typography.Body1Regular
     @Composable

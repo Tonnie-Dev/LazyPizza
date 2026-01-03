@@ -1,6 +1,12 @@
+@file:RequiresApi(Build.VERSION_CODES.O)
+
 package com.tonyxlab.lazypizza.utils
 
-import com.tonyxlab.lazypizza.domain.model.*
+import android.os.Build
+import androidx.annotation.RequiresApi
+import com.tonyxlab.lazypizza.domain.model.Order
+import com.tonyxlab.lazypizza.domain.model.OrderItem
+import com.tonyxlab.lazypizza.domain.model.OrderStatus
 import java.time.LocalDateTime
 import kotlin.random.Random
 
@@ -17,19 +23,25 @@ object OrderMock {
     fun generateOrders(
         count: Int = 5
     ): List<Order> {
-        return (1..count).map { index ->
-            val items = randomOrderItems()
-            val total = items.sumOf { it.quantity * randomPriceFor(it.name) }
+        return buildList {
 
-            Order(
-                    id = index.toLong(),
-                    orderNumber = generateOrderNumber(index),
-                    placedAt = LocalDateTime.now().minusDays(Random.nextLong(0, 10)),
-                    orderItems = items,
-                    totalAmount = total,
-                    orderStatus = OrderStatus.entries.toTypedArray()
-                            .random()
-            )
+            repeat(count) { index ->
+                val items = randomOrderItems()
+                val total = items.sumOf { it.quantity * randomPriceFor(it.name) }
+
+                add(
+                Order(
+                        id = index.toLong(),
+                        orderNumber = generateOrderNumber(index),
+                        placedAt = LocalDateTime.now()
+                                .minusDays(Random.nextLong(0, 10)),
+                        orderItems = items,
+                        totalAmount = total,
+                        orderStatus = OrderStatus.entries.toTypedArray()
+                                .random()
+                )
+                )
+            }
         }
     }
 
@@ -57,5 +69,5 @@ object OrderMock {
         }
 
     private fun generateOrderNumber(index: Int): String =
-        "LP-${1000 + index}"
+        "Order #${1000 + index}"
 }

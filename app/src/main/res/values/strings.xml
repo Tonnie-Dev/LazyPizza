@@ -29,6 +29,11 @@
     <string name="cap_text_enter_code">Enter code </string>
     <string name="cap_text_request_code_in">You can request a new code in %02d</string>
     <string name="cap_text_incorrect_code">Incorrect code. Please try again</string>
+    <string name="cap_text_order_completed">Completed</string>
+    <string name="cap_text_order_in_progress">In Progress</string>
+    <string name="cap_text_order_cancelled">Cancelled</string>
+    <string name="cap_text_total_amount">Total Amount:</string>
+    <string name="cap_text_total_amount_formatted">$%.2f</string>
 
     <!--Label Texts-->
     <string name="lab_text_text">Text</string>
