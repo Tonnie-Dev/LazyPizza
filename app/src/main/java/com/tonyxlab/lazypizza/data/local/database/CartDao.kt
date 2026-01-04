@@ -5,7 +5,6 @@ import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import com.tonyxlab.lazypizza.data.local.database.entity.CartEntity
 import com.tonyxlab.lazypizza.data.local.database.entity.CartItemEntity
 import com.tonyxlab.lazypizza.data.local.database.entity.CartItemWithTopping
 import com.tonyxlab.lazypizza.data.local.database.entity.ToppingEntity
@@ -14,22 +13,14 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CartDao {
-    @Upsert
-    suspend fun upsertCart(cart: CartEntity)
+
     @Transaction
-    @Query(
-            """
-             SELECT * FROM cart_items_table WHERE cart_id = :cartId
-         """
-    )
-    fun getCartItems(cartId: String): Flow<List<CartItemWithTopping>>
+    @Query("SELECT * FROM cart_items_table ")
+    fun getCartItemsFlow(): Flow<List<CartItemWithTopping>>
+
     @Transaction
-    @Query(
-            """
-                SELECT * FROM cart_items_table WHERE cart_id = :cartId
-            """
-    )
-    suspend fun getCartItemsList(cartId: String): List<CartItemWithTopping>
+    @Query("SELECT * FROM cart_items_table ")
+    suspend fun getCartItemsList(): List<CartItemWithTopping>
 
     @Upsert
     suspend fun upsertCartItem(cartItemEntity: CartItemEntity): Long
@@ -40,6 +31,6 @@ interface CartDao {
     @Delete
     suspend fun deleteCartItemById(cartItemEntity: CartItemEntity)
 
-    @Query("DELETE FROM cart_items_table WHERE cart_id =:cartId")
-    suspend fun clear(cartId: String)
+    @Query("DELETE FROM cart_items_table")
+    suspend fun clear()
 }

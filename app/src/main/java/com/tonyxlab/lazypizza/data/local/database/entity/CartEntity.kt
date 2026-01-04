@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 import com.tonyxlab.lazypizza.domain.model.ProductType
 
-@Entity(tableName = "cart_table")
+/*@Entity(tableName = "cart_table")
 data class CartEntity(
     @PrimaryKey
     @ColumnInfo(name = "cart_id")
@@ -20,25 +20,13 @@ data class CartEntity(
 
 enum class CartOwnerType {
     GUEST, AUTHENTICATED
-}
+}*/
 
-@Entity(
-        tableName = "cart_items_table",
-        foreignKeys = [ForeignKey(
-                entity = CartEntity::class,
-                parentColumns = arrayOf("cart_id"),
-                childColumns = arrayOf("cart_id"),
-                onUpdate = ForeignKey.CASCADE,
-                onDelete = ForeignKey.CASCADE
-        )
-        ]
-)
+@Entity(tableName = "cart_items_table")
 data class CartItemEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "cart_item_id")
     val cartItemId: Long = 0L,
-    @ColumnInfo(name = "cart_id")
-    val cartId: String,
     @ColumnInfo(name = "product_id")
     val productId: Long = 0L,
     @ColumnInfo(name = "name")

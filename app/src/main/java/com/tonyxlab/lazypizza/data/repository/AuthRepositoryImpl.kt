@@ -152,7 +152,7 @@ class AuthRepositoryImpl(
 
             if (userId != null) {
                 Timber.tag("AuthRepo").i("clear called")
-                cartRepository.clearAuthenticatedCart(userId)
+                cartRepository.clearAuthenticatedCart()
 
                 Timber.tag("AuthRepo").i("clear called")
             }

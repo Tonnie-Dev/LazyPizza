@@ -3,8 +3,6 @@ package com.tonyxlab.lazypizza.data.repository
 import androidx.room.withTransaction
 import com.tonyxlab.lazypizza.data.local.database.CartDao
 import com.tonyxlab.lazypizza.data.local.database.LazyPizzaDatabase
-import com.tonyxlab.lazypizza.data.local.database.entity.CartEntity
-import com.tonyxlab.lazypizza.data.local.database.entity.CartOwnerType
 import com.tonyxlab.lazypizza.data.local.database.mappers.toEntity
 import com.tonyxlab.lazypizza.data.local.database.mappers.toModel
 import com.tonyxlab.lazypizza.data.local.database.mappers.toToppingEntities
@@ -21,10 +19,8 @@ class CartRepositoryImpl(
    private val cartIdProvider: CartIdProvider
 ) : CartRepository {
 
-    // private val _cartItems = MutableStateFlow<List<CartItem>>(emptyList())
-
     override val cartItems: Flow<List<CartItem>> = dao
-            .getCartItems(cartIdProvider.currentCartId)
+            .getCartItemsFlow()
             .map { entities -> entities.map { it.toModel() } }
 
     override suspend fun addItem(cartItem: CartItem) {
@@ -32,7 +28,7 @@ class CartRepositoryImpl(
         database.withTransaction {
 
 
-            // ✅ 0. Ensure parent cart exists
+            /*// ✅ 0. Ensure parent cart exists
             dao.upsertCart(
                     CartEntity(
                             cartId = cartId,
@@ -41,10 +37,10 @@ class CartRepositoryImpl(
                             else
                                 CartOwnerType.AUTHENTICATED
                     )
-            )
+            )*/
             // 1. Load existing cart items snapshot for comparison
             val existingItems =
-                dao.getCartItemsList(cartIdProvider.currentCartId)
+                dao.getCartItemsList()
             // 2. Compare
             val match = existingItems.firstOrNull {
                 it.toModel().isSameAs(cartItem)
@@ -56,7 +52,7 @@ class CartRepositoryImpl(
                         cartItemEntity = cartItem.copy(
                                 counter = match.cartItem.counter + cartItem.counter
                         )
-                                .toEntity(cartIdProvider.currentCartId)
+                                .toEntity()
                 )
 
             }
@@ -64,7 +60,7 @@ class CartRepositoryImpl(
             else {
 
                 val insertedEntityId = dao.upsertCartItem(
-                        cartItemEntity = cartItem.toEntity(cartIdProvider.currentCartId)
+                        cartItemEntity = cartItem.toEntity()
                 )
 
                 dao.upsertToppings(cartItem.toToppingEntities(insertedEntityId))
@@ -97,7 +93,7 @@ class CartRepositoryImpl(
 
         val cartId = cartIdProvider.currentCartId
 
-        val items = dao.getCartItemsList(cartId)
+        val items = dao.getCartItemsList()
 
         val match = items.firstOrNull {
             it.toModel()
@@ -121,7 +117,7 @@ class CartRepositoryImpl(
         val cartId = cartIdProvider.currentCartId
         database.withTransaction {
 
-            val items = dao.getCartItemsList(cartId)
+            val items = dao.getCartItemsList()
             val match = items.firstOrNull {
                 it.toModel()
                         .isSameAs(cartItem)
@@ -158,17 +154,17 @@ class CartRepositoryImpl(
 
     override suspend fun clear() {
         val cartId = cartIdProvider.currentCartId
-        dao.clear(cartId = cartId)
+        dao.clear()
     }
     /*
         override fun clear() {
             _cartItems.update { emptyList() }
         }
     */
-    override suspend fun clearAuthenticatedCart(userId: String) {
+    override suspend fun clearAuthenticatedCart() {
         database.withTransaction {
             Timber.tag("CartRepo").i("clear called")
-            dao.clear(cartId = userId)
+            dao.clear()
         }
     }
 

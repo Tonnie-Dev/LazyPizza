@@ -6,9 +6,8 @@ import com.tonyxlab.lazypizza.data.local.database.entity.ToppingEntity
 import com.tonyxlab.lazypizza.domain.model.CartItem
 import com.tonyxlab.lazypizza.domain.model.Topping
 
-fun CartItem.toEntity(cartId: String): CartItemEntity =
+fun CartItem.toEntity(): CartItemEntity =
     CartItemEntity(
-            cartId = cartId,
             productType = productType,
             productId = id,
             name = name,
