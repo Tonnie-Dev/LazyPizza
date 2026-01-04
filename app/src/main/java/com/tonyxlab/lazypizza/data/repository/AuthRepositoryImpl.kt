@@ -10,13 +10,23 @@ import com.tonyxlab.lazypizza.domain.firebase.AuthState
 import com.tonyxlab.lazypizza.domain.model.AuthUser
 import com.tonyxlab.lazypizza.domain.model.toAuthUser
 import com.tonyxlab.lazypizza.domain.repository.AuthRepository
+import com.tonyxlab.lazypizza.domain.repository.CartIdProvider
+import com.tonyxlab.lazypizza.domain.repository.CartRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepository {
+class AuthRepositoryImpl(
+    private val firebaseAuth: FirebaseAuth,
+    private val cartRepository: CartRepository,
+    private val cartIdProvider: CartIdProvider,
+    private val appScope: CoroutineScope
+
+) : AuthRepository {
 
     private val _authState = MutableStateFlow<AuthState>(AuthState.Unauthenticated)
     override val authState = _authState.asStateFlow()
@@ -24,7 +34,9 @@ class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepositor
     override val currentUser: AuthUser?
         get() = firebaseAuth.currentUser?.toAuthUser()
 
-    init { observeAuthState() }
+    init {
+        observeAuthState()
+    }
 
     override fun startLogin(phoneNumber: String, activity: Activity) {
 
@@ -53,7 +65,6 @@ class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepositor
             }
 
             override fun onVerificationFailed(e: FirebaseException) {
-
 
                 _authState.update {
                     AuthState.Error(e.localizedMessage ?: "Verification Failed")
@@ -133,21 +144,41 @@ class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepositor
     }
 
     override fun logout() {
-        firebaseAuth.signOut()
-        _authState.update { AuthState.Unauthenticated }
-    }
 
+        val userId = firebaseAuth.currentUser?.uid
+        Timber.tag("AuthRepo")
+                .i("userId is $userId")
+        appScope.launch {
+
+            if (userId != null) {
+                Timber.tag("AuthRepo").i("clear called")
+                cartRepository.clearAuthenticatedCart(userId)
+
+                Timber.tag("AuthRepo").i("clear called")
+            }
+
+            firebaseAuth.signOut()
+            cartIdProvider.logout()
+
+            _authState.update { AuthState.Unauthenticated }
+        }
+    }
 
     private fun observeAuthState() {
 
         firebaseAuth.addAuthStateListener { auth ->
 
-            if (auth.currentUser != null)
-                _authState.value = AuthState.Authenticated
-            else
-                _authState.value = AuthState.Unauthenticated
+            val user = auth.currentUser
+
+            appScope.launch {
+                if (user != null) {
+                    _authState.value = AuthState.Authenticated
+                    cartIdProvider.onLogin(user.uid)   // ✅ safe now
+                } else {
+                    _authState.value = AuthState.Unauthenticated
+                    cartIdProvider.logout()          // ✅ safe now
+                }
+            }
         }
     }
-
-
 }

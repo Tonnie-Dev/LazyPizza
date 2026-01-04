@@ -58,7 +58,11 @@ class DetailsViewModel(
         val cartItem = currentState.pizzaStateItem!!.toCartItem()
                 .copy(toppings = currentState.selectedToppings.toList())
 
-        repository.addItem(cartItem)
+        launch {
+
+            repository.addItem(cartItem)
+
+        }
 
         sendActionEvent(
                 actionEvent = DetailsActionEvent.ShowSnackbar(

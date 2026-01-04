@@ -1,9 +1,12 @@
 package com.tonyxlab.lazypizza
 
 import android.app.Application
+import com.tonyxlab.lazypizza.di.coroutineModule
+
 import com.tonyxlab.lazypizza.di.databaseModule
 import com.tonyxlab.lazypizza.di.firebaseModule
 import com.tonyxlab.lazypizza.di.repositoryModule
+import com.tonyxlab.lazypizza.di.sessionModule
 import com.tonyxlab.lazypizza.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -22,7 +25,9 @@ class LazyPizzaApp : Application() {
                             viewModelModule,
                             repositoryModule,
                             firebaseModule,
-                            databaseModule
+                            databaseModule,
+                            sessionModule,
+                            coroutineModule
                     )
             )
         }

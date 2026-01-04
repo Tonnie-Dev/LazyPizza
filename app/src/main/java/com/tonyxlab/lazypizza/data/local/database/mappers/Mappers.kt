@@ -32,7 +32,7 @@ fun CartItem.toToppingEntities(cartItemId: Long): List<ToppingEntity> =
         }
     }
 
-fun ToppingEntity.toDomainModel(): Topping =
+fun ToppingEntity.toModel(): Topping =
     Topping(
             id = toppingProductId,
             toppingName = toppingName,
@@ -41,7 +41,7 @@ fun ToppingEntity.toDomainModel(): Topping =
             counter = counter
     )
 
-fun CartItemWithTopping.toDomain(): CartItem =
+fun CartItemWithTopping.toModel(): CartItem =
     CartItem(
             id = cartItem.productId,
             name =cartItem.name,
@@ -49,5 +49,5 @@ fun CartItemWithTopping.toDomain(): CartItem =
             unitPrice = cartItem.unitPrice,
             counter = cartItem.counter,
             productType = cartItem.productType,
-            toppings = toppings.map { it.toDomainModel() }
+            toppings = toppings.map { it.toModel() }
     )

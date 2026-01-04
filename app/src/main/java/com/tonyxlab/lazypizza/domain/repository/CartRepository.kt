@@ -1,13 +1,16 @@
 package com.tonyxlab.lazypizza.domain.repository
 
 import com.tonyxlab.lazypizza.domain.model.CartItem
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 interface CartRepository {
-    val cartItems: StateFlow<List<CartItem>>
+    val cartItems: Flow<List<CartItem>>
 
-    fun addItem(cartItem: CartItem)
-    fun removeItem(cartItem: CartItem)
-    fun updateCount(cartItem: CartItem, newCount: Int)
-    fun clear()
+   suspend fun addItem(cartItem: CartItem)
+   suspend fun removeItem(cartItem: CartItem)
+  suspend  fun updateCount(cartItem: CartItem, newCount: Int)
+    suspend fun clear()
+    suspend fun clearAuthenticatedCart(userId: String)
+
 }

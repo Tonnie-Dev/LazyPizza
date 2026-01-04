@@ -154,7 +154,11 @@ class HomeViewModel(
     private fun addSideItemToCart(addOnItem: AddOnItem) {
 
         val cartItem = addOnItem.toCartItem()
-        cartRepository.addItem(cartItem)
+
+        launch {
+
+            cartRepository.addItem(cartItem)
+        }
 
     }
 
@@ -164,7 +168,10 @@ class HomeViewModel(
 
         val newCount = currentCount.plus(1)
                 .coerceAtMost(5)
-        cartRepository.updateCount(cartItem = addOnItem.toCartItem(), newCount = newCount)
+        launch {
+
+            cartRepository.updateCount(cartItem = addOnItem.toCartItem(), newCount = newCount)
+        }
     }
 
     private fun decrementCount(addOnItem: AddOnItem) {
@@ -173,12 +180,18 @@ class HomeViewModel(
 
         val newCount = currentCount.minus(1)
                 .coerceAtLeast(0)
-        cartRepository.updateCount(cartItem = addOnItem.toCartItem(), newCount = newCount)
+        launch {
+
+            cartRepository.updateCount(cartItem = addOnItem.toCartItem(), newCount = newCount)
+        }
 
     }
 
     private fun removeItemFromCart(addOnItem: AddOnItem) {
-        cartRepository.removeItem(addOnItem.toCartItem())
+       launch {
+
+           cartRepository.removeItem(addOnItem.toCartItem())
+       }
     }
 
     private fun dismissLogoutDialog() {

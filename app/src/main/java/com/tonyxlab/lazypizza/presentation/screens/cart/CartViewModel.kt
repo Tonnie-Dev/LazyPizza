@@ -85,22 +85,37 @@ class CartViewModel(private val repository: CartRepository) : CartBaseViewModel(
     }
 
     private fun onIncrement(cartItem: CartItem) {
-        repository.updateCount(cartItem = cartItem, newCount = cartItem.counter + 1)
+
+        launch {
+
+            repository.updateCount(cartItem = cartItem, newCount = cartItem.counter + 1)
+        }
     }
 
     private fun onDecrement(cartItem: CartItem) {
-        repository.updateCount(
-                cartItem = cartItem,
-                newCount = (cartItem.counter - 1).coerceAtLeast(1)
-        )
+        launch {
+
+            repository.updateCount(
+                    cartItem = cartItem,
+                    newCount = (cartItem.counter - 1).coerceAtLeast(1)
+            )
+
+        }
     }
 
     private fun onRemove(cartItem: CartItem) {
-        repository.removeItem(cartItem = cartItem)
+
+        launch {
+
+            repository.removeItem(cartItem = cartItem)
+        }
     }
 
     private fun selectAddOn(addOnItem: AddOnItem) {
-        repository.addItem(cartItem = addOnItem.toCartItem())
+   launch {
+
+       repository.addItem(cartItem = addOnItem.toCartItem())
+   }
     }
 
     private fun deriveSuggestedAddOns(cartItems: List<CartItem>): List<AddOnItem> {
