@@ -37,7 +37,9 @@ class CartRepositoryImpl(
             // 3. If item exists, update counter
             if (match != null) {
 
-                val safeCount = (match.cartItem.counter + cartItem.counter).coerceAtMost(5)
+                val safeCount = (match.cartItem.counter + cartItem.counter)
+                        .coerceAtMost(5)
+
                 dao.upsertCartItem(
                         cartItemEntity = match.cartItem.copy(
                                 counter = safeCount
@@ -61,7 +63,7 @@ class CartRepositoryImpl(
 
     override suspend fun updateCount(cartItem: CartItem, newCount: Int) {
 
-        val safeCount = newCount.coerceIn(1,5)
+        val safeCount = newCount.coerceIn(1, 5)
         database.withTransaction {
 
             val items = dao.getCartItemsList()

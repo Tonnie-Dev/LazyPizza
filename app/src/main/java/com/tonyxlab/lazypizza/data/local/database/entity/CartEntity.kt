@@ -9,9 +9,6 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 import com.tonyxlab.lazypizza.domain.model.ProductType
 
-
-
-
 @Entity(tableName = "cart_items_table")
 data class CartItemEntity(
     @PrimaryKey(autoGenerate = true)
@@ -33,7 +30,8 @@ data class CartItemEntity(
 
 @Entity(
         tableName = "toppings_table",
-        foreignKeys = [ForeignKey(
+        foreignKeys = [
+            ForeignKey(
                 entity = CartItemEntity::class,
                 parentColumns = arrayOf("cart_item_id"),
                 childColumns = arrayOf("cart_item_id"),

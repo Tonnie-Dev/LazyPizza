@@ -5,10 +5,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.tonyxlab.lazypizza.data.local.database.LazyPizzaDatabase
 import com.tonyxlab.lazypizza.data.local.datastore.DataStore
 import com.tonyxlab.lazypizza.data.repository.AuthRepositoryImpl
-import com.tonyxlab.lazypizza.data.repository.CartIdProviderImpl
 import com.tonyxlab.lazypizza.data.repository.CartRepositoryImpl
 import com.tonyxlab.lazypizza.domain.repository.AuthRepository
-import com.tonyxlab.lazypizza.domain.repository.CartIdProvider
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import com.tonyxlab.lazypizza.presentation.screens.auth.AuthViewModel
 import com.tonyxlab.lazypizza.presentation.screens.cart.CartViewModel
@@ -35,19 +33,11 @@ val firebaseModule = module {
     single { FirebaseAuth.getInstance() }
 }
 
-val sessionModule = module {
-
+val dataStoreModule = module {
     single { DataStore(androidContext()) }
-
-    single<CartIdProvider> {
-        CartIdProviderImpl(
-                firebaseAuth = get(),
-                dataStore = get()
-        )
-    }
 }
-val coroutineModule = module {
 
+val coroutineModule = module {
     single<CoroutineScope> {
         CoroutineScope(SupervisorJob() + Dispatchers.IO)
     }
@@ -57,14 +47,12 @@ val repositoryModule = module {
         CartRepositoryImpl(
                 dao = get(),
                 database = get(),
-                //cartIdProvider = get()
         )
     }
     single<AuthRepository> {
         AuthRepositoryImpl(
                 firebaseAuth = get(),
                 cartRepository = get(),
-                cartIdProvider = get(),
                 appScope = get()
         )
     }
