@@ -9,18 +9,8 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 import com.tonyxlab.lazypizza.domain.model.ProductType
 
-/*@Entity(tableName = "cart_table")
-data class CartEntity(
-    @PrimaryKey
-    @ColumnInfo(name = "cart_id")
-    val cartId: String,
-    @ColumnInfo(name = "cart_owner_type")
-    val ownerType: CartOwnerType
-)
 
-enum class CartOwnerType {
-    GUEST, AUTHENTICATED
-}*/
+
 
 @Entity(tableName = "cart_items_table")
 data class CartItemEntity(

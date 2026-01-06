@@ -11,7 +11,7 @@ import com.tonyxlab.lazypizza.domain.model.Topping
 val mockToppings = listOf(
 
         Topping(
-                id = 1L,
+                id = 25L,
                 toppingName = "Bacon",
                 toppingPrice = 1.0,
                 imageUrl = "bacon.png",
@@ -19,7 +19,7 @@ val mockToppings = listOf(
         ),
 
         Topping(
-                id = 2L,
+                id =26L,
                 toppingName = "Extra Cheese",
                 toppingPrice = 1.0,
                 imageUrl = "extra_cheese.png",
@@ -27,7 +27,7 @@ val mockToppings = listOf(
         ),
 
         Topping(
-                id = 3L,
+                id = 27L,
                 toppingName = "Corn",
                 toppingPrice = 0.50,
                 imageUrl = "corn.png",
@@ -35,7 +35,7 @@ val mockToppings = listOf(
         ),
 
         Topping(
-                id = 4L,
+                id = 28L,
                 toppingName = "Tomato",
                 toppingPrice = 0.50,
                 imageUrl = "tomato.png",
@@ -43,7 +43,7 @@ val mockToppings = listOf(
         ),
 
         Topping(
-                id = 5L,
+                id = 29L,
                 toppingName = "Olives",
                 toppingPrice = 0.50,
                 imageUrl = "olives.png",
@@ -51,7 +51,7 @@ val mockToppings = listOf(
         ),
 
         Topping(
-                id = 6L,
+                id = 30L,
                 toppingName = "Pepperoni",
                 toppingPrice = 1.0,
                 imageUrl = "pepperoni.png",
@@ -59,7 +59,7 @@ val mockToppings = listOf(
         ),
 
         Topping(
-                id = 7L,
+                id = 31L,
                 toppingName = "Mushrooms",
                 toppingPrice = 0.50,
                 imageUrl = "mushrooms.png",
@@ -67,7 +67,7 @@ val mockToppings = listOf(
         ),
 
         Topping(
-                id = 8L,
+                id = 32L,
                 toppingName = "Basil",
                 toppingPrice = 0.50,
                 imageUrl = "basil.png",
@@ -75,7 +75,7 @@ val mockToppings = listOf(
         ),
 
         Topping(
-                id = 9L,
+                id = 33L,
                 toppingName = "Pineapple",
                 toppingPrice = 1.0,
                 imageUrl = "pineapple.png",
@@ -83,7 +83,7 @@ val mockToppings = listOf(
         ),
 
         Topping(
-                id = 10L,
+                id = 34L,
                 toppingName = "Onion",
                 toppingPrice = 0.50,
                 imageUrl = "onion.png",
@@ -91,7 +91,7 @@ val mockToppings = listOf(
         ),
 
         Topping(
-                id = 11L,
+                id = 35L,
                 toppingName = "Chili Peppers",
                 toppingPrice = 0.50,
                 imageUrl = "chili_peppers.png",
@@ -99,7 +99,7 @@ val mockToppings = listOf(
         ),
 
         Topping(
-                id = 12L,
+                id = 36L,
                 toppingName = "Spinach",
                 toppingPrice = 0.50,
                 imageUrl = "spinach.png",

@@ -43,7 +43,7 @@ fun ToppingEntity.toModel(): Topping =
 fun CartItemWithTopping.toModel(): CartItem =
     CartItem(
             id = cartItem.productId,
-            name =cartItem.name,
+            name = cartItem.name,
             imageUrl = cartItem.imageUrl,
             unitPrice = cartItem.unitPrice,
             counter = cartItem.counter,

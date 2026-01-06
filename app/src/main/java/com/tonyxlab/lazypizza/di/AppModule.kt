@@ -57,7 +57,7 @@ val repositoryModule = module {
         CartRepositoryImpl(
                 dao = get(),
                 database = get(),
-                cartIdProvider = get()
+                //cartIdProvider = get()
         )
     }
     single<AuthRepository> {

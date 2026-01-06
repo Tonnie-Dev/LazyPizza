@@ -9,7 +9,6 @@ interface CartRepository {
     suspend fun addItem(cartItem: CartItem)
     suspend fun removeItem(cartItem: CartItem)
     suspend fun updateCount(cartItem: CartItem, newCount: Int)
-    suspend fun clear()
     suspend fun clearAuthenticatedCart()
 
 }
