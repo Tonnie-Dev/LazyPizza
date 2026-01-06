@@ -204,6 +204,49 @@ fun AppTopBarThree(
     }
 }
 
+@Composable
+fun AppTopBarFour(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+    Row(
+            modifier = modifier
+                    .statusBarsPadding()
+                    .fillMaxWidth()
+                    .height(MaterialTheme.spacing.spaceExtraLarge)
+                    .padding(horizontal = MaterialTheme.spacing.spaceTen)
+                    .padding(vertical = MaterialTheme.spacing.spaceSmall),
+            verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        Box(
+                modifier = Modifier
+                        .clip(CircleShape)
+                        .background(color = TextSecondary8)
+                        .size(MaterialTheme.spacing.spaceDoubleDp * 22)
+                        .clickable { onClick() }
+                        .padding(all = MaterialTheme.spacing.spaceSmall),
+                contentAlignment = Alignment.Center
+        ) {
+
+            Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(id = R.string.cds_text_back),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+
+        Text(
+                modifier = Modifier.weight(1f),
+                text = stringResource(id = R.string.topbar_text_order_checkout),
+                style = MaterialTheme.typography.Body1Medium.copy(
+                        color = MaterialTheme.colorScheme.onSurface,
+                        textAlign = TextAlign.Center)
+        )
+    }
+}
+
 @PreviewLightDark
 @Composable
 private fun AppTopBar_Preview() {
@@ -222,7 +265,7 @@ private fun AppTopBar_Preview() {
             AppTopBarOne(phoneNumber = "0723 445 813", onEvent = {}, signedIn = true)
             AppTopBarTwo(onClick = {})
             AppTopBarThree(titleText = "Cart")
-
+            AppTopBarFour(onClick = {})
         }
     }
 }

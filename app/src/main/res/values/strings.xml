@@ -9,6 +9,7 @@
     <string name="topbar_text_lazy_pizza">LazyPizza</string>
     <string name="topbar_text_cart">Cart</string>
     <string name="topbar_text_history">Order History</string>
+    <string name="topbar_text_order_checkout">Order Checkout</string>
 
 
     <!--Header Texts-->
