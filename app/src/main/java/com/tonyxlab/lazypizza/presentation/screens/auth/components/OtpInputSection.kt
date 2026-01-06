@@ -159,7 +159,6 @@ fun OtpInputSection(
 
                         }
                         .ifThen(!uiState.otpInputState.error) {
-
                             padding(
                                     bottom = MaterialTheme.spacing.spaceMedium
                             )
@@ -238,8 +237,6 @@ fun OtpInputSection(
 
 private fun extractOtp(message: String?): String? {
 
-    Timber.tag("SmsConsentReceiver")
-            .i("OtpInputSection - extractOtp() called with $message")
     if (message.isNullOrBlank()) return null
 
     val match = Regex("""\b(\d{6})\b""").find(message)

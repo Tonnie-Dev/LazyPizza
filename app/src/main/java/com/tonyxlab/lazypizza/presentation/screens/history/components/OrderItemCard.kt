@@ -176,7 +176,11 @@ private fun OrderItemCard_Preview() {
 
                 ) {
 
-            LazyListComponent(items = orders, key = { it.id }) {
+            LazyListComponent(
+                    items = orders,
+                    key = { it.id },
+                    //isDeviceWide = true
+            ) {
 
                 OrderItemCard(order = it)
             }

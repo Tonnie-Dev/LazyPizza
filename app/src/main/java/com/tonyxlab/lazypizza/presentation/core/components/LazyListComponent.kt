@@ -25,8 +25,8 @@ import com.tonyxlab.lazypizza.presentation.theme.Label2SemiBold
 fun <T> LazyListComponent(
     items: List<T>,
     key: (T) -> Any,
-    header: String = "",
     modifier: Modifier = Modifier,
+    header: String = "",
     isDeviceWide: Boolean = false,
     content: @Composable (T) -> Unit,
 ) {

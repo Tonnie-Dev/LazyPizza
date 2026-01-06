@@ -32,7 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
-import com.tonyxlab.lazypizza.presentation.screens.home.handling.HomeUiEvent
+import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuUiEvent
 import com.tonyxlab.lazypizza.presentation.theme.Body1Medium
 import com.tonyxlab.lazypizza.presentation.theme.Body1Regular
 import com.tonyxlab.lazypizza.presentation.theme.Body3Medium
@@ -44,7 +44,7 @@ import com.tonyxlab.lazypizza.utils.ifThen
 @Composable
 fun AppTopBarOne(
     phoneNumber: String,
-    onEvent: (HomeUiEvent) -> Unit,
+    onEvent: (MenuUiEvent) -> Unit,
     signedIn: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -80,7 +80,7 @@ fun AppTopBarOne(
         Row(
                 modifier = Modifier
                         .weight(1f)
-                        .clickable { onEvent(HomeUiEvent.PlaceCall) },
+                        .clickable { onEvent(MenuUiEvent.PlaceCall) },
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
         ) {
@@ -118,9 +118,9 @@ fun AppTopBarOne(
                             }
                             .clickable {
                                 if (signedIn)
-                                    onEvent(HomeUiEvent.ShowLogoutDialog)
+                                    onEvent(MenuUiEvent.ShowLogoutDialog)
                                 else
-                                    onEvent(HomeUiEvent.SignIn)
+                                    onEvent(MenuUiEvent.SignIn)
                             },
                     contentAlignment = Alignment.Center
             ) {

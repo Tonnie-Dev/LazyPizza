@@ -1,6 +1,5 @@
 package com.tonyxlab.lazypizza.presentation.screens.auth.components
 
-import android.R.attr.textStyle
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -9,6 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,7 +39,6 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.coerceIn
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
@@ -163,7 +162,10 @@ private fun OtpDigitBox(
     Box(
             modifier = Modifier
                     .size(MaterialTheme.spacing.spaceTwelve * 4)
-                    .clickable { onClick() }
+                    .clickable(
+                            interactionSource = remember {MutableInteractionSource()  },
+                            indication = null
+                    ) { onClick() }
                     .border(
                             width = MaterialTheme.spacing.spaceSingleDp,
                             color = when {
