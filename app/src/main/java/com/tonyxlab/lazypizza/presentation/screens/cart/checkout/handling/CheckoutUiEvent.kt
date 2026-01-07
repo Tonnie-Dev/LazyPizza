@@ -5,4 +5,5 @@ import com.tonyxlab.lazypizza.presentation.core.base.handling.UiEvent
 sealed interface CheckoutUiEvent: UiEvent{
 
     object GoBack: CheckoutUiEvent
+    data class SelectPickupTime(val scheduled: Boolean): CheckoutUiEvent
 }

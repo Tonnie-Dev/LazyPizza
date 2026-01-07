@@ -14,3 +14,10 @@ fun LocalDateTime.toFormattedDate(): String {
     val formatter = DateTimeFormatter.ofPattern(pattern)
     return formatter.format(this)
 }
+
+fun LocalDateTime.calculateEarliestPickupTime(): String{
+
+    val earliest = plusMinutes(15L)
+    val pattern = "HH:mm"
+    return DateTimeFormatter.ofPattern(pattern).format(earliest)
+}

@@ -1,14 +1,25 @@
 package com.tonyxlab.lazypizza.presentation.screens.cart.checkout
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.shadow.Shadow
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarFour
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiState
+import com.tonyxlab.lazypizza.presentation.theme.HorizontalRoundedCornerShape24
+import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -31,8 +42,36 @@ fun CheckoutScreenContent(
     modifier: Modifier = Modifier
 ) {
 
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(
+            modifier = modifier
+                    .fillMaxSize()
+                    .clip(MaterialTheme.shapes.HorizontalRoundedCornerShape24)
+                    .dropShadow(
+                            shape = MaterialTheme.shapes.HorizontalRoundedCornerShape24,
+                            shadow = Shadow(
+                                    radius = 10.dp,
+                                    spread = 6.dp,
+                                    color = Color(0x40000000),
+                                    offset = DpOffset(x = 4.dp, 4.dp)
+                            )
+                    )
+                    .background(MaterialTheme.colorScheme.surface)
+    ) {
         AppTopBarFour(onClick = { onEvent(CheckoutUiEvent.GoBack) })
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun CheckoutScreen_Preview() {
+    LazyPizzaTheme {
+
+        Column(modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant)) {
+            CheckoutScreenContent(
+                    uiState = CheckoutUiState(),
+                    onEvent = {}
+            )
+        }
     }
 }
 

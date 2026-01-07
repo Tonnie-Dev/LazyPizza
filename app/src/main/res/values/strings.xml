@@ -15,6 +15,9 @@
     <!--Header Texts-->
     <string name="header_text_add_toppings">ADD EXTRA TOPPINGS</string>
     <string name="header_text_recommended_options">RECOMMENDED TO ADD TO YOUR ORDER</string>
+    <string name="header_text_pickup_time">PICKUP TIME</string>
+    <string name="header_text_earliest_pickup_time">EARLIEST PICKUP TIME:</string>
+    <string name="header_text_order_details">ORDER DETAILS</string>
 
     <!--Caption Texts-->
     <string name="cap_text_no_results">No results found for your query</string>
@@ -36,6 +39,7 @@
     <string name="cap_text_total_amount">Total Amount:</string>
     <string name="cap_text_total_amount_formatted">$%.2f</string>
 
+
     <!--Label Texts-->
     <string name="lab_text_text">Text</string>
 
@@ -50,6 +54,8 @@
     <string name="btn_text_continue">Continue</string>
     <string name="btn_text_confirm">Confirm</string>
     <string name="btn_text_go_to_menu">Go to Menu</string>
+    <string name="btn_text_earliest_time">Earliest available time</string>
+    <string name="btn_text_schedule">Schedule time</string>
 
     <!--Text Button Texts-->
     <string name="txt_btn_cancel">Cancel</string>
