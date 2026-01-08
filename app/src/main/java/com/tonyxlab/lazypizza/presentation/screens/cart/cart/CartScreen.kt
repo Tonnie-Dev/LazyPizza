@@ -35,11 +35,12 @@ import com.tonyxlab.lazypizza.navigation.MenuScreenDestination
 import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarThree
+import com.tonyxlab.lazypizza.presentation.core.components.CardItemContent
+import com.tonyxlab.lazypizza.presentation.core.components.CartItemActions
 import com.tonyxlab.lazypizza.presentation.core.components.EmptyScreenContent
+import com.tonyxlab.lazypizza.presentation.core.components.uniqueKey
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.components.AddOnItemsSection
-import com.tonyxlab.lazypizza.presentation.screens.cart.cart.components.CardItemContent
-import com.tonyxlab.lazypizza.presentation.screens.cart.cart.components.uniqueKey
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartUiState
@@ -97,7 +98,27 @@ fun CartScreen(
                     containerColor = MaterialTheme.colorScheme.background
             ) {
 
-                CartScreenContentWide(uiState = uiState, onEvent = viewModel::onEvent)
+                CartScreenContentWide(
+                        uiState = uiState,
+                        onEvent = viewModel::onEvent,
+                        cartItemActions = CartItemActions(
+                                onIncrement = {
+                                    viewModel.onEvent(
+                                            event = CartUiEvent.IncrementQuantity(item = it)
+                                    )
+                                },
+                                onDecrement = {
+                                    viewModel.onEvent(
+                                            event = CartUiEvent.DecrementQuantity(item = it)
+                                    )
+                                },
+                                onRemove = {
+                                    viewModel.onEvent(
+                                            event = CartUiEvent.RemoveItem(item = it)
+                                    )
+                                }
+                        )
+                )
             }
         }
 
@@ -131,7 +152,24 @@ fun CartScreen(
             CartScreenContentNarrow(
                     modifier = Modifier,
                     uiState = uiState,
-                    onEvent = viewModel::onEvent
+                    onEvent = viewModel::onEvent,
+                    cartItemActions = CartItemActions(
+                            onIncrement = {
+                                viewModel.onEvent(
+                                        event = CartUiEvent.IncrementQuantity(item = it)
+                                )
+                            },
+                            onDecrement = {
+                                viewModel.onEvent(
+                                        event = CartUiEvent.DecrementQuantity(item = it)
+                                )
+                            },
+                            onRemove = {
+                                viewModel.onEvent(
+                                        event = CartUiEvent.RemoveItem(item = it)
+                                )
+                            }
+                    )
             )
         }
     }
@@ -141,6 +179,7 @@ fun CartScreen(
 private fun CartScreenContentNarrow(
     uiState: CartUiState,
     onEvent: (CartUiEvent) -> Unit,
+    cartItemActions: CartItemActions,
     modifier: Modifier = Modifier,
 ) {
 
@@ -192,7 +231,7 @@ private fun CartScreenContentNarrow(
                                 .padding(bottom = MaterialTheme.spacing.spaceSmall),
                         cartItem = item,
                         cartItems = uiState.cartItems,
-                        onEvent = onEvent
+                        cartItemActions = cartItemActions
                 )
             }
             item {
@@ -221,6 +260,7 @@ private fun CartScreenContentNarrow(
 private fun CartScreenContentWide(
     uiState: CartUiState,
     onEvent: (CartUiEvent) -> Unit,
+    cartItemActions: CartItemActions,
     modifier: Modifier = Modifier,
 ) {
 
@@ -273,7 +313,7 @@ private fun CartScreenContentWide(
                                 .padding(bottom = MaterialTheme.spacing.spaceSmall),
                         cartItem = item,
                         cartItems = uiState.cartItems,
-                        onEvent = onEvent
+                        cartItemActions = cartItemActions
                 )
             }
 
@@ -323,7 +363,11 @@ private fun HomeScreenContent_Narrow_Preview() {
         ) {
             CartScreenContentNarrow(
                     uiState = CartUiState(),
-                    onEvent = {}
+                    onEvent = {},
+                    cartItemActions = CartItemActions(
+                            onIncrement = {},
+                            onDecrement = {},
+                            onRemove = {})
             )
         }
     }

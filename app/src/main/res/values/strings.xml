@@ -72,6 +72,8 @@
     <string name="cds_text_add">Add</string>
     <string name="cds_text_remove">Remove</string>
     <string name="cds_text_delete">Delete Icon</string>
+    <string name="cds_text_expand">Expand Order </string>
+    <string name="cds_text_collapse">Collapse Order</string>
 
     <!--Snackbar Texts-->
     <string name="snack_text_item_added_to_cart">Item Added to Cart</string>

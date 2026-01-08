@@ -1,4 +1,4 @@
-package com.tonyxlab.lazypizza.presentation.screens.cart.cart.components
+package com.tonyxlab.lazypizza.presentation.core.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -31,10 +31,7 @@ import androidx.compose.ui.util.fastForEach
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.CartItem
 import com.tonyxlab.lazypizza.domain.model.ProductType
-import com.tonyxlab.lazypizza.presentation.core.components.CounterItem
-import com.tonyxlab.lazypizza.presentation.core.components.DisplayImage
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
-import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartUiEvent
 import com.tonyxlab.lazypizza.presentation.theme.Body1Medium
 import com.tonyxlab.lazypizza.presentation.theme.Body3Regular
 import com.tonyxlab.lazypizza.presentation.theme.Body4Regular
@@ -44,33 +41,13 @@ import com.tonyxlab.lazypizza.presentation.theme.VerticalRoundedCornerShape12
 import com.tonyxlab.lazypizza.utils.cartItemsMock
 
 @Composable
-fun CartItemList(
-    cartItems: List<CartItem>,
-    onEvent: (CartUiEvent) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-            modifier = modifier,
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceSmall)
-    ) {
-        cartItems.forEach { item ->
-            CardItemContent(
-                    modifier = modifier,
-                    cartItem = item,
-                    cartItems = cartItems,
-                    onEvent = onEvent
-            )
-        }
-    }
-}
-
-@Composable
- fun CardItemContent(
+fun CardItemContent(
     cartItem: CartItem,
     cartItems: List<CartItem>,
-    onEvent: (CartUiEvent) -> Unit,
+    cartItemActions: CartItemActions,
     modifier: Modifier = Modifier
 ) {
+
     val counter = cartItems.counterFor(cartItem)
 
     Card(
@@ -102,33 +79,30 @@ fun CartItemList(
                     backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
                     fallbackDrawableRes = R.drawable.drink_seven
             )
-            CartItemMainContent(
+            CartItemBody(
                     modifier = Modifier.weight(.7f),
                     cartItem = cartItem,
                     counter = counter,
-                    onEvent = onEvent
+                    actions = cartItemActions
             )
         }
     }
 }
 
 @Composable
-private fun CartItemMainContent(
+private fun CartItemBody(
     cartItem: CartItem,
     counter: Int,
-    onEvent: (CartUiEvent) -> Unit,
+    actions: CartItemActions,
     modifier: Modifier = Modifier,
 ) {
     Column(
-            modifier = modifier
-                    .padding(
-                            horizontal = MaterialTheme.spacing.spaceMedium,
-                            vertical = MaterialTheme.spacing.spaceTwelve
-                    ),
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceMedium)
+            modifier = modifier.padding(
+                    horizontal = MaterialTheme.spacing.spaceMedium,
+                    vertical = MaterialTheme.spacing.spaceTwelve
+            ), verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceMedium)
     ) {
-        Column {
-            //Row 1
+        Column { //Row 1
             Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -152,9 +126,8 @@ private fun CartItemMainContent(
                                 )
                                 .size(MaterialTheme.spacing.spaceDoubleDp * 11)
                                 .clickable {
-                                    onEvent(CartUiEvent.RemoveItem(item = cartItem))
-                                },
-                        contentAlignment = Alignment.Center
+                                    actions.onRemove(cartItem)
+                                }, contentAlignment = Alignment.Center
                 ) {
 
                     Icon(
@@ -190,16 +163,15 @@ private fun CartItemMainContent(
 
             CounterItem(
                     modifier = Modifier.weight(1f),
-                    onAdd = { onEvent(CartUiEvent.IncrementQuantity(item = cartItem)) },
-                    onRemove = { onEvent(CartUiEvent.DecrementQuantity(item = cartItem)) },
+                    onAdd = { actions.onIncrement(cartItem) },
+                    onRemove = { actions.onDecrement(cartItem) },
                     counter = counter,
                     maxCount = 5,
                     minCount = 1
             )
 
             Column(
-                    modifier = Modifier.weight(1f),
-                    horizontalAlignment = Alignment.End
+                    modifier = Modifier.weight(1f), horizontalAlignment = Alignment.End
             ) {
 
                 Text(
@@ -214,26 +186,27 @@ private fun CartItemMainContent(
 
                 Text(
                         text = stringResource(
-                                id = R.string.counter_price_tag,
-                                counter,
-                                cartItem.unitTotalPrice()
-                        ),
-                        style = MaterialTheme.typography.Body4Regular.copy(
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                                id = R.string.counter_price_tag, counter, cartItem.unitTotalPrice()
+                        ), style = MaterialTheme.typography.Body4Regular.copy(
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
                 )
             }
         }
     }
 }
 
- val CartItem.uniqueKey
+data class CartItemActions(
+    val onIncrement: (CartItem) -> Unit,
+    val onDecrement: (CartItem) -> Unit,
+    val onRemove: (CartItem) -> Unit,
+)
+
+val CartItem.uniqueKey
     get() = listOf(
             id.toString(),
-            toppings
-                    .sortedBy { it.id }
-                    .joinToString(separator = "|") { "${it.id}x${it.counter}" }
-    ).joinToString("-")
+            toppings.sortedBy { it.id }
+                    .joinToString(separator = "|") { "${it.id}x${it.counter}" }).joinToString("-")
 
 private fun List<CartItem>.counterFor(cartItem: CartItem): Int =
     firstOrNull { it.uniqueKey == cartItem.uniqueKey }?.counter ?: 1
@@ -249,11 +222,22 @@ private fun CartItem.totalPrice() = unitTotalPrice() * counter
 @Composable
 private fun CartItemContent_Preview() {
 
-    val items = cartItemsMock
+    val cartItems = cartItemsMock
     LazyPizzaTheme {
-
-        Column(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
-            CartItemList(cartItems = items, onEvent = {})
+        Column(
+                modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceSmall)
+        ) {
+            cartItems.forEach { item ->
+                CardItemContent(
+                        cartItem = item,
+                        cartItems = cartItems,
+                        cartItemActions = CartItemActions(
+                                onIncrement = {},
+                                onDecrement = {},
+                                onRemove = {})
+                )
+            }
         }
     }
 }

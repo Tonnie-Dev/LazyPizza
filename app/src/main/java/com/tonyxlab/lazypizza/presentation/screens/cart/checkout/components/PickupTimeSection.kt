@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -49,9 +50,12 @@ fun PickupTimeSection(
     isWideDevice: Boolean = false,
     headerTextStyle: TextStyle = MaterialTheme.typography.Label2SemiBold
 ) {
-    Column(modifier = modifier) {
+    Column(
+            modifier = modifier,
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceTwelve)
+    ) {
         Text(
-                modifier = Modifier.padding(bottom = MaterialTheme.spacing.spaceTwelve),
+                modifier = Modifier,
                 text = stringResource(id = R.string.header_text_pickup_time),
                 style = headerTextStyle,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -114,6 +118,9 @@ fun PickupTimeSection(
                     color = MaterialTheme.colorScheme.onSurface
             )
         }
+
+        HorizontalDivider(modifier = Modifier
+                .padding(bottom = MaterialTheme.spacing.spaceMedium))
     }
 }
 
