@@ -41,13 +41,12 @@ import com.tonyxlab.lazypizza.presentation.theme.VerticalRoundedCornerShape12
 import com.tonyxlab.lazypizza.utils.cartItemsMock
 
 @Composable
-fun CardItemContent(
+fun CartItemCard(
     cartItem: CartItem,
     cartItems: List<CartItem>,
     cartItemActions: CartItemActions,
     modifier: Modifier = Modifier
 ) {
-
     val counter = cartItems.counterFor(cartItem)
 
     Card(
@@ -220,7 +219,7 @@ private fun CartItem.totalPrice() = unitTotalPrice() * counter
 
 @PreviewLightDark
 @Composable
-private fun CartItemContent_Preview() {
+private fun CartItemCard_Preview() {
 
     val cartItems = cartItemsMock
     LazyPizzaTheme {
@@ -229,13 +228,14 @@ private fun CartItemContent_Preview() {
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceSmall)
         ) {
             cartItems.forEach { item ->
-                CardItemContent(
+                CartItemCard(
                         cartItem = item,
                         cartItems = cartItems,
                         cartItemActions = CartItemActions(
                                 onIncrement = {},
                                 onDecrement = {},
-                                onRemove = {})
+                                onRemove = {}
+                        )
                 )
             }
         }

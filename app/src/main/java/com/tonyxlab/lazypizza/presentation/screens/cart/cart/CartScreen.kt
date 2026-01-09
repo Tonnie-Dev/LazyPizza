@@ -35,7 +35,7 @@ import com.tonyxlab.lazypizza.navigation.MenuScreenDestination
 import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarThree
-import com.tonyxlab.lazypizza.presentation.core.components.CardItemContent
+import com.tonyxlab.lazypizza.presentation.core.components.CartItemCard
 import com.tonyxlab.lazypizza.presentation.core.components.CartItemActions
 import com.tonyxlab.lazypizza.presentation.core.components.EmptyScreenContent
 import com.tonyxlab.lazypizza.presentation.core.components.uniqueKey
@@ -225,7 +225,7 @@ private fun CartScreenContentNarrow(
                     items = uiState.cartItems,
                     key = { it.uniqueKey }
             ) { item ->
-                CardItemContent(
+                CartItemCard(
                         modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = MaterialTheme.spacing.spaceSmall),
@@ -307,7 +307,7 @@ private fun CartScreenContentWide(
                     items = uiState.cartItems,
                     key = { it.uniqueKey }
             ) { item ->
-                CardItemContent(
+                CartItemCard(
                         modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = MaterialTheme.spacing.spaceSmall),

@@ -1,8 +1,13 @@
+@file:RequiresApi(Build.VERSION_CODES.O)
+
 package com.tonyxlab.lazypizza.presentation.screens.cart.checkout
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,10 +21,15 @@ import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarFour
+import com.tonyxlab.lazypizza.presentation.core.components.CartItemActions
+import com.tonyxlab.lazypizza.presentation.core.utils.spacing
+import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.OrderDetailsSection
+import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.PickupTimeSection
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiState
 import com.tonyxlab.lazypizza.presentation.theme.HorizontalRoundedCornerShape24
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
+import com.tonyxlab.lazypizza.utils.cartItemsMock
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -39,6 +49,7 @@ fun CheckoutScreen(
 fun CheckoutScreenContent(
     uiState: CheckoutUiState,
     onEvent: (CheckoutUiEvent) -> Unit,
+    cartItemActions: CartItemActions,
     modifier: Modifier = Modifier
 ) {
 
@@ -56,8 +67,19 @@ fun CheckoutScreenContent(
                             )
                     )
                     .background(MaterialTheme.colorScheme.surface)
+                    .padding(MaterialTheme.spacing.spaceMedium)
     ) {
         AppTopBarFour(onClick = { onEvent(CheckoutUiEvent.GoBack) })
+        PickupTimeSection(
+                uiState = uiState,
+                onEvent = onEvent
+        )
+
+        OrderDetailsSection(
+                uiState = uiState,
+                onEvent = onEvent,
+                cartItemActions = cartItemActions
+        )
     }
 }
 
@@ -66,10 +88,20 @@ fun CheckoutScreenContent(
 private fun CheckoutScreen_Preview() {
     LazyPizzaTheme {
 
-        Column(modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant)) {
+        Column(
+                modifier = Modifier
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                        //.padding(MaterialTheme.spacing.spaceMedium)
+        ) {
             CheckoutScreenContent(
-                    uiState = CheckoutUiState(),
-                    onEvent = {}
+                    modifier = Modifier
+                            .fillMaxSize(),
+                    uiState = CheckoutUiState(cartItems = cartItemsMock, expanded = true),
+                    onEvent = {},
+                    cartItemActions = CartItemActions(
+                            onIncrement = {},
+                            onDecrement = {},
+                            onRemove = {})
             )
         }
     }
