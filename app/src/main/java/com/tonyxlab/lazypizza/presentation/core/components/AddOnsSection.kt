@@ -1,4 +1,4 @@
-package com.tonyxlab.lazypizza.presentation.screens.cart.cart.components
+package com.tonyxlab.lazypizza.presentation.core.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -30,9 +30,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
-import com.tonyxlab.lazypizza.presentation.core.components.DisplayImage
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
-import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartUiEvent
 import com.tonyxlab.lazypizza.presentation.theme.Body1Regular
 import com.tonyxlab.lazypizza.presentation.theme.HorizontalRoundedCornerShape12
 import com.tonyxlab.lazypizza.presentation.theme.Label2SemiBold
@@ -41,9 +39,9 @@ import com.tonyxlab.lazypizza.presentation.theme.Title1SemiBold
 import com.tonyxlab.lazypizza.utils.getMockSideItems
 
 @Composable
-fun AddOnItemsSection(
+fun AddOnsSection(
     items: List<AddOnItem>,
-    onEvent: (CartUiEvent) -> Unit,
+    onAddItem: (AddOnItem) -> Unit,
     modifier: Modifier = Modifier,
     isWide: Boolean = true
 ) {
@@ -67,11 +65,10 @@ fun AddOnItemsSection(
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceSmall)
         ) {
 
-            items(items = items, key = { it.id }) { sideItem ->
-
+            items(items = items, key = { it.id }) { item ->
                 AddOnItem(
-                        addOnItem = sideItem,
-                        onEvent = onEvent
+                        addOnItem = item,
+                        onAddItem = { onAddItem(item) }
                 )
             }
         }
@@ -81,7 +78,7 @@ fun AddOnItemsSection(
 @Composable
 private fun AddOnItem(
     addOnItem: AddOnItem,
-    onEvent: (CartUiEvent) -> Unit,
+    onAddItem: (AddOnItem) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -143,7 +140,7 @@ private fun AddOnItem(
                                             shape = MaterialTheme.shapes.small
                                     )
                                     .clickable {
-                                        onEvent(CartUiEvent.SelectAddOn(addOnItem = addOnItem))
+                                        onAddItem(addOnItem)
                                     }
                                     .padding(MaterialTheme.spacing.spaceExtraSmall),
                             contentAlignment = Alignment.Center
@@ -165,6 +162,7 @@ private fun AddOnItem(
 private fun AddOnsRow_PreviewSection() {
 
     val sideItems = getMockSideItems()
+
     LazyPizzaTheme {
         Column(
                 modifier = Modifier
@@ -173,7 +171,10 @@ private fun AddOnsRow_PreviewSection() {
                         .padding(MaterialTheme.spacing.spaceMedium),
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AddOnItemsSection(items = sideItems, onEvent = {})
+            AddOnsSection(
+                    items = sideItems,
+                    onAddItem = {}
+            )
         }
     }
 }

@@ -40,7 +40,7 @@ import com.tonyxlab.lazypizza.presentation.core.components.CartItemActions
 import com.tonyxlab.lazypizza.presentation.core.components.EmptyScreenContent
 import com.tonyxlab.lazypizza.presentation.core.components.uniqueKey
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
-import com.tonyxlab.lazypizza.presentation.screens.cart.cart.components.AddOnItemsSection
+import com.tonyxlab.lazypizza.presentation.core.components.AddOnsSection
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartUiState
@@ -235,10 +235,10 @@ private fun CartScreenContentNarrow(
                 )
             }
             item {
-                AddOnItemsSection(
+                AddOnsSection(
                         modifier = Modifier.fillMaxWidth(),
                         items = uiState.suggestedAddOnItems,
-                        onEvent = onEvent,
+                        onAddItem = { onEvent(CartUiEvent.SelectAddOn(addOnItem = it))},
                         isWide = false
                 )
             }
@@ -331,10 +331,10 @@ private fun CartScreenContentWide(
                         )
                 )
 
-                AddOnItemsSection(
+                AddOnsSection(
                         modifier = Modifier.fillMaxWidth(),
                         items = uiState.suggestedAddOnItems,
-                        onEvent = onEvent
+                        onAddItem = { onEvent(CartUiEvent.SelectAddOn(addOnItem = it))}
                 )
 
                 StickyAddToCart(

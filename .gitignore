@@ -26,6 +26,7 @@ local.properties
 .idea/copilot.*
 .idea/*.xml
 .idea/*.iml
+.idea/deploymentTargetSelector.xml
 
 # JetBrains Fleet
 .fleet/
