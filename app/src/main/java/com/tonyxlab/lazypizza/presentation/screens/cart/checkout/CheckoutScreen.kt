@@ -47,7 +47,6 @@ fun CheckoutScreen(
     modifier: Modifier = Modifier,
     viewModel: CheckoutViewModel = koinViewModel()
 ) {
-
     BaseContentLayout(
             modifier = modifier,
             viewModel = viewModel,
@@ -57,10 +56,13 @@ fun CheckoutScreen(
 
                 }
 
-            }
+            },
+            topBar = {},
+            containerColor = MaterialTheme.colorScheme.background
     ) { uiState ->
 
         CheckoutScreenContent(
+             modifier = modifier,
                 uiState = uiState,
                 onEvent = viewModel::onEvent,
                 cartItemActions = CartItemActions(
@@ -85,7 +87,7 @@ fun CheckoutScreenContent(
     cartItemActions: CartItemActions,
     modifier: Modifier = Modifier
 ) {
-    val isDeviceWide = rememberIsDeviceWide()
+
     Box(
             modifier = modifier
                     .fillMaxSize()
@@ -113,7 +115,7 @@ fun CheckoutScreenContent(
             PickupTimeSection(
                     uiState = uiState,
                     onEvent = onEvent,
-                    isDeviceWide = isDeviceWide
+                    isDeviceWide = rememberIsDeviceWide()
             )
 
             OrderDetailsSection(
@@ -138,7 +140,7 @@ fun CheckoutScreenContent(
                         .navigationBarsPadding(),
                 totalOrderAmount = 85.10, // TODO: Hook the Total to UI State
                 onEvent = onEvent,
-                isWideDevice = isDeviceWide
+                isWideDevice = rememberIsDeviceWide()
         )
     }
 }

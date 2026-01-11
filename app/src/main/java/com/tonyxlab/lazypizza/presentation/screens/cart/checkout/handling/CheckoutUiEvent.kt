@@ -9,7 +9,7 @@ sealed interface CheckoutUiEvent : UiEvent {
     data class IncrementQuantity(val cartItem: CartItem) : CheckoutUiEvent
     data class DecrementQuantity(val cartItem: CartItem) : CheckoutUiEvent
     data class RemoveItem(val cartItem: CartItem) : CheckoutUiEvent
-    data class SelectPickupTime(val scheduled: Boolean) : CheckoutUiEvent
+    data class SelectPickupTime(val pickupTimeOption: PickupTimeOption) : CheckoutUiEvent
     data class SelectAddOnItem(val addOnItem: AddOnItem) : CheckoutUiEvent
     data object ExpandOrder : CheckoutUiEvent
     data object CollapseOrder : CheckoutUiEvent

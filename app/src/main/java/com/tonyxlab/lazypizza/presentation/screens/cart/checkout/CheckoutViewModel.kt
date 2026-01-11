@@ -37,7 +37,9 @@ class CheckoutViewModel(
             is CheckoutUiEvent.RemoveItem -> removeCartItem(event.cartItem)
             is CheckoutUiEvent.SelectAddOnItem -> {}
             CheckoutUiEvent.PlaceOrder -> {}
-            is CheckoutUiEvent.SelectPickupTime -> {}
+            is CheckoutUiEvent.SelectPickupTime -> {
+                updateState { it.copy(pickupTimeOption = event.pickupTimeOption) }
+            }
             CheckoutUiEvent.GoBack -> {
                 sendActionEvent(CheckoutActionEvent.NavigateBack)
             }

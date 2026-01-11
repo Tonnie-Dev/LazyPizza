@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -71,18 +73,29 @@ fun PickupTimeSection(
                         modifier = modifier.weight(1f),
                         text = stringResource(id = R.string.btn_text_earliest_time),
                         active = uiState.pickupTimeOption == PickupTimeOption.EARLIEST,
-                        onClick = { onEvent(CheckoutUiEvent.SelectPickupTime(scheduled = false)) }
-                )
+                ) {
+                    onEvent(
+                            CheckoutUiEvent.SelectPickupTime(
+                                    pickupTimeOption = PickupTimeOption.EARLIEST
+                            )
+                    )
+                }
+
 
                 TimeSlotItem(
                         modifier = modifier.weight(1f),
                         text = stringResource(id = R.string.btn_text_schedule),
                         active = uiState.pickupTimeOption == PickupTimeOption.SCHEDULED,
-                        onClick = { onEvent(CheckoutUiEvent.SelectPickupTime(scheduled = true)) }
-                )
+                ) {
+                    onEvent(
+                            CheckoutUiEvent.SelectPickupTime(
+                                    pickupTimeOption = PickupTimeOption.SCHEDULED
+                            )
+                    )
+                }
+
             }
-        }
-        else {
+        } else {
             Column(
                     modifier = Modifier
                             .padding(bottom = MaterialTheme.spacing.spaceTwelve),
@@ -94,13 +107,24 @@ fun PickupTimeSection(
                 TimeSlotItem(
                         text = stringResource(id = R.string.btn_text_earliest_time),
                         active = uiState.pickupTimeOption == PickupTimeOption.EARLIEST,
-                        onClick = { onEvent(CheckoutUiEvent.SelectPickupTime(scheduled = false)) }
-                )
+                ) {
+                    onEvent(
+                            CheckoutUiEvent.SelectPickupTime(
+                                    pickupTimeOption = PickupTimeOption.EARLIEST
+                            )
+                    )
+                }
                 TimeSlotItem(
                         text = stringResource(id = R.string.btn_text_schedule),
                         active = uiState.pickupTimeOption == PickupTimeOption.SCHEDULED,
-                        onClick = { onEvent(CheckoutUiEvent.SelectPickupTime(scheduled = true)) }
                 )
+                {
+                    onEvent(
+                            CheckoutUiEvent.SelectPickupTime(
+                                    pickupTimeOption = PickupTimeOption.SCHEDULED
+                            )
+                    )
+                }
             }
         }
 
@@ -134,10 +158,9 @@ fun PickupTimeSection(
 private fun TimeSlotItem(
     text: String,
     active: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
-
     Box(
             modifier = modifier
                     .clip(RoundedCornerShape(100))
@@ -151,16 +174,19 @@ private fun TimeSlotItem(
                     )
                     .fillMaxWidth()
                     .height(MaterialTheme.spacing.spaceTwelve * 4)
-                    .clickable { onClick() }
+                    .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                    ) { onClick() }
+                    .padding(start = MaterialTheme.spacing.spaceTen * 2)
+                    .padding(end = MaterialTheme.spacing.spaceTen)
     ) {
 
         Row(
                 modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = MaterialTheme.spacing.spaceSmall),
+                        .fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically
         ) {
-
             RadioButton(
                     selected = active,
                     onClick = null
