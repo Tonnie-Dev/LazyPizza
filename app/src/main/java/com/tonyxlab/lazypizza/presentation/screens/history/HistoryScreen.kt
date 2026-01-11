@@ -33,6 +33,7 @@ import com.tonyxlab.lazypizza.presentation.screens.history.handling.HistoryUiSta
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.utils.DeviceType
 import com.tonyxlab.lazypizza.utils.SetStatusBarIconsColor
+import com.tonyxlab.lazypizza.utils.rememberIsDeviceWide
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -45,10 +46,8 @@ fun HistoryScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     val activity = LocalActivity.current ?: return
-    val windowClass = calculateWindowSizeClass(activity)
-    val deviceType = DeviceType.fromWindowSizeClass(windowClass)
 
-    val isDeviceWide = deviceType != DeviceType.MOBILE_PORTRAIT
+    val isDeviceWide = rememberIsDeviceWide()
 
     if (isDeviceWide) {
 

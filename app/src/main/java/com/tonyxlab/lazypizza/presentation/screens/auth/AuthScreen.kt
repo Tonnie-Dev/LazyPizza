@@ -30,6 +30,7 @@ import com.tonyxlab.lazypizza.presentation.screens.auth.handling.AuthUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.auth.handling.AuthUiState
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.utils.DeviceType
+import com.tonyxlab.lazypizza.utils.rememberIsDeviceWide
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -63,12 +64,9 @@ private fun AuthScreenContent(
     onEvent: (AuthUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val isDeviceWide = rememberIsDeviceWide()
 
     val activity = LocalActivity.current ?: return
-    val windowClass = calculateWindowSizeClass(activity)
-    val deviceType = DeviceType.fromWindowSizeClass(windowClass)
-
-    val isDeviceWide = deviceType != DeviceType.MOBILE_PORTRAIT
 
     val maxWidth = if (isDeviceWide)
         MaterialTheme.spacing.spaceTwoHundred * 2

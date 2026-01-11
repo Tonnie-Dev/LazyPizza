@@ -2,7 +2,6 @@
 
 package com.tonyxlab.lazypizza.presentation.screens.menu.details
 
-import android.app.Activity
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -17,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -48,7 +46,7 @@ import com.tonyxlab.lazypizza.presentation.screens.menu.details.handling.Details
 import com.tonyxlab.lazypizza.presentation.screens.menu.details.handling.DetailsUiState
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.presentation.theme.VerticalRoundedCornerShape16
-import com.tonyxlab.lazypizza.utils.DeviceType
+import com.tonyxlab.lazypizza.utils.rememberIsDeviceWide
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -120,19 +118,13 @@ private fun DetailsScreenContent(
     onEvent: (DetailsUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    val context = LocalContext.current
-    val activity = context as? Activity ?: return
-
-    val windowClass = calculateWindowSizeClass(activity = activity)
-    val deviceType = DeviceType.fromWindowSizeClass(windowSizeClass = windowClass)
-
-    val isDeviceWide = when (deviceType) {
-        DeviceType.MOBILE_PORTRAIT -> false
-        else -> true
-    }
+    val isDeviceWide = rememberIsDeviceWide()
     val animatedAggregate1 by
-    animateFloatAsState(targetValue = uiState.aggregatePrice.toFloat(), animationSpec = tween())
+
+    animateFloatAsState(
+            targetValue = uiState.aggregatePrice.toFloat(),
+            animationSpec = tween()
+    )
 
     val animatedAggregate2 by animateFloatAsState(
             targetValue = uiState.aggregatePrice.toFloat(),
@@ -143,11 +135,10 @@ private fun DetailsScreenContent(
             label = "CheckoutTotalAnimation"
     )
 
-
     if (isDeviceWide) {
 
         Row {
-            Column(modifier = Modifier.weight(1f)) {
+            Column(modifier = modifier.weight(1f)) {
 
                 uiState.pizzaStateItem?.let {
 
@@ -196,45 +187,46 @@ private fun DetailsScreenContent(
                 )
             }
         }
-        return
-    }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    } else {
 
-        Column(
-                modifier = Modifier
-                        .fillMaxWidth()
+        Box(modifier = modifier.fillMaxSize()) {
 
-        ) {
+            Column(
+                    modifier = Modifier
+                            .fillMaxWidth()
 
-            uiState.pizzaStateItem?.let {
-                DisplayImage(
+            ) {
+
+                uiState.pizzaStateItem?.let {
+                    DisplayImage(
+                            modifier = Modifier
+                                    .fillMaxWidth(),
+                            imageSize = 300.dp,
+                            imageUrl = it.imageUrl,
+                    )
+                }
+
+                ToppingsCardContent(
                         modifier = Modifier
-                                .fillMaxWidth(),
-                        imageSize = 300.dp,
-                        imageUrl = it.imageUrl,
+                                .padding(bottom = MaterialTheme.spacing.spaceOneHundred)
+                                .navigationBarsPadding(),
+                        uiState = uiState,
+                        onEvent = onEvent
                 )
             }
 
-            ToppingsCardContent(
+            StickyAddToCart(
                     modifier = Modifier
-                            .padding(bottom = MaterialTheme.spacing.spaceOneHundred)
+                            .align(alignment = Alignment.BottomCenter)
                             .navigationBarsPadding(),
-                    uiState = uiState,
+                    buttonText = stringResource(
+                            R.string.btn_text_add_to_cart_with_price,
+                            animatedAggregate1
+                    ),
                     onEvent = onEvent
             )
         }
-
-        StickyAddToCart(
-                modifier = Modifier
-                        .align(alignment = Alignment.BottomCenter)
-                        .navigationBarsPadding(),
-                buttonText = stringResource(
-                        R.string.btn_text_add_to_cart_with_price,
-                        animatedAggregate1
-                ),
-                onEvent = onEvent
-        )
     }
 }
 

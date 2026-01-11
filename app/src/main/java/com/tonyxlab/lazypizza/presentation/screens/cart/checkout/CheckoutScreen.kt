@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AddOnsSection
@@ -39,6 +38,7 @@ import com.tonyxlab.lazypizza.presentation.theme.HorizontalRoundedCornerShape24
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.utils.cartItemsMock
 import com.tonyxlab.lazypizza.utils.getMockSideItems
+import com.tonyxlab.lazypizza.utils.rememberIsDeviceWide
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -85,6 +85,7 @@ fun CheckoutScreenContent(
     cartItemActions: CartItemActions,
     modifier: Modifier = Modifier
 ) {
+    val isDeviceWide = rememberIsDeviceWide()
     Box(
             modifier = modifier
                     .fillMaxSize()
@@ -136,7 +137,7 @@ fun CheckoutScreenContent(
                         .navigationBarsPadding(),
                 totalOrderAmount = 85.10, // TODO: Hook the Total to UI State
                 onEvent = onEvent,
-                isWideDevice = false // TODO: Hook isDeviceWide to UI State
+                isWideDevice = isDeviceWide
         )
     }
 }
@@ -149,7 +150,6 @@ private fun CheckoutScreen_Preview() {
         Column(
                 modifier = Modifier
                         .background(MaterialTheme.colorScheme.surfaceVariant)
-                //.padding(MaterialTheme.spacing.spaceMedium)
         ) {
             CheckoutScreenContent(
                     modifier = Modifier
@@ -162,7 +162,8 @@ private fun CheckoutScreen_Preview() {
                     cartItemActions = CartItemActions(
                             onIncrement = {},
                             onDecrement = {},
-                            onRemove = {})
+                            onRemove = {}
+                    )
             )
         }
     }

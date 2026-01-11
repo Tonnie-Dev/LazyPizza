@@ -20,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -48,8 +47,8 @@ import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartUiStat
 import com.tonyxlab.lazypizza.presentation.screens.menu.details.components.StickyAddToCart
 import com.tonyxlab.lazypizza.presentation.theme.Label2SemiBold
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
-import com.tonyxlab.lazypizza.utils.DeviceType
 import com.tonyxlab.lazypizza.utils.SetStatusBarIconsColor
+import com.tonyxlab.lazypizza.utils.rememberIsDeviceWide
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -64,10 +63,7 @@ fun CartScreen(
     val uiState by viewModel.uiState.collectAsState()
     val activity = LocalActivity.current ?: return
 
-    val windowClass = calculateWindowSizeClass(activity)
-    val deviceType = DeviceType.fromWindowSizeClass(windowClass)
-
-    val isDeviceWide = deviceType != DeviceType.MOBILE_PORTRAIT
+    val isDeviceWide = rememberIsDeviceWide()
 
     if (isDeviceWide) {
 

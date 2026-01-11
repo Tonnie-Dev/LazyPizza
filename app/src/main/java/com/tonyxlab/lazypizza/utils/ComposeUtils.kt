@@ -1,9 +1,14 @@
+@file:OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+
 package com.tonyxlab.lazypizza.utils
 
 import android.app.Activity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
@@ -63,4 +68,12 @@ fun Modifier.clickableWithoutRipple(onClick: () -> Unit): Modifier =
         )
     }
     )
+
+@Composable
+fun rememberIsDeviceWide(): Boolean {
+    val activity = LocalActivity.current ?: return false
+    val windowClass = calculateWindowSizeClass(activity)
+    val deviceType = DeviceType.fromWindowSizeClass(windowClass)
+    return remember(windowClass) { deviceType != DeviceType.MOBILE_PORTRAIT }
+}
 

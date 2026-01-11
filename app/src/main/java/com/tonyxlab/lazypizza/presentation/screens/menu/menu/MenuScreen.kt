@@ -2,8 +2,8 @@
 
 package com.tonyxlab.lazypizza.presentation.screens.menu.menu
 
-import android.app.Activity
 import android.content.Intent
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,9 +39,9 @@ import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppDialog
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarOne
+import com.tonyxlab.lazypizza.presentation.core.components.LazyListComponent
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.components.CategoryTabs
-import com.tonyxlab.lazypizza.presentation.core.components.LazyListComponent
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.components.PizzaCard
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.components.SearchComponent
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.components.SideItemCard
@@ -50,8 +49,8 @@ import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuAction
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuUiState
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
-import com.tonyxlab.lazypizza.utils.DeviceType
 import com.tonyxlab.lazypizza.utils.SetStatusBarIconsColor
+import com.tonyxlab.lazypizza.utils.rememberIsDeviceWide
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -64,12 +63,9 @@ fun MenuScreen(
 
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
-    val activity = context as? Activity ?: return
+    val activity = LocalActivity.current?: return
 
-    val windowClass = calculateWindowSizeClass(activity)
-    val deviceType = DeviceType.fromWindowSizeClass(windowClass)
-
-    val isDeviceWide = deviceType != DeviceType.MOBILE_PORTRAIT
+    val isDeviceWide = rememberIsDeviceWide()
 
     if (isDeviceWide) {
 
