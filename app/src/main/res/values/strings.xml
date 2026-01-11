@@ -39,6 +39,8 @@
     <string name="cap_text_order_cancelled">Cancelled</string>
     <string name="cap_text_total_amount">Total Amount:</string>
     <string name="cap_text_total_amount_formatted">$%.2f</string>
+    <string name="cap_text_order_total">ORDER TOTAL:</string>
+    <string name="cap_text_order_total_amount">$%.2f</string>
 
 
     <!--Label Texts-->
@@ -57,11 +59,13 @@
     <string name="btn_text_go_to_menu">Go to Menu</string>
     <string name="btn_text_earliest_time">Earliest available time</string>
     <string name="btn_text_schedule">Schedule time</string>
+    <string name="btn_text_place_order">Place Order</string>
 
     <!--Text Button Texts-->
     <string name="txt_btn_cancel">Cancel</string>
     <string name="txt_btn_continue_without_sign_in">Continue without signing in</string>
     <string name="txt_btn_resend">Resend</string>
+
 
     <!--Content Description Texts-->
     <string name="cds_text_pizza_logo">Pizza Logo</string>

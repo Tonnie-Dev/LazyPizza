@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,6 +25,7 @@ import com.tonyxlab.lazypizza.presentation.core.components.AddOnsSection
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarFour
 import com.tonyxlab.lazypizza.presentation.core.components.CartItemActions
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
+import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.CommentBox
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.OrderDetailsSection
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.PickupTimeSection
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiEvent
@@ -90,6 +92,8 @@ fun CheckoutScreenContent(
                 items = getMockSideItems(),
                 onAddItem = { onEvent(CheckoutUiEvent.SelectAddOnItem(addOnItem = it)) }
         )
+
+        CommentBox(textFieldState = uiState.textFieldState)
     }
 }
 
