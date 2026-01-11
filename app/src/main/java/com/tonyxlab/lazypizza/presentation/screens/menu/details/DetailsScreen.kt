@@ -4,6 +4,7 @@ package com.tonyxlab.lazypizza.presentation.screens.menu.details
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,7 +19,9 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -119,20 +122,21 @@ private fun DetailsScreenContent(
     modifier: Modifier = Modifier
 ) {
     val isDeviceWide = rememberIsDeviceWide()
-    val animatedAggregate1 by
 
-    animateFloatAsState(
+    var hasAnimated by remember { mutableStateOf(false) }
+    
+    val animatedAggregate by animateFloatAsState(
             targetValue = uiState.aggregatePrice.toFloat(),
-            animationSpec = tween()
-    )
-
-    val animatedAggregate2 by animateFloatAsState(
-            targetValue = uiState.aggregatePrice.toFloat(),
-            animationSpec = tween(
-                    durationMillis = 450,
-                    easing = FastOutSlowInEasing
-            ),
-            label = "CheckoutTotalAnimation"
+            animationSpec = if (hasAnimated) {
+                tween(
+                        durationMillis = 450,
+                        easing = FastOutSlowInEasing
+                )
+            } else {
+                snap()
+            },
+            label = "CheckoutTotalAnimation",
+            finishedListener = { hasAnimated = true }
     )
 
     if (isDeviceWide) {
@@ -181,7 +185,7 @@ private fun DetailsScreenContent(
                         modifier = Modifier.align(alignment = Alignment.BottomCenter),
                         buttonText = stringResource(
                                 R.string.btn_text_add_to_cart_with_price,
-                                animatedAggregate2
+                                animatedAggregate
                         ),
                         onEvent = onEvent
                 )
@@ -222,7 +226,7 @@ private fun DetailsScreenContent(
                             .navigationBarsPadding(),
                     buttonText = stringResource(
                             R.string.btn_text_add_to_cart_with_price,
-                            animatedAggregate1
+                            animatedAggregate
                     ),
                     onEvent = onEvent
             )

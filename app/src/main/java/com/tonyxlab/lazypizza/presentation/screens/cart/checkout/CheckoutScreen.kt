@@ -5,6 +5,7 @@ package com.tonyxlab.lazypizza.presentation.screens.cart.checkout
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -42,6 +43,8 @@ import com.tonyxlab.lazypizza.utils.cartItemsMock
 import com.tonyxlab.lazypizza.utils.rememberIsDeviceWide
 import org.koin.androidx.compose.koinViewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 
 @Composable
@@ -91,9 +94,15 @@ fun CheckoutScreenContent(
     modifier: Modifier = Modifier
 ) {
 
+    var hasAnimated by remember { mutableStateOf(false) }
     val animatedTotalAmount by animateFloatAsState(
             targetValue = uiState.totalAmount.toFloat(),
-            animationSpec = tween()
+            animationSpec = if (hasAnimated){
+                tween()
+            }else{
+                snap()
+            },
+            finishedListener = {hasAnimated = true}
     )
     Box(
             modifier = modifier

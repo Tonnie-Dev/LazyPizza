@@ -5,6 +5,7 @@ package com.tonyxlab.lazypizza.presentation.screens.cart.cart
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,11 +19,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -45,7 +48,6 @@ import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartAction
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartUiState
 import com.tonyxlab.lazypizza.presentation.screens.menu.details.components.StickyAddToCart
-import com.tonyxlab.lazypizza.presentation.theme.Label2SemiBold
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.utils.SetStatusBarIconsColor
 import com.tonyxlab.lazypizza.utils.rememberIsDeviceWide
@@ -189,13 +191,20 @@ private fun CartScreenContentNarrow(
     modifier: Modifier = Modifier,
 ) {
 
+    var hasAnimated by remember { mutableStateOf(false) }
     val animatedTotal by animateFloatAsState(
             targetValue = uiState.aggregateCartAmount.toFloat(),
-            animationSpec = tween(
-                    durationMillis = 450,
-                    easing = FastOutSlowInEasing
-            ),
-            label = "CheckoutTotalAnimation"
+
+            animationSpec = if (hasAnimated) {
+                tween(
+                        durationMillis = 450,
+                        easing = FastOutSlowInEasing
+                )
+            } else {
+                snap()
+            },
+            label = "CheckoutTotalAnimation",
+            finishedListener = {hasAnimated = true}
     )
 
     if (uiState.cartItems.isEmpty()) {
