@@ -72,7 +72,7 @@ fun AppInputField(
                     .clickableWithoutRipple {
                         focusRequester.requestFocus()
                     },
-            contentAlignment = Alignment.CenterStart
+            contentAlignment = Alignment.TopStart
     ) {
         Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -102,7 +102,8 @@ fun AppInputField(
                         OutputTransformation {
                             val formatted = formatKenyaPhone(textFieldState.text.toString())
                             replace(0, length, formatted)
-                        }}else null,
+                        }
+                    } else null,
                     decorator = { innerTextField ->
                         TextDecorator(
                                 isEmpty = textFieldState.text.isEmpty(),
@@ -132,7 +133,10 @@ fun TextDecorator(
     Box(
             modifier = modifier
                     .fillMaxWidth()
-                    .padding(start = MaterialTheme.spacing.spaceExtraSmall),
+                    .padding(
+                            start = MaterialTheme.spacing.spaceExtraSmall,
+                            top = MaterialTheme.spacing.spaceSmall
+                    ),
 
             ) {
 
@@ -147,7 +151,6 @@ fun TextDecorator(
     }
 }
 
-
 private fun formatInternationalPhone(raw: String): String {
     val cleaned = raw.replace(" ", "")
 
@@ -156,7 +159,8 @@ private fun formatInternationalPhone(raw: String): String {
     val countryCode = cleaned.take(2) // simple assumption: +1, +2, +3…
     val rest = cleaned.drop(2)
 
-    val grouped = rest.chunked(3).joinToString(" ")
+    val grouped = rest.chunked(3)
+            .joinToString(" ")
 
     return "$countryCode $grouped"
 }
@@ -172,7 +176,8 @@ fun formatKenyaPhone(raw: String): String {
     // Guard: Kenya numbers should have up to 9 digits
     val trimmed = localNumber.take(9)
 
-    val grouped = trimmed.chunked(3).joinToString(" ")
+    val grouped = trimmed.chunked(3)
+            .joinToString(" ")
 
     return buildString {
         append("+254")

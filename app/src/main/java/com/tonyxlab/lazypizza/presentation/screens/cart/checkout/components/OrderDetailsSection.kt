@@ -27,8 +27,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.tonyxlab.lazypizza.R
-import com.tonyxlab.lazypizza.presentation.core.components.CartItemCard
 import com.tonyxlab.lazypizza.presentation.core.components.CartItemActions
+import com.tonyxlab.lazypizza.presentation.core.components.CartItemCard
 import com.tonyxlab.lazypizza.presentation.core.components.LazyListComponent
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiEvent
@@ -103,16 +103,12 @@ fun OrderDetailsSection(
                         modifier = Modifier,
                         cartItem = cartItem,
                         cartItems = uiState.cartItems,
-                        cartItemActions = CartItemActions(
-                                onIncrement = {},
-                                onDecrement = {},
-                                onRemove = {})
+                        cartItemActions = cartItemActions
                 )
             }
-
-            if (!uiState.expanded) {
-                HorizontalDivider()
-            }
+        }
+        if (uiState.expanded.not()) {
+            HorizontalDivider()
         }
     }
 }

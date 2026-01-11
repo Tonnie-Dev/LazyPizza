@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
+import com.tonyxlab.lazypizza.presentation.core.components.AddOnsSection
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarFour
 import com.tonyxlab.lazypizza.presentation.core.components.CartItemActions
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
@@ -30,6 +31,7 @@ import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.Checko
 import com.tonyxlab.lazypizza.presentation.theme.HorizontalRoundedCornerShape24
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.utils.cartItemsMock
+import com.tonyxlab.lazypizza.utils.getMockSideItems
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -69,16 +71,24 @@ fun CheckoutScreenContent(
                     .background(MaterialTheme.colorScheme.surface)
                     .padding(MaterialTheme.spacing.spaceMedium)
     ) {
+
         AppTopBarFour(onClick = { onEvent(CheckoutUiEvent.GoBack) })
+
         PickupTimeSection(
                 uiState = uiState,
                 onEvent = onEvent
         )
 
         OrderDetailsSection(
+                modifier = Modifier.padding(bottom = MaterialTheme.spacing.spaceMedium),
                 uiState = uiState,
                 onEvent = onEvent,
                 cartItemActions = cartItemActions
+        )
+
+        AddOnsSection(
+                items = getMockSideItems(),
+                onAddItem = { onEvent(CheckoutUiEvent.SelectAddOnItem(addOnItem = it)) }
         )
     }
 }
@@ -96,7 +106,10 @@ private fun CheckoutScreen_Preview() {
             CheckoutScreenContent(
                     modifier = Modifier
                             .fillMaxSize(),
-                    uiState = CheckoutUiState(cartItems = cartItemsMock, expanded = true),
+                    uiState = CheckoutUiState(
+                            cartItems = cartItemsMock,
+                            expanded = false
+                    ),
                     onEvent = {},
                     cartItemActions = CartItemActions(
                             onIncrement = {},

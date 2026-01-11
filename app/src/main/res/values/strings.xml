@@ -18,6 +18,7 @@
     <string name="header_text_pickup_time">PICKUP TIME</string>
     <string name="header_text_earliest_pickup_time">EARLIEST PICKUP TIME:</string>
     <string name="header_text_order_details">ORDER DETAILS</string>
+    <string name="header_text_comments">COMMENTS</string>
 
     <!--Caption Texts-->
     <string name="cap_text_no_results">No results found for your query</string>
@@ -93,6 +94,7 @@
 
     <!--Placeholder Texts-->
     <string name="placeholder_text_search">Search for delicious food…</string>
+    <string name="placeholder_text_add_comments">Add Comment</string>
 
     <!--Meta Data Texts-->
     <string name="dollar_price_tag">$%.2f</string>
