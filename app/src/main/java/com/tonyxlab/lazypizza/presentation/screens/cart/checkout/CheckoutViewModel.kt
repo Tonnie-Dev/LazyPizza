@@ -1,7 +1,11 @@
 package com.tonyxlab.lazypizza.presentation.screens.cart.checkout
 
 import androidx.lifecycle.viewModelScope
+import com.tonyxlab.lazypizza.domain.extensions.calculateTotal
+import com.tonyxlab.lazypizza.domain.extensions.extractRecommendedAddOnItems
+import com.tonyxlab.lazypizza.domain.model.AddOnItem
 import com.tonyxlab.lazypizza.domain.model.CartItem
+import com.tonyxlab.lazypizza.domain.model.toCartItem
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutActionEvent
@@ -21,10 +25,7 @@ class CheckoutViewModel(
         get() = CheckoutUiState()
 
     init {
-        repository.cartItems.onEach { cartItems ->
-
-            updateState { it.copy(cartItems = cartItems) }
-        }.launchIn(viewModelScope)
+        observeCart()
     }
 
     override fun onEvent(event: CheckoutUiEvent) {
@@ -35,15 +36,34 @@ class CheckoutViewModel(
             is CheckoutUiEvent.IncrementQuantity -> incrementQuantity(event.cartItem)
             is CheckoutUiEvent.DecrementQuantity -> decrementQuantity(event.cartItem)
             is CheckoutUiEvent.RemoveItem -> removeCartItem(event.cartItem)
-            is CheckoutUiEvent.SelectAddOnItem -> {}
+            is CheckoutUiEvent.SelectAddOnItem -> {
+                addItem(event.addOnItem)
+            }
+
             CheckoutUiEvent.PlaceOrder -> {}
             is CheckoutUiEvent.SelectPickupTime -> {
                 updateState { it.copy(pickupTimeOption = event.pickupTimeOption) }
             }
+
             CheckoutUiEvent.GoBack -> {
                 sendActionEvent(CheckoutActionEvent.NavigateBack)
             }
         }
+    }
+
+    private fun observeCart() {
+        repository.cartItems.onEach { cartItems ->
+            with(cartItems) {
+                updateState {
+                    it.copy(
+                            cartItems = this,
+                            totalAmount = calculateTotal(),
+                            suggestedAddOnItems = extractRecommendedAddOnItems()
+                    )
+                }
+            }
+        }
+                .launchIn(viewModelScope)
     }
 
     private fun expandOrderDetails() {
@@ -71,6 +91,12 @@ class CheckoutViewModel(
                     newCount = (cartItem.counter - 1)
                             .coerceAtLeast(minimumValue = 1)
             )
+        }
+    }
+
+    private fun addItem(addOnItem: AddOnItem) {
+        launch {
+            repository.addItem(cartItem = addOnItem.toCartItem())
         }
     }
 

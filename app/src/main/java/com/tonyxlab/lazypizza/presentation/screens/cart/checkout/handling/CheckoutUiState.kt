@@ -12,6 +12,7 @@ data class CheckoutUiState(
     val textFieldState: TextFieldState = TextFieldState(),
     val pickupTimeOption: PickupTimeOption = PickupTimeOption.EARLIEST,
     val expanded: Boolean = false,
+    val totalAmount: Double = 0.0
 
 ) : UiState {
 

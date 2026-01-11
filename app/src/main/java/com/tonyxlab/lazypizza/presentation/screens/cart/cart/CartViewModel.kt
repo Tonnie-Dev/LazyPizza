@@ -1,16 +1,17 @@
 package com.tonyxlab.lazypizza.presentation.screens.cart.cart
 
 import androidx.lifecycle.viewModelScope
+import com.tonyxlab.lazypizza.domain.extensions.calculateTotal
+import com.tonyxlab.lazypizza.domain.extensions.extractRecommendedAddOnItems
+import com.tonyxlab.lazypizza.domain.model.AddOnItem
 import com.tonyxlab.lazypizza.domain.model.CartItem
 import com.tonyxlab.lazypizza.domain.model.ProductType
-import com.tonyxlab.lazypizza.domain.model.AddOnItem
 import com.tonyxlab.lazypizza.domain.model.toCartItem
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartUiState
-import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutActionEvent
 import com.tonyxlab.lazypizza.utils.getMockSideItems
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -33,17 +34,7 @@ class CartViewModel(private val repository: CartRepository) : CartBaseViewModel(
 
             val count = items.sumOf { it.counter }
 
-            val total = items.sumOf { cartItem ->
-
-                val toppingsAmount = cartItem.toppings.sumOf {
-                    it.toppingPrice * it.counter
-                }
-
-                val unitTotalPrice = cartItem.unitPrice + toppingsAmount
-                unitTotalPrice * cartItem.counter
-            }
-
-            Triple(items, count, total)
+            Triple(items, count, items.calculateTotal())
         }
                 .onEach { (items, count, total) ->
                     updateState {
@@ -51,7 +42,7 @@ class CartViewModel(private val repository: CartRepository) : CartBaseViewModel(
                                 cartItems = items,
                                 badgeCount = count,
                                 aggregateCartAmount = total,
-                                suggestedAddOnItems = deriveSuggestedAddOns(items)
+                                suggestedAddOnItems =items. extractRecommendedAddOnItems()
                         )
                     }
                 }
@@ -113,25 +104,12 @@ class CartViewModel(private val repository: CartRepository) : CartBaseViewModel(
     }
 
     private fun selectAddOn(addOnItem: AddOnItem) {
-   launch {
-
-       repository.addItem(cartItem = addOnItem.toCartItem())
-   }
-    }
-
-    private fun deriveSuggestedAddOns(cartItems: List<CartItem>): List<AddOnItem> {
-        val selectedAddOnItemIds = cartItems.filterNot {
-            it.productType == ProductType.PIZZA
+        launch {
+            repository.addItem(cartItem = addOnItem.toCartItem())
         }
-                .map { it.id }
-                .toSet()
-
-        val unSelectedSideItems = getMockSideItems()
-                .filterNot { it.id in selectedAddOnItemIds }
-                .shuffled()
-
-        return unSelectedSideItems
     }
+
+
 }
 
 

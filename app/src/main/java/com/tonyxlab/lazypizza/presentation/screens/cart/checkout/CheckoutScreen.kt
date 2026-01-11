@@ -4,6 +4,8 @@ package com.tonyxlab.lazypizza.presentation.screens.cart.checkout
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,9 +39,10 @@ import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.Checko
 import com.tonyxlab.lazypizza.presentation.theme.HorizontalRoundedCornerShape24
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.utils.cartItemsMock
-import com.tonyxlab.lazypizza.utils.getMockSideItems
 import com.tonyxlab.lazypizza.utils.rememberIsDeviceWide
 import org.koin.androidx.compose.koinViewModel
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 @Composable
 fun CheckoutScreen(
@@ -88,6 +91,10 @@ fun CheckoutScreenContent(
     modifier: Modifier = Modifier
 ) {
 
+    val animatedTotalAmount by animateFloatAsState(
+            targetValue = uiState.totalAmount.toFloat(),
+            animationSpec = tween()
+    )
     Box(
             modifier = modifier
                     .fillMaxSize()
@@ -126,19 +133,18 @@ fun CheckoutScreenContent(
             )
 
             AddOnsSection(
-                    items = getMockSideItems(),
+                    items = uiState.suggestedAddOnItems,
                     onAddItem = { onEvent(CheckoutUiEvent.SelectAddOnItem(addOnItem = it)) }
             )
 
             CommentBox(textFieldState = uiState.textFieldState)
-
         }
 
         OrderButtonSection(
                 modifier = Modifier
                         .align(alignment = Alignment.BottomCenter)
                         .navigationBarsPadding(),
-                totalOrderAmount = 85.10, // TODO: Hook the Total to UI State
+                totalOrderAmount = animatedTotalAmount.toDouble(),
                 onEvent = onEvent,
                 isWideDevice = rememberIsDeviceWide()
         )
