@@ -205,7 +205,8 @@ val CartItem.uniqueKey
     get() = listOf(
             id.toString(),
             toppings.sortedBy { it.id }
-                    .joinToString(separator = "|") { "${it.id}x${it.counter}" }).joinToString("-")
+                    .joinToString(separator = "|") { "${it.id}x${it.counter}" })
+            .joinToString("-")
 
 private fun List<CartItem>.counterFor(cartItem: CartItem): Int =
     firstOrNull { it.uniqueKey == cartItem.uniqueKey }?.counter ?: 1

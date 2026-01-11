@@ -31,16 +31,17 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.navigation.AppNavigationRail
 import com.tonyxlab.lazypizza.navigation.BottomNavBar
+import com.tonyxlab.lazypizza.navigation.CheckoutScreenDestination
 import com.tonyxlab.lazypizza.navigation.MenuScreenDestination
 import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
+import com.tonyxlab.lazypizza.presentation.core.components.AddOnsSection
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarThree
-import com.tonyxlab.lazypizza.presentation.core.components.CartItemCard
 import com.tonyxlab.lazypizza.presentation.core.components.CartItemActions
+import com.tonyxlab.lazypizza.presentation.core.components.CartItemCard
 import com.tonyxlab.lazypizza.presentation.core.components.EmptyScreenContent
 import com.tonyxlab.lazypizza.presentation.core.components.uniqueKey
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
-import com.tonyxlab.lazypizza.presentation.core.components.AddOnsSection
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartUiState
@@ -91,6 +92,10 @@ fun CartScreen(
                         when (action) {
                             CartActionEvent.NavigateBackToMenu -> {
                                 navigator.navigate(MenuScreenDestination)
+                            }
+
+                            CartActionEvent.NavigateToCheckout -> {
+                                navigator.navigate(CheckoutScreenDestination)
                             }
                         }
                     },
@@ -144,7 +149,12 @@ fun CartScreen(
                         CartActionEvent.NavigateBackToMenu -> {
                             navigator.navigate(MenuScreenDestination)
                         }
+
+                        CartActionEvent.NavigateToCheckout -> {
+                            navigator.navigate(CheckoutScreenDestination)
+                        }
                     }
+
                 },
                 onBackPressed = { activity.finish() },
                 containerColor = MaterialTheme.colorScheme.background
@@ -238,7 +248,7 @@ private fun CartScreenContentNarrow(
                 AddOnsSection(
                         modifier = Modifier.fillMaxWidth(),
                         items = uiState.suggestedAddOnItems,
-                        onAddItem = { onEvent(CartUiEvent.SelectAddOn(addOnItem = it))},
+                        onAddItem = { onEvent(CartUiEvent.SelectAddOn(addOnItem = it)) },
                         isWide = false
                 )
             }
@@ -334,7 +344,7 @@ private fun CartScreenContentWide(
                 AddOnsSection(
                         modifier = Modifier.fillMaxWidth(),
                         items = uiState.suggestedAddOnItems,
-                        onAddItem = { onEvent(CartUiEvent.SelectAddOn(addOnItem = it))}
+                        onAddItem = { onEvent(CartUiEvent.SelectAddOn(addOnItem = it)) }
                 )
 
                 StickyAddToCart(

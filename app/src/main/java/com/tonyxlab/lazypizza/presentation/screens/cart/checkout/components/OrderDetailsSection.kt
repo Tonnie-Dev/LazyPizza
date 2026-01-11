@@ -30,6 +30,7 @@ import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.presentation.core.components.CartItemActions
 import com.tonyxlab.lazypizza.presentation.core.components.CartItemCard
 import com.tonyxlab.lazypizza.presentation.core.components.LazyListComponent
+import com.tonyxlab.lazypizza.presentation.core.components.uniqueKey
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiState
@@ -96,7 +97,7 @@ fun OrderDetailsSection(
         AnimatedVisibility(visible = uiState.expanded) {
             LazyListComponent(
                     items = uiState.cartItems,
-                    key = { it.id },
+                    key = { it.uniqueKey },
 
                     ) { cartItem ->
                 CartItemCard(

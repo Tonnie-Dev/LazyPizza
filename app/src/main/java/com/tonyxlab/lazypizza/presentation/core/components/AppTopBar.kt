@@ -215,7 +215,6 @@ fun AppTopBarFour(
                     .statusBarsPadding()
                     .fillMaxWidth()
                     .height(MaterialTheme.spacing.spaceExtraLarge)
-                    .padding(horizontal = MaterialTheme.spacing.spaceTen)
                     .padding(vertical = MaterialTheme.spacing.spaceSmall),
             verticalAlignment = Alignment.CenterVertically
     ) {
@@ -224,7 +223,7 @@ fun AppTopBarFour(
                 modifier = Modifier
                         .clip(CircleShape)
                         .background(color = TextSecondary8)
-                        .size(MaterialTheme.spacing.spaceDoubleDp * 22)
+                        .size(size = MaterialTheme.spacing.spaceLarge)
                         .clickable { onClick() }
                         .padding(all = MaterialTheme.spacing.spaceSmall),
                 contentAlignment = Alignment.Center

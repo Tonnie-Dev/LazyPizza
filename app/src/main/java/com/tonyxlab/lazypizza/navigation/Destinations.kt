@@ -18,3 +18,6 @@ data object HistoryScreenDestination : NavKey
 @Serializable
 data object AuthScreenDestination: NavKey
 
+@Serializable
+data object CheckoutScreenDestination: NavKey
+

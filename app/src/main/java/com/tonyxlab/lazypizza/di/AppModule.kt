@@ -10,6 +10,7 @@ import com.tonyxlab.lazypizza.domain.repository.AuthRepository
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import com.tonyxlab.lazypizza.presentation.screens.auth.AuthViewModel
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.CartViewModel
+import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.CheckoutViewModel
 import com.tonyxlab.lazypizza.presentation.screens.menu.details.DetailsViewModel
 import com.tonyxlab.lazypizza.presentation.screens.history.HistoryViewModel
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.MenuViewModel
@@ -27,6 +28,7 @@ val viewModelModule = module {
     viewModelOf(::CartViewModel)
     viewModelOf(::HistoryViewModel)
     viewModelOf(::AuthViewModel)
+    viewModelOf(::CheckoutViewModel)
 }
 
 val firebaseModule = module {

@@ -10,6 +10,7 @@ import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartUiState
+import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutActionEvent
 import com.tonyxlab.lazypizza.utils.getMockSideItems
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -79,7 +80,7 @@ class CartViewModel(private val repository: CartRepository) : CartBaseViewModel(
             is CartUiEvent.SelectAddOn -> selectAddOn(event.addOnItem)
 
             CartUiEvent.Checkout -> {
-                // Future Milestone
+                sendActionEvent(CartActionEvent.NavigateToCheckout)
             }
         }
     }

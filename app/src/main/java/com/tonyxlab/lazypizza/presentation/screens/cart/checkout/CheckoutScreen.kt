@@ -8,10 +8,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,7 +21,7 @@ import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.window.embedding.EmbeddingBounds
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AddOnsSection
@@ -34,6 +32,7 @@ import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.Comm
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.OrderButtonSection
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.OrderDetailsSection
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.PickupTimeSection
+import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiState
 import com.tonyxlab.lazypizza.presentation.theme.HorizontalRoundedCornerShape24
@@ -50,9 +49,33 @@ fun CheckoutScreen(
 ) {
 
     BaseContentLayout(
-            viewModel = viewModel, topBar = {
+            modifier = modifier,
+            viewModel = viewModel,
+            actionEventHandler = { _, action ->
+                when (action) {
+                    CheckoutActionEvent.NavigateBack -> navigator.goBack()
 
-    }) { }
+                }
+
+            }
+    ) { uiState ->
+
+        CheckoutScreenContent(
+                uiState = uiState,
+                onEvent = viewModel::onEvent,
+                cartItemActions = CartItemActions(
+                        onIncrement = {
+                            viewModel.onEvent(event = CheckoutUiEvent.IncrementQuantity(it))
+                        },
+                        onDecrement = {
+                            viewModel.onEvent(event = CheckoutUiEvent.DecrementQuantity(it))
+                        },
+                        onRemove = {
+                            viewModel.onEvent(event = CheckoutUiEvent.RemoveItem(it))
+                        }
+                )
+        )
+    }
 }
 
 @Composable
@@ -62,38 +85,30 @@ fun CheckoutScreenContent(
     cartItemActions: CartItemActions,
     modifier: Modifier = Modifier
 ) {
-
     Box(
-             modifier = modifier
-                     .fillMaxSize()
-                     .clip(MaterialTheme.shapes.HorizontalRoundedCornerShape24)
-                     .dropShadow(
-                             shape = MaterialTheme.shapes.HorizontalRoundedCornerShape24,
-                             shadow = Shadow(
-                                     radius = 10.dp,
-                                     spread = 6.dp,
-                                     color = Color(0x40000000),
-                                     offset = DpOffset(x = 4.dp, 4.dp)
-                             )
-                     )
-                     .background(MaterialTheme.colorScheme.surface)
+            modifier = modifier
+                    .fillMaxSize()
+                    .clip(MaterialTheme.shapes.HorizontalRoundedCornerShape24)
+                    .dropShadow(
+                            shape = MaterialTheme.shapes.HorizontalRoundedCornerShape24,
+                            shadow = Shadow(
+                                    radius = 10.dp,
+                                    spread = 6.dp,
+                                    color = Color(0x40000000),
+                                    offset = DpOffset(x = 4.dp, 4.dp)
+                            )
+                    )
+                    .background(MaterialTheme.colorScheme.surface)
 
-     ) {
+    ) {
 
         Column(
-modifier = Modifier.padding(all =  MaterialTheme.spacing.spaceMedium)
-        /*modifier = Modifier
-                .fillMaxSize()
-
-                .padding(
-                        start = MaterialTheme.spacing.spaceMedium,
-                        end = MaterialTheme.spacing.spaceMedium,
-                        top = MaterialTheme.spacing.spaceMedium,
-                        bottom = MaterialTheme.spacing.spaceExtraLarge
-                )*/
+                modifier = Modifier
+                        .padding(all = MaterialTheme.spacing.spaceMedium)
         ) {
-            AppTopBarFour(onClick = { onEvent(CheckoutUiEvent.GoBack) })
-
+            AppTopBarFour(
+                    onClick = { onEvent(CheckoutUiEvent.GoBack) }
+            )
             PickupTimeSection(
                     uiState = uiState,
                     onEvent = onEvent
@@ -113,18 +128,17 @@ modifier = Modifier.padding(all =  MaterialTheme.spacing.spaceMedium)
 
             CommentBox(textFieldState = uiState.textFieldState)
 
-
         }
 
         OrderButtonSection(
                 modifier = Modifier
                         .align(alignment = Alignment.BottomCenter)
-                       ,
+                        .navigationBarsPadding(),
                 totalOrderAmount = 85.10, // TODO: Hook the Total to UI State
                 onEvent = onEvent,
                 isWideDevice = false // TODO: Hook isDeviceWide to UI State
         )
-     }
+    }
 }
 
 @PreviewLightDark
@@ -135,7 +149,7 @@ private fun CheckoutScreen_Preview() {
         Column(
                 modifier = Modifier
                         .background(MaterialTheme.colorScheme.surfaceVariant)
-                        //.padding(MaterialTheme.spacing.spaceMedium)
+                //.padding(MaterialTheme.spacing.spaceMedium)
         ) {
             CheckoutScreenContent(
                     modifier = Modifier

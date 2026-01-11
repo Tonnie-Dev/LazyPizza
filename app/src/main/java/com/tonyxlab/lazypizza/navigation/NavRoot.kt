@@ -1,13 +1,18 @@
+@file:RequiresApi(Build.VERSION_CODES.O)
+
 package com.tonyxlab.lazypizza.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.tonyxlab.lazypizza.presentation.screens.auth.AuthScreen
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.CartScreen
-import com.tonyxlab.lazypizza.presentation.screens.menu.details.DetailsScreen
+import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.CheckoutScreen
 import com.tonyxlab.lazypizza.presentation.screens.history.HistoryScreen
+import com.tonyxlab.lazypizza.presentation.screens.menu.details.DetailsScreen
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.MenuScreen
 
 @Composable
@@ -46,8 +51,12 @@ fun NavRoot() {
             DetailsScreen(id = it.id, navigator = navigator)
         }
 
-        entry< AuthScreenDestination> {
+        entry<AuthScreenDestination> {
             AuthScreen(navigator = navigator)
+        }
+
+        entry <CheckoutScreenDestination> {
+            CheckoutScreen(navigator = navigator)
         }
     }
 
