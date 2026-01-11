@@ -112,7 +112,8 @@ fun CheckoutScreenContent(
             )
             PickupTimeSection(
                     uiState = uiState,
-                    onEvent = onEvent
+                    onEvent = onEvent,
+                    isDeviceWide = isDeviceWide
             )
 
             OrderDetailsSection(

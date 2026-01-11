@@ -245,7 +245,6 @@ private fun CartScreenContentNarrow(
                         modifier = Modifier.fillMaxWidth(),
                         items = uiState.suggestedAddOnItems,
                         onAddItem = { onEvent(CartUiEvent.SelectAddOn(addOnItem = it)) },
-                        isWide = false
                 )
             }
         }
@@ -328,14 +327,6 @@ private fun CartScreenContentWide(
         Surface(modifier = Modifier.weight(1f)) {
 
             Column(modifier = Modifier.padding(all = MaterialTheme.spacing.spaceMedium)) {
-
-                Text(
-                        modifier = Modifier.padding(bottom = MaterialTheme.spacing.spaceSmall),
-                        text = stringResource(R.string.header_text_recommended_options),
-                        style = MaterialTheme.typography.Label2SemiBold.copy(
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                )
 
                 AddOnsSection(
                         modifier = Modifier.fillMaxWidth(),

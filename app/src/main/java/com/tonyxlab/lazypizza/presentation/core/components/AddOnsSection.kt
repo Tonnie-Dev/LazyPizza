@@ -43,7 +43,6 @@ fun AddOnsSection(
     items: List<AddOnItem>,
     onAddItem: (AddOnItem) -> Unit,
     modifier: Modifier = Modifier,
-    isWide: Boolean = true
 ) {
     Column(
             modifier = modifier
@@ -51,7 +50,6 @@ fun AddOnsSection(
                     .padding(bottom = MaterialTheme.spacing.spaceTen * 2)
     ) {
 
-        if (isWide.not()) {
             Text(
                     modifier = Modifier.padding(bottom = MaterialTheme.spacing.spaceSmall),
                     text = stringResource(R.string.header_text_recommended_options),
@@ -59,7 +57,7 @@ fun AddOnsSection(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
             )
-        }
+
         LazyRow(
                 modifier = Modifier,
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceSmall)

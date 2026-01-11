@@ -2,7 +2,6 @@
 
 package com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components
 
-import android.R.attr.onClick
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -45,9 +44,9 @@ import java.time.LocalDateTime
 @Composable
 fun PickupTimeSection(
     uiState: CheckoutUiState,
-    onEvent:(CheckoutUiEvent)-> Unit,
+    onEvent: (CheckoutUiEvent) -> Unit,
     modifier: Modifier = Modifier,
-    isWideDevice: Boolean = false,
+    isDeviceWide: Boolean = false,
     headerTextStyle: TextStyle = MaterialTheme.typography.Label2SemiBold
 ) {
     Column(
@@ -61,13 +60,17 @@ fun PickupTimeSection(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        if (isWideDevice) {
+        if (isDeviceWide) {
 
-            Row {
+            Row(
+                    horizontalArrangement = Arrangement.spacedBy(
+                            space = MaterialTheme.spacing.spaceSmall
+                    )
+            ) {
                 TimeSlotItem(
                         modifier = modifier.weight(1f),
                         text = stringResource(id = R.string.btn_text_earliest_time),
-                        active = uiState.pickupTimeOption== PickupTimeOption.EARLIEST,
+                        active = uiState.pickupTimeOption == PickupTimeOption.EARLIEST,
                         onClick = { onEvent(CheckoutUiEvent.SelectPickupTime(scheduled = false)) }
                 )
 
@@ -78,7 +81,8 @@ fun PickupTimeSection(
                         onClick = { onEvent(CheckoutUiEvent.SelectPickupTime(scheduled = true)) }
                 )
             }
-        } else {
+        }
+        else {
             Column(
                     modifier = Modifier
                             .padding(bottom = MaterialTheme.spacing.spaceTwelve),
@@ -119,8 +123,10 @@ fun PickupTimeSection(
             )
         }
 
-        HorizontalDivider(modifier = Modifier
-                .padding(bottom = MaterialTheme.spacing.spaceMedium))
+        HorizontalDivider(
+                modifier = Modifier
+                        .padding(bottom = MaterialTheme.spacing.spaceMedium)
+        )
     }
 }
 
@@ -174,8 +180,6 @@ private fun TimeSlotItem(
         }
     }
 }
-
-
 
 @Preview
 @Composable
