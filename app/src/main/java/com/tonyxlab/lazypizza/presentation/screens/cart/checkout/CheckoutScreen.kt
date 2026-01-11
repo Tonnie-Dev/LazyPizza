@@ -5,12 +5,16 @@ package com.tonyxlab.lazypizza.presentation.screens.cart.checkout
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.dropShadow
@@ -19,6 +23,7 @@ import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.window.embedding.EmbeddingBounds
 import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AddOnsSection
@@ -26,6 +31,7 @@ import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarFour
 import com.tonyxlab.lazypizza.presentation.core.components.CartItemActions
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.CommentBox
+import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.OrderButtonSection
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.OrderDetailsSection
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.PickupTimeSection
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiEvent
@@ -57,44 +63,68 @@ fun CheckoutScreenContent(
     modifier: Modifier = Modifier
 ) {
 
-    Column(
-            modifier = modifier
-                    .fillMaxSize()
-                    .clip(MaterialTheme.shapes.HorizontalRoundedCornerShape24)
-                    .dropShadow(
-                            shape = MaterialTheme.shapes.HorizontalRoundedCornerShape24,
-                            shadow = Shadow(
-                                    radius = 10.dp,
-                                    spread = 6.dp,
-                                    color = Color(0x40000000),
-                                    offset = DpOffset(x = 4.dp, 4.dp)
-                            )
-                    )
-                    .background(MaterialTheme.colorScheme.surface)
-                    .padding(MaterialTheme.spacing.spaceMedium)
-    ) {
+    Box(
+             modifier = modifier
+                     .fillMaxSize()
+                     .clip(MaterialTheme.shapes.HorizontalRoundedCornerShape24)
+                     .dropShadow(
+                             shape = MaterialTheme.shapes.HorizontalRoundedCornerShape24,
+                             shadow = Shadow(
+                                     radius = 10.dp,
+                                     spread = 6.dp,
+                                     color = Color(0x40000000),
+                                     offset = DpOffset(x = 4.dp, 4.dp)
+                             )
+                     )
+                     .background(MaterialTheme.colorScheme.surface)
 
-        AppTopBarFour(onClick = { onEvent(CheckoutUiEvent.GoBack) })
+     ) {
 
-        PickupTimeSection(
-                uiState = uiState,
-                onEvent = onEvent
-        )
+        Column(
+modifier = Modifier.padding(all =  MaterialTheme.spacing.spaceMedium)
+        /*modifier = Modifier
+                .fillMaxSize()
 
-        OrderDetailsSection(
-                modifier = Modifier.padding(bottom = MaterialTheme.spacing.spaceMedium),
-                uiState = uiState,
+                .padding(
+                        start = MaterialTheme.spacing.spaceMedium,
+                        end = MaterialTheme.spacing.spaceMedium,
+                        top = MaterialTheme.spacing.spaceMedium,
+                        bottom = MaterialTheme.spacing.spaceExtraLarge
+                )*/
+        ) {
+            AppTopBarFour(onClick = { onEvent(CheckoutUiEvent.GoBack) })
+
+            PickupTimeSection(
+                    uiState = uiState,
+                    onEvent = onEvent
+            )
+
+            OrderDetailsSection(
+                    modifier = Modifier.padding(bottom = MaterialTheme.spacing.spaceMedium),
+                    uiState = uiState,
+                    onEvent = onEvent,
+                    cartItemActions = cartItemActions
+            )
+
+            AddOnsSection(
+                    items = getMockSideItems(),
+                    onAddItem = { onEvent(CheckoutUiEvent.SelectAddOnItem(addOnItem = it)) }
+            )
+
+            CommentBox(textFieldState = uiState.textFieldState)
+
+
+        }
+
+        OrderButtonSection(
+                modifier = Modifier
+                        .align(alignment = Alignment.BottomCenter)
+                       ,
+                totalOrderAmount = 85.10, // TODO: Hook the Total to UI State
                 onEvent = onEvent,
-                cartItemActions = cartItemActions
+                isWideDevice = false // TODO: Hook isDeviceWide to UI State
         )
-
-        AddOnsSection(
-                items = getMockSideItems(),
-                onAddItem = { onEvent(CheckoutUiEvent.SelectAddOnItem(addOnItem = it)) }
-        )
-
-        CommentBox(textFieldState = uiState.textFieldState)
-    }
+     }
 }
 
 @PreviewLightDark
@@ -112,7 +142,7 @@ private fun CheckoutScreen_Preview() {
                             .fillMaxSize(),
                     uiState = CheckoutUiState(
                             cartItems = cartItemsMock,
-                            expanded = false
+                            expanded = true
                     ),
                     onEvent = {},
                     cartItemActions = CartItemActions(

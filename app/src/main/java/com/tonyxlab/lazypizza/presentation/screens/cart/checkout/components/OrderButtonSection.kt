@@ -19,7 +19,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.presentation.core.components.AppButton
-import com.tonyxlab.lazypizza.presentation.core.utils.gradientScheme
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiEvent
 import com.tonyxlab.lazypizza.presentation.theme.Label1Medium
@@ -35,9 +34,13 @@ fun OrderButtonSection(
 ) {
     Box(
             modifier = modifier
-                    .background(brush = MaterialTheme.gradientScheme.stickyOverlayGradient)
-
-                    .fillMaxWidth(), contentAlignment = Alignment.Center
+                    //.background(brush = MaterialTheme.gradientScheme.stickyOverlayGradient)
+                    .background(color = MaterialTheme.colorScheme.background)
+                    .fillMaxWidth()
+                    .padding(
+                            all = MaterialTheme.spacing.spaceMedium
+                    ),
+            contentAlignment = Alignment.Center
     ) {
 
         if (isWideDevice) {
