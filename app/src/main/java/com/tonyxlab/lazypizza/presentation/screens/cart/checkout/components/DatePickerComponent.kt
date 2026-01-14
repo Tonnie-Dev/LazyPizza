@@ -3,6 +3,7 @@
 package com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -22,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.presentation.core.components.AppButton
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
+import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiState
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.presentation.theme.Title3
 import java.time.Instant
@@ -30,9 +32,10 @@ import java.time.ZoneId
 
 @Composable
 fun DatePickerComponent(
+    uiState: CheckoutUiState,
     onDateSelected: (LocalDate) -> Unit,
     onDismiss: () -> Unit
-    ) {
+) {
 
     val today = LocalDate.now()
 
@@ -50,39 +53,41 @@ fun DatePickerComponent(
             }
     )
 
-    DatePickerDialog(
-            onDismissRequest = onDismiss,
-            confirmButton = {
-                AppButton(
-                        modifier = Modifier
-                                .padding(end = MaterialTheme.spacing.spaceMedium)
-                                .padding(bottom = MaterialTheme.spacing.spaceTwelve),
-                        onClick = {
+    if (uiState.dateTimePickerState.showDatePicker) {
+        DatePickerDialog(
+                onDismissRequest = onDismiss,
+                confirmButton = {
+                    AppButton(
+                            modifier = Modifier
+                                    .padding(end = MaterialTheme.spacing.spaceMedium)
+                                    .padding(bottom = MaterialTheme.spacing.spaceTwelve),
+                            onClick = {
 
-                            datePickerState.selectedDateMillis?.let {
+                                datePickerState.selectedDateMillis?.let {
 
-                                val date = Instant.ofEpochMilli(it)
-                                        .atZone(ZoneId.systemDefault())
-                                        .toLocalDate()
-                                onDateSelected(date)
-                            }
-                        },
-                        buttonText = stringResource(id = R.string.btn_text_ok)
-                )
-            },
-            dismissButton = {
-                TextButton(onClick = { onDismiss()}) {
-                    Text(
-                            text = stringResource(R.string.txt_btn_cancel),
-                            style = MaterialTheme.typography.Title3.copy(
-                                    color = MaterialTheme.colorScheme.primary
-                            )
+                                    val date = Instant.ofEpochMilli(it)
+                                            .atZone(ZoneId.systemDefault())
+                                            .toLocalDate()
+                                    onDateSelected(date)
+                                }
+                            },
+                            buttonText = stringResource(id = R.string.btn_text_ok)
                     )
-                }
-            }, colors = DatePickerDefaults.colors()
-    ) {
+                },
+                dismissButton = {
+                    TextButton(onClick = { onDismiss() }) {
+                        Text(
+                                text = stringResource(R.string.txt_btn_cancel),
+                                style = MaterialTheme.typography.Title3.copy(
+                                        color = MaterialTheme.colorScheme.primary
+                                )
+                        )
+                    }
+                }, colors = DatePickerDefaults.colors()
+        ) {
 
-        DatePicker(state = datePickerState)
+            DatePicker(state = datePickerState)
+        }
     }
 }
 
@@ -97,6 +102,7 @@ private fun PickupTimeSection_Preview() {
                         .padding(MaterialTheme.spacing.spaceMedium)
         ) {
             DatePickerComponent(
+                    uiState = CheckoutUiState(),
                     onDateSelected = {},
                     onDismiss = {}
             )
