@@ -124,7 +124,7 @@ private fun DetailsScreenContent(
     val isDeviceWide = rememberIsDeviceWide()
 
     var hasAnimated by remember { mutableStateOf(false) }
-    
+
     val animatedAggregate by animateFloatAsState(
             targetValue = uiState.aggregatePrice.toFloat(),
             animationSpec = if (hasAnimated) {

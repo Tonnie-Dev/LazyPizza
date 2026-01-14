@@ -15,6 +15,10 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,9 +35,11 @@ import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarFour
 import com.tonyxlab.lazypizza.presentation.core.components.CartItemActions
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.CommentBox
+import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.DatePickerComponent
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.OrderButtonSection
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.OrderDetailsSection
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.PickupTimeSection
+import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.TimePickerComponent
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiState
@@ -42,10 +48,6 @@ import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.utils.cartItemsMock
 import com.tonyxlab.lazypizza.utils.rememberIsDeviceWide
 import org.koin.androidx.compose.koinViewModel
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 
 @Composable
 fun CheckoutScreen(
@@ -68,7 +70,7 @@ fun CheckoutScreen(
     ) { uiState ->
 
         CheckoutScreenContent(
-             modifier = modifier,
+                modifier = modifier,
                 uiState = uiState,
                 onEvent = viewModel::onEvent,
                 cartItemActions = CartItemActions(
@@ -97,12 +99,12 @@ fun CheckoutScreenContent(
     var hasAnimated by remember { mutableStateOf(false) }
     val animatedTotalAmount by animateFloatAsState(
             targetValue = uiState.totalAmount.toFloat(),
-            animationSpec = if (hasAnimated){
+            animationSpec = if (hasAnimated) {
                 tween()
-            }else{
+            } else {
                 snap()
             },
-            finishedListener = {hasAnimated = true}
+            finishedListener = { hasAnimated = true }
     )
     Box(
             modifier = modifier
@@ -157,7 +159,21 @@ fun CheckoutScreenContent(
                 onEvent = onEvent,
                 isWideDevice = rememberIsDeviceWide()
         )
+
+        DatePickerComponent(
+                uiState = uiState,
+                onDateSelected = { onEvent(CheckoutUiEvent.SelectDate(date =it)) },
+                onDismiss = { onEvent(CheckoutUiEvent.DismissPicker) }
+        )
+
+
+        TimePickerComponent(
+                uiState = uiState,
+                onTimeSelected = { onEvent(CheckoutUiEvent.SelectTime(time =it)) },
+                onEvent = onEvent
+        )
     }
+
 }
 
 @PreviewLightDark

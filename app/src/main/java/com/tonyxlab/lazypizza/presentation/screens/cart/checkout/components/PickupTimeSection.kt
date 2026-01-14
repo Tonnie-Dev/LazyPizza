@@ -72,7 +72,8 @@ fun PickupTimeSection(
                 TimeSlotItem(
                         modifier = modifier.weight(1f),
                         text = stringResource(id = R.string.btn_text_earliest_time),
-                        active = uiState.pickupTimeOption == PickupTimeOption.EARLIEST,
+                        active = uiState.dateTimePickerState.pickupTimeOption
+                                == PickupTimeOption.EARLIEST
                 ) {
                     onEvent(
                             CheckoutUiEvent.SelectPickupTime(
@@ -81,19 +82,22 @@ fun PickupTimeSection(
                     )
                 }
 
-
                 TimeSlotItem(
                         modifier = modifier.weight(1f),
                         text = stringResource(id = R.string.btn_text_schedule),
-                        active = uiState.pickupTimeOption == PickupTimeOption.SCHEDULED,
+                        active = uiState.dateTimePickerState.pickupTimeOption
+                                == PickupTimeOption.SCHEDULED
                 ) {
                     onEvent(
                             CheckoutUiEvent.SelectPickupTime(
                                     pickupTimeOption = PickupTimeOption.SCHEDULED
                             )
                     )
-                }
 
+                    onEvent(
+                            CheckoutUiEvent.OpenDatePicker
+                    )
+                }
             }
         } else {
             Column(
@@ -106,7 +110,8 @@ fun PickupTimeSection(
             {
                 TimeSlotItem(
                         text = stringResource(id = R.string.btn_text_earliest_time),
-                        active = uiState.pickupTimeOption == PickupTimeOption.EARLIEST,
+                        active = uiState.dateTimePickerState.pickupTimeOption
+                                == PickupTimeOption.EARLIEST,
                 ) {
                     onEvent(
                             CheckoutUiEvent.SelectPickupTime(
@@ -116,7 +121,8 @@ fun PickupTimeSection(
                 }
                 TimeSlotItem(
                         text = stringResource(id = R.string.btn_text_schedule),
-                        active = uiState.pickupTimeOption == PickupTimeOption.SCHEDULED,
+                        active = uiState.dateTimePickerState.pickupTimeOption
+                                == PickupTimeOption.SCHEDULED,
                 )
                 {
                     onEvent(
@@ -124,6 +130,8 @@ fun PickupTimeSection(
                                     pickupTimeOption = PickupTimeOption.SCHEDULED
                             )
                     )
+
+                    onEvent(CheckoutUiEvent.OpenDatePicker)
                 }
             }
         }

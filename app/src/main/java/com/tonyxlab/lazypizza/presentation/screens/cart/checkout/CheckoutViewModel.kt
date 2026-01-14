@@ -1,6 +1,7 @@
 package com.tonyxlab.lazypizza.presentation.screens.cart.checkout
 
 import androidx.lifecycle.viewModelScope
+import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.extensions.calculateTotal
 import com.tonyxlab.lazypizza.domain.extensions.extractRecommendedAddOnItems
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
@@ -13,6 +14,8 @@ import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.Checko
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiState
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.time.LocalDate
+import java.time.LocalTime
 
 typealias CheckoutBaseViewModel =
         BaseViewModel<CheckoutUiState, CheckoutUiEvent, CheckoutActionEvent>
@@ -29,7 +32,6 @@ class CheckoutViewModel(
     }
 
     override fun onEvent(event: CheckoutUiEvent) {
-
         when (event) {
             CheckoutUiEvent.ExpandOrder -> expandOrderDetails()
             CheckoutUiEvent.CollapseOrder -> collapseOrderDetails()
@@ -42,8 +44,21 @@ class CheckoutViewModel(
 
             CheckoutUiEvent.PlaceOrder -> {}
             is CheckoutUiEvent.SelectPickupTime -> {
-                updateState { it.copy(pickupTimeOption = event.pickupTimeOption) }
+                updateState {
+                    it.copy(
+                            dateTimePickerState = currentState.dateTimePickerState.copy(
+                                    pickupTimeOption = event.pickupTimeOption
+                            )
+                    )
+                }
             }
+
+            CheckoutUiEvent.OpenDatePicker -> openDatePicker()
+            CheckoutUiEvent.OpenTimePicker -> openTimePicker()
+            is CheckoutUiEvent.SelectDate -> selectDate(event.date)
+            is CheckoutUiEvent.SelectTime -> selectTime(event.time)
+            CheckoutUiEvent.DismissPicker -> dismissPicker()
+            is CheckoutUiEvent.PreviewTime -> previewTime(event.time)
 
             CheckoutUiEvent.GoBack -> {
                 sendActionEvent(CheckoutActionEvent.NavigateBack)
@@ -104,5 +119,102 @@ class CheckoutViewModel(
         launch {
             repository.removeItem(cartItem)
         }
+    }
+
+    private fun openDatePicker() {
+
+        updateState {
+            it.copy(
+                    dateTimePickerState = currentState.dateTimePickerState.copy(
+                            showDatePicker = true,
+                            showTimePicker = false
+                    )
+            )
+        }
+    }
+
+    private fun selectDate(date: LocalDate) {
+        updateState {
+            it.copy(
+                    dateTimePickerState = currentState.dateTimePickerState.copy(
+                            selectedDate = date,
+                            showTimePicker = true
+                    )
+            )
+        }
+    }
+
+    private fun openTimePicker() {
+        updateState {
+            it.copy(
+                    dateTimePickerState = currentState.dateTimePickerState.copy(
+                            showDatePicker = false,
+                            showTimePicker = true
+                    )
+            )
+        }
+    }
+
+    private fun previewTime(time: LocalTime) {
+
+        val date = currentState.dateTimePickerState.selectedDate ?: return
+        val error = validatePickupTime(date = date, time = time)
+
+        updateState {
+            it.copy(
+                    dateTimePickerState = currentState.dateTimePickerState.copy(
+                            selectedTime = time,
+                            pickTimeError = error
+                    )
+            )
+        }
+    }
+
+    private fun selectTime(time: LocalTime) {
+        val date = currentState.dateTimePickerState.selectedDate ?: return
+        val error = validatePickupTime(date = date, time = time)
+        updateState {
+            it.copy(
+                    dateTimePickerState = currentState.dateTimePickerState.copy(
+                            selectedTime = time,
+                            showTimePicker = false,
+                            pickTimeError = error
+                    )
+            )
+        }
+
+    }
+
+    private fun dismissPicker() {
+
+        updateState {
+            it.copy(
+                    dateTimePickerState = currentState.dateTimePickerState.copy(
+                            showDatePicker = false,
+                            showTimePicker = false
+                    )
+            )
+        }
+    }
+
+    private fun validatePickupTime(date: LocalDate, time: LocalTime): Int? {
+
+        val earliestPickupTime = LocalTime.of(10, 15)
+        val latestPickupTime = LocalTime.of(21, 45)
+
+        if (time.isBefore(earliestPickupTime) || time.isAfter(latestPickupTime)) {
+            return R.string.cap_text_pickup_available_time
+        }
+
+        if (date == LocalDate.now()) {
+            val adjustedPickupTime = LocalTime.now()
+                    .plusMinutes(15)
+            if (time.isBefore(adjustedPickupTime)) {
+
+                return R.string.cap_text_pickup_possible_time
+            }
+        }
+
+        return null
     }
 }

@@ -41,6 +41,8 @@
     <string name="cap_text_total_amount_formatted">$%.2f</string>
     <string name="cap_text_order_total">ORDER TOTAL:</string>
     <string name="cap_text_order_total_amount">$%.2f</string>
+    <string name="cap_text_pickup_available_time">Pickup available between 10:15 and 21:45</string>
+    <string name="cap_text_pickup_possible_time">Pickup is possible at least 15 minutes from the current time</string>
 
 
     <!--Label Texts-->
@@ -60,6 +62,7 @@
     <string name="btn_text_earliest_time">Earliest available time</string>
     <string name="btn_text_schedule">Schedule time</string>
     <string name="btn_text_place_order">Place Order</string>
+    <string name="btn_text_ok">Ok</string>
 
     <!--Text Button Texts-->
     <string name="txt_btn_cancel">Cancel</string>
