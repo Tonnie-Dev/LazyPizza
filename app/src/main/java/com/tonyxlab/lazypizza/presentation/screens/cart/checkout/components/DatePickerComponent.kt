@@ -3,7 +3,6 @@
 package com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding

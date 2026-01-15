@@ -17,6 +17,7 @@
     <string name="header_text_recommended_options">RECOMMENDED TO ADD TO YOUR ORDER</string>
     <string name="header_text_pickup_time">PICKUP TIME</string>
     <string name="header_text_earliest_pickup_time">EARLIEST PICKUP TIME:</string>
+    <string name="header_text_selected_pickup_time">PICKUP TIME:</string>
     <string name="header_text_order_details">ORDER DETAILS</string>
     <string name="header_text_comments">COMMENTS</string>
 

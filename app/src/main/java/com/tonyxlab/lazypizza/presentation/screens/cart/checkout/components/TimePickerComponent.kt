@@ -2,6 +2,11 @@
 
 package com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -109,7 +114,7 @@ fun TimePickerComponent(
                     Column {
                         TimePicker(state = timePickerState)
 
-                        if (error != null) {
+                       /* if (error != null) {
                             Spacer(modifier = Modifier.padding(top = MaterialTheme.spacing.spaceSmall))
                             Text(
                                     modifier = Modifier.fillMaxWidth(),
@@ -119,8 +124,37 @@ fun TimePickerComponent(
                                             color = MaterialTheme.colorScheme.primary
                                     )
                             )
+                        }*/
+
+
+                        AnimatedVisibility(
+                                visible = error != null,
+                                enter = fadeIn() + slideInVertically(
+                                        initialOffsetY = { it / 4 }
+                                ),
+                                exit = fadeOut() + slideOutVertically(
+                                        targetOffsetY = { it / 4 }
+                                )
+                        ) {
+                            error?.let { errorRes ->
+
+                                Column {
+                                    Spacer(modifier = Modifier.padding(top = MaterialTheme.spacing.spaceSmall))
+
+                                    Text(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            text = stringResource(id = errorRes),
+                                            textAlign = TextAlign.Center,
+                                            style = MaterialTheme.typography.Label2SemiBold.copy(
+                                                    color = MaterialTheme.colorScheme.primary
+                                            )
+                                    )
+                                }
+                            }
+
                         }
-                    }
+
+                            }
                 }
         )
     }

@@ -40,8 +40,8 @@ import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.Pickup
 import com.tonyxlab.lazypizza.presentation.theme.Body3Medium
 import com.tonyxlab.lazypizza.presentation.theme.Label2SemiBold
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
-import com.tonyxlab.lazypizza.utils.calculateEarliestPickupTime
-import java.time.LocalDateTime
+import com.tonyxlab.lazypizza.utils.formatSelectedPickupTime
+import com.tonyxlab.lazypizza.utils.toPickupTimeDisplayString
 
 @Composable
 fun PickupTimeSection(
@@ -76,7 +76,7 @@ fun PickupTimeSection(
                                 == PickupTimeOption.EARLIEST
                 ) {
                     onEvent(
-                            CheckoutUiEvent.SelectPickupTime(
+                            CheckoutUiEvent.SelectPickupOption(
                                     pickupTimeOption = PickupTimeOption.EARLIEST
                             )
                     )
@@ -89,7 +89,7 @@ fun PickupTimeSection(
                                 == PickupTimeOption.SCHEDULED
                 ) {
                     onEvent(
-                            CheckoutUiEvent.SelectPickupTime(
+                            CheckoutUiEvent.SelectPickupOption(
                                     pickupTimeOption = PickupTimeOption.SCHEDULED
                             )
                     )
@@ -114,7 +114,7 @@ fun PickupTimeSection(
                                 == PickupTimeOption.EARLIEST,
                 ) {
                     onEvent(
-                            CheckoutUiEvent.SelectPickupTime(
+                            CheckoutUiEvent.SelectPickupOption(
                                     pickupTimeOption = PickupTimeOption.EARLIEST
                             )
                     )
@@ -126,7 +126,7 @@ fun PickupTimeSection(
                 )
                 {
                     onEvent(
-                            CheckoutUiEvent.SelectPickupTime(
+                            CheckoutUiEvent.SelectPickupOption(
                                     pickupTimeOption = PickupTimeOption.SCHEDULED
                             )
                     )
@@ -142,14 +142,27 @@ fun PickupTimeSection(
                 verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                    text = stringResource(id = R.string.header_text_earliest_pickup_time),
+                    text = if (uiState.dateTimePickerState.pickupTimeOption == PickupTimeOption.EARLIEST)
+                        stringResource(id = R.string.header_text_earliest_pickup_time)
+                    else
+                        stringResource(id = R.string.header_text_selected_pickup_time),
                     style = headerTextStyle,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             Text(
-                    text = LocalDateTime.now()
-                            .calculateEarliestPickupTime(),
+                    text = when (uiState.dateTimePickerState.pickupTimeOption) {
+
+                        PickupTimeOption.EARLIEST -> uiState.dateTimePickerState
+                                .earliestPickupTime
+                                .toPickupTimeDisplayString()
+
+                        PickupTimeOption.SCHEDULED -> formatSelectedPickupTime(
+                                uiState.dateTimePickerState.selectedDate,
+                                uiState.dateTimePickerState.selectedTime
+                        )
+
+                    },
                     style = headerTextStyle,
                     color = MaterialTheme.colorScheme.onSurface
             )

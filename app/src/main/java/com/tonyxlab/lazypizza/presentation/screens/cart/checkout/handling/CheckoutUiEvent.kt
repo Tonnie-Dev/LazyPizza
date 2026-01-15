@@ -17,7 +17,7 @@ sealed interface CheckoutUiEvent : UiEvent {
     data object CollapseOrder : CheckoutUiEvent
     data object PlaceOrder : CheckoutUiEvent
 
-    data class SelectPickupTime(val pickupTimeOption: PickupTimeOption) : CheckoutUiEvent
+    data class SelectPickupOption(val pickupTimeOption: PickupTimeOption) : CheckoutUiEvent
 
     data object OpenDatePicker: CheckoutUiEvent
     data object OpenTimePicker: CheckoutUiEvent
