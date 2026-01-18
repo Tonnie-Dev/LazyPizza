@@ -8,14 +8,23 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.shadow.Shadow
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
@@ -34,11 +44,13 @@ import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AddOnsSection
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarFour
 import com.tonyxlab.lazypizza.presentation.core.components.CartItemActions
+import com.tonyxlab.lazypizza.presentation.core.components.CartItemCard
+import com.tonyxlab.lazypizza.presentation.core.components.uniqueKey
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.CommentBox
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.DatePickerComponent
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.OrderButtonSection
-import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.OrderDetailsSection
+import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.OrderDetailsHeader
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.PickupTimeSection
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components.TimePickerComponent
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutActionEvent
@@ -62,7 +74,9 @@ fun CheckoutScreen(
             actionEventHandler = { _, action ->
                 when (action) {
                     CheckoutActionEvent.NavigateBack -> navigator.goBack()
+
                 }
+
             },
             topBar = {},
             containerColor = MaterialTheme.colorScheme.background
@@ -94,8 +108,10 @@ fun CheckoutScreenContent(
     cartItemActions: CartItemActions,
     modifier: Modifier = Modifier
 ) {
+    val isDeviceWide = rememberIsDeviceWide()
 
     var hasAnimated by remember { mutableStateOf(false) }
+
     val animatedTotalAmount by animateFloatAsState(
             targetValue = uiState.totalAmount.toFloat(),
             animationSpec = if (hasAnimated) {
@@ -105,6 +121,27 @@ fun CheckoutScreenContent(
             },
             finishedListener = { hasAnimated = true }
     )
+
+    val listState = rememberLazyListState()
+
+    val imeBottom = WindowInsets.ime.getBottom(LocalDensity.current)
+
+    val isKeyboardOpen = imeBottom > 0
+
+    LaunchedEffect(isKeyboardOpen) {
+        if (isKeyboardOpen) {
+
+            if (isDeviceWide){
+
+                listState.animateScrollToItem(2)
+
+            }else {
+
+                listState.animateScrollToItem(1)
+            }
+        }
+    }
+
     Box(
             modifier = modifier
                     .fillMaxSize()
@@ -122,32 +159,67 @@ fun CheckoutScreenContent(
 
     ) {
 
-        Column(
+        LazyColumn(
                 modifier = Modifier
-                        .padding(all = MaterialTheme.spacing.spaceMedium)
+                        .fillMaxSize()
+                        .padding(MaterialTheme.spacing.spaceMedium)
+                        .imePadding(),
+                state = listState
+
         ) {
-            AppTopBarFour(
-                    onClick = { onEvent(CheckoutUiEvent.GoBack) }
-            )
-            PickupTimeSection(
-                    uiState = uiState,
-                    onEvent = onEvent,
-                    isDeviceWide = rememberIsDeviceWide()
-            )
+            item {
 
-            OrderDetailsSection(
-                    modifier = Modifier.padding(bottom = MaterialTheme.spacing.spaceMedium),
-                    uiState = uiState,
-                    onEvent = onEvent,
-                    cartItemActions = cartItemActions
-            )
+                AppTopBarFour(
+                        onClick = { onEvent(CheckoutUiEvent.GoBack) }
+                )
+            }
 
-            AddOnsSection(
-                    items = uiState.suggestedAddOnItems,
-                    onAddItem = { onEvent(CheckoutUiEvent.SelectAddOnItem(addOnItem = it)) }
-            )
+            item {
+                PickupTimeSection(
+                        uiState = uiState,
+                        onEvent = onEvent,
+                        isDeviceWide = isDeviceWide
+                )
+            }
 
-            CommentBox(modifier = Modifier.imePadding(),textFieldState = uiState.textFieldState)
+            item {
+
+                OrderDetailsHeader(
+                        uiState = uiState,
+                        onEvent = onEvent
+                )
+            }
+
+            if (uiState.expanded) {
+                items(
+                        items = uiState.cartItems,
+                        key = { it.uniqueKey }
+                ) { cartItem ->
+                    CartItemCard(
+                            cartItem = cartItem,
+                            cartItems = uiState.cartItems,
+                            cartItemActions = cartItemActions
+                    )
+                }
+            }
+
+            item {
+                AddOnsSection(
+                        items = uiState.suggestedAddOnItems,
+                        onAddItem = {
+                            onEvent(CheckoutUiEvent.SelectAddOnItem(addOnItem = it))
+                        }
+                )
+            }
+
+            item {
+                CommentBox(textFieldState = uiState.textFieldState)
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceOneTwenty))
+            }
+
         }
 
         OrderButtonSection(
@@ -161,16 +233,19 @@ fun CheckoutScreenContent(
 
         DatePickerComponent(
                 uiState = uiState,
-                onDateSelected = { onEvent(CheckoutUiEvent.SelectDate(date =it)) },
+                onDateSelected = { onEvent(CheckoutUiEvent.SelectDate(date = it)) },
                 onDismiss = { onEvent(CheckoutUiEvent.DismissPicker) }
         )
 
+
         TimePickerComponent(
                 uiState = uiState,
-                onTimeSelected = { onEvent(CheckoutUiEvent.SelectTime(time =it)) },
-                onEvent = onEvent
+                onTimeSelected = { onEvent(CheckoutUiEvent.SelectTime(time = it)) },
+                onEvent = onEvent,
+                isDeviceWide = isDeviceWide
         )
     }
+
 }
 
 @PreviewLightDark

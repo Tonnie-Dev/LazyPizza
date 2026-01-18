@@ -34,12 +34,9 @@ fun OrderButtonSection(
 ) {
     Box(
             modifier = modifier
-                    //.background(brush = MaterialTheme.gradientScheme.stickyOverlayGradient)
                     .background(color = MaterialTheme.colorScheme.background)
                     .fillMaxWidth()
-                    .padding(
-                            all = MaterialTheme.spacing.spaceMedium
-                    ),
+                    .padding(all = MaterialTheme.spacing.spaceMedium),
             contentAlignment = Alignment.Center
     ) {
 

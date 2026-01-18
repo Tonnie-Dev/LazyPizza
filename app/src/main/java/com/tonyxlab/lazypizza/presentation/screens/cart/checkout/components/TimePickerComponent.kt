@@ -1,7 +1,11 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
+@file:RequiresApi(Build.VERSION_CODES.O)
 
 package com.tonyxlab.lazypizza.presentation.screens.cart.checkout.components
 
+import android.R.attr.maxWidth
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -13,6 +17,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.presentation.core.components.AppButton
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
@@ -37,11 +43,13 @@ import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.presentation.theme.Title3
 import java.time.LocalTime
 
+
 @Composable
 fun TimePickerComponent(
     uiState: CheckoutUiState,
     onTimeSelected: (LocalTime) -> Unit,
     onEvent: (CheckoutUiEvent) -> Unit,
+    isDeviceWide: Boolean,
     modifier: Modifier = Modifier
 ) {
 
@@ -173,7 +181,8 @@ private fun PickupTimeSection_Preview() {
             TimePickerComponent(
                     uiState = CheckoutUiState(),
                     onTimeSelected = {},
-                    onEvent = {}
+                    onEvent = {},
+                    isDeviceWide = false
             )
         }
     }

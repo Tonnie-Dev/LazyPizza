@@ -47,7 +47,7 @@ fun AddOnsSection(
     Column(
             modifier = modifier
                     .fillMaxWidth()
-                    .padding(bottom = MaterialTheme.spacing.spaceTen * 2)
+                 .padding(bottom = MaterialTheme.spacing.spaceTen * 2)
     ) {
 
             Text(
