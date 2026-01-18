@@ -1,18 +1,15 @@
 package com.tonyxlab.lazypizza.presentation.core.components
 
-import android.R.attr.textStyle
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
 import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.MaterialTheme
@@ -31,16 +28,11 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.IntSize
-import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.theme.Body1Regular
 import com.tonyxlab.lazypizza.presentation.theme.Body3Regular
-import com.tonyxlab.lazypizza.utils.InvisibleSpacer
 import com.tonyxlab.lazypizza.utils.clickableWithoutRipple
 
 @Composable
@@ -52,15 +44,17 @@ fun AppInputField(
     placeholderTextStyle: TextStyle = MaterialTheme.typography.Body1Regular,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     shape: Shape = RoundedCornerShape(MaterialTheme.spacing.spaceExtraSmall * 7),
-    leadingIcon:(@Composable ()-> Unit)? = null,
+    leadingIcon: (@Composable () -> Unit)? = null,
     inputFormat: InputFormat = InputFormat.NONE,
-    keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+    keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
 ) {
+
     var focused by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 
     Box(
             modifier = modifier
+
                     .clip(shape)
                     .fillMaxWidth()
                     .height(MaterialTheme.spacing.spaceTwelve * 4)
@@ -70,6 +64,7 @@ fun AppInputField(
                     )
                     .focusRequester(focusRequester)
                     .onFocusChanged { focused = it.isFocused }
+
                     .padding(horizontal = MaterialTheme.spacing.spaceMedium)
                     .padding(vertical = MaterialTheme.spacing.spaceExtraSmall)
                     .clickableWithoutRipple {
@@ -86,6 +81,7 @@ fun AppInputField(
             BasicTextField(
                     modifier = Modifier
                             .fillMaxWidth()
+                            .fillMaxHeight()
                             .padding(start = MaterialTheme.spacing.spaceExtraSmall),
                     state = textFieldState,
                     textStyle = textStyle.copy(
@@ -127,7 +123,6 @@ fun TextDecorator(
     placeholderTextStyle: TextStyle,
     innerTextField: @Composable () -> Unit,
     modifier: Modifier = Modifier
-
 ) {
     Box(
             modifier = modifier

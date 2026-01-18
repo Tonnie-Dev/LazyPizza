@@ -20,24 +20,13 @@ import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.theme.Body2Regular
 import com.tonyxlab.lazypizza.presentation.theme.Label2SemiBold
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
-import com.tonyxlab.lazypizza.utils.ifThen
 
 @Composable
 fun CommentBox(
     textFieldState: TextFieldState,
     modifier: Modifier = Modifier,
-    isWideDevice: Boolean = false
 ) {
-
-    Column(
-            modifier = modifier
-                    .ifThen(isWideDevice) {
-                        padding(bottom = MaterialTheme.spacing.spaceOneTwenty)
-                    }
-                    .ifThen(isWideDevice.not()) {
-                        padding(bottom = MaterialTheme.spacing.spaceTen * 4)
-
-                    }) {
+    Column(modifier = modifier) {
 
         Text(
                 modifier = Modifier
@@ -46,7 +35,6 @@ fun CommentBox(
                 style = MaterialTheme.typography.Label2SemiBold.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
         )
 
         AppInputField(
