@@ -1,5 +1,10 @@
+@file:RequiresApi(Build.VERSION_CODES.O)
+
 package com.tonyxlab.lazypizza.presentation.screens.cart.checkout
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.viewModelScope
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.extensions.calculateTotal
@@ -28,6 +33,7 @@ class CheckoutViewModel(
 ) : CheckoutBaseViewModel() {
 
     override val initialState: CheckoutUiState
+
         get() = CheckoutUiState()
 
     init {
@@ -66,6 +72,7 @@ class CheckoutViewModel(
         }
     }
 
+
     private fun observeCart() {
         repository.cartItems.onEach { cartItems ->
             with(cartItems) {
@@ -80,6 +87,8 @@ class CheckoutViewModel(
         }
                 .launchIn(viewModelScope)
     }
+
+
 
     private fun expandOrderDetails() {
         updateState { it.copy(expanded = true) }
@@ -202,7 +211,6 @@ class CheckoutViewModel(
         val fallbackToEarliest =
             pickerState.pickupTimeOption == PickupTimeOption.SCHEDULED &&
                     !pickerState.scheduledTimeConfirmed
-
 
         updateState {
             it.copy(

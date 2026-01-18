@@ -1,6 +1,10 @@
+@file:RequiresApi(Build.VERSION_CODES.O)
+
 package com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling
 
+import android.os.Build
 import androidx.annotation.DrawableRes
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.text.input.TextFieldState
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
 import com.tonyxlab.lazypizza.domain.model.CartItem
@@ -20,7 +24,7 @@ data class CheckoutUiState(
 
 ) : UiState {
 
-    data class DateTimePickerState(
+    data class DateTimePickerState (
         val pickupTimeOption: PickupTimeOption = PickupTimeOption.EARLIEST,
 
         val earliestPickupTime: LocalDateTime = LocalDateTime.now(),

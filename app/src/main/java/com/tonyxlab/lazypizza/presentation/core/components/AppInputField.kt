@@ -1,5 +1,6 @@
 package com.tonyxlab.lazypizza.presentation.core.components
 
+import android.R.attr.textStyle
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
 import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.MaterialTheme
@@ -50,7 +52,8 @@ fun AppInputField(
     placeholderTextStyle: TextStyle = MaterialTheme.typography.Body1Regular,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     shape: Shape = RoundedCornerShape(MaterialTheme.spacing.spaceExtraSmall * 7),
-    isSearchField: Boolean = false,
+    leadingIcon:(@Composable ()-> Unit)? = null,
+    inputFormat: InputFormat = InputFormat.NONE,
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
 ) {
     var focused by remember { mutableStateOf(false) }
@@ -78,15 +81,7 @@ fun AppInputField(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
         ) {
-            if (isSearchField) {
-                Column {
-                    InvisibleSpacer(componentSize = IntSize(0, 20))
-                    Image(
-                            painter = painterResource(R.drawable.icon_search),
-                            contentDescription = stringResource(id = R.string.cds_text_search_icon),
-                    )
-                }
-            }
+            leadingIcon?.invoke()
 
             BasicTextField(
                     modifier = Modifier
@@ -98,12 +93,16 @@ fun AppInputField(
                     ),
                     cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                     keyboardOptions = keyboardOptions,
-                    outputTransformation = if (isSearchField.not()) {
-                        OutputTransformation {
-                            val formatted = formatKenyaPhone(textFieldState.text.toString())
-                            replace(0, length, formatted)
-                        }
-                    } else null,
+                    outputTransformation =
+                        when (inputFormat) {
+                            InputFormat.KENYA_PHONE -> OutputTransformation {
+                                val formatted = formatKenyaPhone(textFieldState.text.toString())
+                                replace(0, length, formatted)
+                            }
+
+                            else -> null
+                        },
+
                     decorator = { innerTextField ->
                         TextDecorator(
                                 isEmpty = textFieldState.text.isEmpty(),
@@ -149,6 +148,10 @@ fun TextDecorator(
             innerTextField()
         }
     }
+}
+
+enum class InputFormat {
+    NONE, KENYA_PHONE
 }
 
 private fun formatInternationalPhone(raw: String): String {

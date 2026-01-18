@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.presentation.core.components.AppButton
 import com.tonyxlab.lazypizza.presentation.core.components.AppInputField
+import com.tonyxlab.lazypizza.presentation.core.components.InputFormat
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.auth.handling.AuthUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.auth.handling.AuthUiState
@@ -74,6 +75,7 @@ fun PhoneInputSection(
                 ),
                 backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
                 shape = MaterialTheme.shapes.RoundedCornerShape100,
+                inputFormat = InputFormat.KENYA_PHONE,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
         )
 

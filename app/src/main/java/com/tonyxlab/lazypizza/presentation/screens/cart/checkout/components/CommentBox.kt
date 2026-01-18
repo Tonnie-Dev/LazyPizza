@@ -33,7 +33,8 @@ fun CommentBox(
             modifier = modifier
                     .ifThen(isWideDevice) {
                         padding(bottom = MaterialTheme.spacing.spaceOneTwenty)
-                    }.ifThen(isWideDevice.not()){
+                    }
+                    .ifThen(isWideDevice.not()) {
                         padding(bottom = MaterialTheme.spacing.spaceTen * 4)
 
                     }) {
@@ -55,9 +56,8 @@ fun CommentBox(
                 textFieldState = textFieldState,
                 placeholderText = stringResource(id = R.string.placeholder_text_add_comments),
                 placeholderTextStyle = MaterialTheme.typography.Body2Regular,
-                backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
-
-                )
+                backgroundColor = MaterialTheme.colorScheme.surfaceVariant
+        )
     }
 }
 
@@ -71,7 +71,6 @@ private fun CommentBox_Preview() {
                         .background(MaterialTheme.colorScheme.background)
                         .padding(MaterialTheme.spacing.spaceMedium)
         ) {
-
             val textFieldState = remember { TextFieldState() }
             CommentBox(textFieldState = textFieldState)
         }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -61,9 +62,7 @@ fun CheckoutScreen(
             actionEventHandler = { _, action ->
                 when (action) {
                     CheckoutActionEvent.NavigateBack -> navigator.goBack()
-
                 }
-
             },
             topBar = {},
             containerColor = MaterialTheme.colorScheme.background
@@ -148,7 +147,7 @@ fun CheckoutScreenContent(
                     onAddItem = { onEvent(CheckoutUiEvent.SelectAddOnItem(addOnItem = it)) }
             )
 
-            CommentBox(textFieldState = uiState.textFieldState)
+            CommentBox(modifier = Modifier.imePadding(),textFieldState = uiState.textFieldState)
         }
 
         OrderButtonSection(
@@ -166,14 +165,12 @@ fun CheckoutScreenContent(
                 onDismiss = { onEvent(CheckoutUiEvent.DismissPicker) }
         )
 
-
         TimePickerComponent(
                 uiState = uiState,
                 onTimeSelected = { onEvent(CheckoutUiEvent.SelectTime(time =it)) },
                 onEvent = onEvent
         )
     }
-
 }
 
 @PreviewLightDark

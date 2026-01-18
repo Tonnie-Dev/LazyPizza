@@ -1,5 +1,6 @@
 package com.tonyxlab.lazypizza.presentation.screens.menu.menu.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,13 +18,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.IntSize
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.presentation.core.components.AppInputField
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuUiState
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
+import com.tonyxlab.lazypizza.utils.InvisibleSpacer
 import com.tonyxlab.lazypizza.utils.mockPizzas
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,7 +44,15 @@ fun SearchComponent(
                 AppInputField(
                         textFieldState = uiState.textFieldState,
                         placeholderText = stringResource(R.string.placeholder_text_search),
-                        isSearchField = true
+                        leadingIcon ={
+                            Column {
+                                InvisibleSpacer(componentSize = IntSize(0, 20))
+                                Image(
+                                        painter = painterResource(R.drawable.icon_search),
+                                        contentDescription = stringResource(id = R.string.cds_text_search_icon),
+                                )
+                            }
+                        }
                 )
             },
             expanded = uiState.textFieldState.text.isNotBlank(),
