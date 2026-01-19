@@ -9,6 +9,7 @@ import java.time.LocalTime
 sealed interface CheckoutUiEvent : UiEvent {
 
     data object GoBack : CheckoutUiEvent
+    data object ExitCheckout : CheckoutUiEvent
     data class IncrementQuantity(val cartItem: CartItem) : CheckoutUiEvent
     data class DecrementQuantity(val cartItem: CartItem) : CheckoutUiEvent
     data class RemoveItem(val cartItem: CartItem) : CheckoutUiEvent

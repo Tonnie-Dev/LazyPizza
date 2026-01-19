@@ -12,3 +12,12 @@ fun String.isValidInternationalPhone(): Boolean {
     return Regex("^\\+254\\d{9}$").matches(this)
     // return Regex("^\\+[1-9]\\d{7,14}$").matches(this)
 }
+
+fun generateOrderNumber(): String {
+
+    val timeMillis = System.currentTimeMillis()
+            .toString()
+            .takeLast(5)
+
+    return "#$timeMillis"
+}

@@ -92,13 +92,17 @@ fun OrderDetailsHeader(
     }
 
     if (uiState.expanded.not()) {
-        HorizontalDivider(modifier = Modifier.padding(bottom = MaterialTheme.spacing.spaceMedium))
+        HorizontalDivider(
+                modifier = Modifier
+                        .padding(bottom = MaterialTheme.spacing.spaceMedium)
+        )
     }
 }
 
 @Preview
 @Composable
 private fun OrderDetailHeader_Preview() {
+
     LazyPizzaTheme {
         Column(
                 modifier = Modifier

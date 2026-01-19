@@ -21,6 +21,7 @@
     <string name="header_text_order_details">ORDER DETAILS</string>
     <string name="header_text_comments">COMMENTS</string>
 
+
     <!--Caption Texts-->
     <string name="cap_text_no_results">No results found for your query</string>
     <string name="cap_text_empty_cart">Your Cart is Empty</string>
@@ -29,7 +30,8 @@
     <string name="cap_text_not_signed_in">Not Signed In</string>
     <string name="cap_text_no_orders_yet">No Order Yet</string>
     <string name="cap_text_please_sign_in">Please sign in to view your order history.</string>
-    <string name="cap_text_orders_will_appear_here">Your orders will appear here after your first purchase</string>d
+    <string name="cap_text_orders_will_appear_here">Your orders will appear here after your first purchase</string>
+
     <string name="cap_text_welcome">Welcome to LazyPizza</string>
     <string name="cap_text_enter_phone_number">Enter your phone number</string>
     <string name="cap_text_enter_code">Enter code </string>
@@ -41,9 +43,14 @@
     <string name="cap_text_total_amount">Total Amount:</string>
     <string name="cap_text_total_amount_formatted">$%.2f</string>
     <string name="cap_text_order_total">ORDER TOTAL:</string>
+    <string name="cap_text_order_number">ORDER NUMBER:</string>
+    <string name="cap_text_order_pickup_time">PICKUP TIME:</string>
     <string name="cap_text_order_total_amount">$%.2f</string>
     <string name="cap_text_pickup_available_time">Pickup available between 10:15 and 21:45</string>
     <string name="cap_text_pickup_possible_time">Pickup is possible at least 15 minutes from the current time</string>
+    <string name="cap_text_order_placed">Your order has been placed!</string>
+    <string name="cap_text_order_confirmation">Thank you for your order! Please come at
+the indicated time.</string>
 
 
     <!--Label Texts-->
@@ -65,10 +72,12 @@
     <string name="btn_text_place_order">Place Order</string>
     <string name="btn_text_ok">Ok</string>
 
+
     <!--Text Button Texts-->
     <string name="txt_btn_cancel">Cancel</string>
     <string name="txt_btn_continue_without_sign_in">Continue without signing in</string>
     <string name="txt_btn_resend">Resend</string>
+    <string name="txt_btn_back_to_menu">Back To Menu</string>
 
 
     <!--Content Description Texts-->

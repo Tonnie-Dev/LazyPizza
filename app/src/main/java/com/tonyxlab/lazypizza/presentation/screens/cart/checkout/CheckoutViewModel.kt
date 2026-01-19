@@ -69,6 +69,8 @@ class CheckoutViewModel(
             CheckoutUiEvent.GoBack -> {
                 sendActionEvent(CheckoutActionEvent.NavigateBack)
             }
+
+            CheckoutUiEvent.ExitCheckout -> {}
         }
     }
 
