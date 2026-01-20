@@ -4,7 +4,6 @@ package com.tonyxlab.lazypizza.presentation.screens.cart.checkout
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.viewModelScope
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.extensions.calculateTotal
@@ -15,9 +14,11 @@ import com.tonyxlab.lazypizza.domain.model.toCartItem
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutActionEvent
+import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutStep
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiState
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.PickupTimeOption
+import com.tonyxlab.lazypizza.utils.generateOrderNumber
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -33,7 +34,6 @@ class CheckoutViewModel(
 ) : CheckoutBaseViewModel() {
 
     override val initialState: CheckoutUiState
-
         get() = CheckoutUiState()
 
     init {
@@ -64,16 +64,17 @@ class CheckoutViewModel(
                 addItem(event.addOnItem)
             }
 
-            CheckoutUiEvent.PlaceOrder -> {}
+            CheckoutUiEvent.PlaceOrder -> placeOrder()
 
             CheckoutUiEvent.GoBack -> {
                 sendActionEvent(CheckoutActionEvent.NavigateBack)
             }
 
-            CheckoutUiEvent.ExitCheckout -> {}
+            CheckoutUiEvent.ExitCheckout -> {
+                sendActionEvent(CheckoutActionEvent.ExitCheckout)
+            }
         }
     }
-
 
     private fun observeCart() {
         repository.cartItems.onEach { cartItems ->
@@ -89,8 +90,6 @@ class CheckoutViewModel(
         }
                 .launchIn(viewModelScope)
     }
-
-
 
     private fun expandOrderDetails() {
         updateState { it.copy(expanded = true) }
@@ -277,6 +276,16 @@ class CheckoutViewModel(
                 }
                 delay(30_000)
             }
+        }
+    }
+
+    private fun placeOrder() {
+
+        updateState {
+            it.copy(
+                    checkoutStep = CheckoutStep.STEP_CONFIRMATION,
+                    orderNumber = generateOrderNumber()
+            )
         }
     }
 

@@ -151,18 +151,7 @@ fun PickupTimeSection(
             )
 
             Text(
-                    text = when (uiState.dateTimePickerState.pickupTimeOption) {
-
-                        PickupTimeOption.EARLIEST -> uiState.dateTimePickerState
-                                .earliestPickupTime
-                                .toPickupTimeDisplayString()
-
-                        PickupTimeOption.SCHEDULED -> formatSelectedPickupTime(
-                                uiState.dateTimePickerState.selectedDate,
-                                uiState.dateTimePickerState.selectedTime
-                        )
-
-                    },
+                    text =formatPickupTime(uiState = uiState),
                     style = headerTextStyle,
                     color = MaterialTheme.colorScheme.onSurface
             )
@@ -228,6 +217,21 @@ private fun TimeSlotItem(
     }
 }
 
+@Composable
+private fun formatPickupTime(uiState: CheckoutUiState): String {
+    return when (uiState.dateTimePickerState.pickupTimeOption) {
+
+        PickupTimeOption.EARLIEST -> uiState.dateTimePickerState
+                .earliestPickupTime
+                .toPickupTimeDisplayString()
+
+        PickupTimeOption.SCHEDULED -> formatSelectedPickupTime(
+                uiState.dateTimePickerState.selectedDate,
+                uiState.dateTimePickerState.selectedTime
+        )
+
+    }
+}
 @Preview
 @Composable
 private fun PickupTimeSection_Preview() {

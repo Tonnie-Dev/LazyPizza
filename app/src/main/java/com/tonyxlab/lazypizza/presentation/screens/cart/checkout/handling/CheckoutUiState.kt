@@ -1,7 +1,5 @@
 @file:RequiresApi(Build.VERSION_CODES.O)
 
-
-
 package com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling
 
 import android.os.Build
@@ -22,11 +20,13 @@ data class CheckoutUiState(
     val textFieldState: TextFieldState = TextFieldState(),
     val expanded: Boolean = false,
     val totalAmount: Double = 0.0,
-    val dateTimePickerState: DateTimePickerState = DateTimePickerState()
+    val dateTimePickerState: DateTimePickerState = DateTimePickerState(),
+    val checkoutStep: CheckoutStep = CheckoutStep.STEP_CHECKOUT,
+        val orderNumber: String = ""
 
 ) : UiState {
 
-    data class DateTimePickerState (
+    data class DateTimePickerState(
         val pickupTimeOption: PickupTimeOption = PickupTimeOption.EARLIEST,
 
         val earliestPickupTime: LocalDateTime = LocalDateTime.now(),
@@ -45,3 +45,5 @@ data class CheckoutUiState(
 }
 
 enum class PickupTimeOption { EARLIEST, SCHEDULED }
+
+enum class CheckoutStep { STEP_CHECKOUT, STEP_CONFIRMATION }

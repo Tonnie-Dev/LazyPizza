@@ -15,11 +15,11 @@ fun LocalDateTime.toFormattedDate(): String {
     return formatter.format(this)
 }
 
-fun LocalDateTime.toPickupTimeDisplayString(): String {
+fun LocalDateTime.toPickupTimeDisplayString(isFullDate: Boolean = false): String {
 
     val today = LocalDate.now()
 
-    val pattern = if (toLocalDate() == today) {
+    val pattern = if (toLocalDate() == today && isFullDate.not()) {
 
         "HH:mm"
     } else {
