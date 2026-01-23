@@ -19,7 +19,7 @@ class HistoryViewModel(
     private val authRepository: AuthRepository
 ) : HistoryBaseViewModel() {
 
-    val cartItems = cartRepository.cartItems
+    val cartItems = cartRepository.menuItems
 
     init {
         observeCount()
@@ -43,7 +43,7 @@ class HistoryViewModel(
 
     private fun observeCount() {
 
-        cartRepository.cartItems.map { items -> items.sumOf { it.counter } }
+        cartRepository.menuItems.map { items -> items.sumOf { it.counter } }
                 .onEach { count ->
                     updateState { it.copy(badgeCount = count) }
                 }

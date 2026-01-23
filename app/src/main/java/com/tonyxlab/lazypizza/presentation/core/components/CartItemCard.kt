@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import com.tonyxlab.lazypizza.R
-import com.tonyxlab.lazypizza.domain.model.CartItem
+import com.tonyxlab.lazypizza.domain.model.MenuItem
 import com.tonyxlab.lazypizza.domain.model.ProductType
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.theme.Body1Medium
@@ -38,16 +38,16 @@ import com.tonyxlab.lazypizza.presentation.theme.Body4Regular
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.presentation.theme.Title1SemiBold
 import com.tonyxlab.lazypizza.presentation.theme.VerticalRoundedCornerShape12
-import com.tonyxlab.lazypizza.utils.cartItemsMock
+import com.tonyxlab.lazypizza.utils.menuItemsMocks
 
 @Composable
 fun CartItemCard(
-    cartItem: CartItem,
-    cartItems: List<CartItem>,
+    menuItem: MenuItem,
+    menuItems: List<MenuItem>,
     cartItemActions: CartItemActions,
     modifier: Modifier = Modifier
 ) {
-    val counter = cartItems.counterFor(cartItem)
+    val counter = menuItems.counterFor(menuItem)
 
     Card(
             modifier = modifier
@@ -73,14 +73,14 @@ fun CartItemCard(
                     modifier = Modifier
                             .weight(.3f)
                             .fillMaxHeight(),
-                    imageUrl = cartItem.imageUrl,
+                    imageUrl = menuItem.imageUrl,
                     shape = MaterialTheme.shapes.VerticalRoundedCornerShape12,
                     backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
                     fallbackDrawableRes = R.drawable.drink_seven
             )
             CartItemBody(
                     modifier = Modifier.weight(.7f),
-                    cartItem = cartItem,
+                    menuItem = menuItem,
                     counter = counter,
                     actions = cartItemActions
             )
@@ -90,7 +90,7 @@ fun CartItemCard(
 
 @Composable
 private fun CartItemBody(
-    cartItem: CartItem,
+    menuItem: MenuItem,
     counter: Int,
     actions: CartItemActions,
     modifier: Modifier = Modifier,
@@ -108,7 +108,7 @@ private fun CartItemBody(
             ) {
 
                 Text(
-                        text = cartItem.name,
+                        text = menuItem.name,
                         style = MaterialTheme.typography.Body1Medium.copy(
                                 color = MaterialTheme.colorScheme.onSurface,
                                 fontWeight = FontWeight.W700
@@ -125,7 +125,7 @@ private fun CartItemBody(
                                 )
                                 .size(MaterialTheme.spacing.spaceDoubleDp * 11)
                                 .clickable {
-                                    actions.onRemove(cartItem)
+                                    actions.onRemove(menuItem)
                                 }, contentAlignment = Alignment.Center
                 ) {
 
@@ -137,10 +137,10 @@ private fun CartItemBody(
                 }
             }
 
-            if (cartItem.productType == ProductType.PIZZA && cartItem.toppings.isNotEmpty()) {
+            if (menuItem.productType == ProductType.PIZZA && menuItem.toppings.isNotEmpty()) {
 
                 Column {
-                    cartItem.toppings.fastForEach { topping ->
+                    menuItem.toppings.fastForEach { topping ->
 
                         Text(
                                 text = "${topping.counter} x ${topping.toppingName}",
@@ -162,8 +162,8 @@ private fun CartItemBody(
 
             CounterItem(
                     modifier = Modifier.weight(1f),
-                    onAdd = { actions.onIncrement(cartItem) },
-                    onRemove = { actions.onDecrement(cartItem) },
+                    onAdd = { actions.onIncrement(menuItem) },
+                    onRemove = { actions.onDecrement(menuItem) },
                     counter = counter,
                     maxCount = 5,
                     minCount = 1
@@ -176,7 +176,7 @@ private fun CartItemBody(
                 Text(
                         text = stringResource(
                                 id = R.string.dollar_price_tag,
-                                cartItem.totalPrice()
+                                menuItem.totalPrice()
                         ),
                         style = MaterialTheme.typography.Title1SemiBold.copy(
                                 color = MaterialTheme.colorScheme.onSurface
@@ -185,7 +185,7 @@ private fun CartItemBody(
 
                 Text(
                         text = stringResource(
-                                id = R.string.counter_price_tag, counter, cartItem.unitTotalPrice()
+                                id = R.string.counter_price_tag, counter, menuItem.unitTotalPrice()
                         ), style = MaterialTheme.typography.Body4Regular.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -196,33 +196,33 @@ private fun CartItemBody(
 }
 
 data class CartItemActions(
-    val onIncrement: (CartItem) -> Unit,
-    val onDecrement: (CartItem) -> Unit,
-    val onRemove: (CartItem) -> Unit,
+    val onIncrement: (MenuItem) -> Unit,
+    val onDecrement: (MenuItem) -> Unit,
+    val onRemove: (MenuItem) -> Unit,
 )
 
-val CartItem.uniqueKey
+val MenuItem.uniqueKey
     get() = listOf(
             id.toString(),
             toppings.sortedBy { it.id }
                     .joinToString(separator = "|") { "${it.id}x${it.counter}" })
             .joinToString("-")
 
-private fun List<CartItem>.counterFor(cartItem: CartItem): Int =
-    firstOrNull { it.uniqueKey == cartItem.uniqueKey }?.counter ?: 1
+private fun List<MenuItem>.counterFor(menuItem: MenuItem): Int =
+    firstOrNull { it.uniqueKey == menuItem.uniqueKey }?.counter ?: 1
 
-private fun CartItem.unitTotalPrice(): Double {
+private fun MenuItem.unitTotalPrice(): Double {
     val toppingsTotalPrice = toppings.sumOf { it.toppingPrice * it.counter }
     return unitPrice + toppingsTotalPrice
 }
 
-private fun CartItem.totalPrice() = unitTotalPrice() * counter
+private fun MenuItem.totalPrice() = unitTotalPrice() * counter
 
 @PreviewLightDark
 @Composable
 private fun CartItemCard_Preview() {
 
-    val cartItems = cartItemsMock
+    val cartItems = menuItemsMocks
     LazyPizzaTheme {
         Column(
                 modifier = Modifier.background(MaterialTheme.colorScheme.background),
@@ -230,8 +230,8 @@ private fun CartItemCard_Preview() {
         ) {
             cartItems.forEach { item ->
                 CartItemCard(
-                        cartItem = item,
-                        cartItems = cartItems,
+                        menuItem = item,
+                        menuItems = cartItems,
                         cartItemActions = CartItemActions(
                                 onIncrement = {},
                                 onDecrement = {},

@@ -48,7 +48,8 @@ import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.Checko
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiState
 import com.tonyxlab.lazypizza.presentation.theme.HorizontalRoundedCornerShape24
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
-import com.tonyxlab.lazypizza.utils.cartItemsMock
+import com.tonyxlab.lazypizza.utils.menuItemsMocks
+import com.tonyxlab.lazypizza.utils.ifThen
 import com.tonyxlab.lazypizza.utils.rememberIsDeviceWide
 
 @Composable
@@ -142,12 +143,12 @@ fun CheckoutFormContent(
 
             if (uiState.expanded) {
                 items(
-                        items = uiState.cartItems,
+                        items = uiState.menuItems,
                         key = { it.uniqueKey }
                 ) { cartItem ->
                     CartItemCard(
-                            cartItem = cartItem,
-                            cartItems = uiState.cartItems,
+                            menuItem = cartItem,
+                            menuItems = uiState.menuItems,
                             cartItemActions = cartItemActions
                     )
                 }
@@ -167,7 +168,15 @@ fun CheckoutFormContent(
             }
 
             item {
-                Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceOneTwenty))
+                Spacer(modifier = Modifier.ifThen(uiState.expanded){
+
+                    height(MaterialTheme.spacing.spaceOneHundredFifty)
+                }.ifThen(uiState.expanded.not()){
+
+
+                    height(MaterialTheme.spacing.spaceOneHundred)
+                })
+
             }
 
         }
@@ -212,7 +221,7 @@ private fun CheckoutForm_Preview() {
                     modifier = Modifier
                             .fillMaxSize(),
                     uiState = CheckoutUiState(
-                            cartItems = cartItemsMock,
+                            menuItems = menuItemsMocks,
                             expanded = true
                     ),
                     onEvent = {},

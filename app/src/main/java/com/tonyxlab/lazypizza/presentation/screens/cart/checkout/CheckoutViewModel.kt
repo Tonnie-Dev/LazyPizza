@@ -9,7 +9,7 @@ import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.extensions.calculateTotal
 import com.tonyxlab.lazypizza.domain.extensions.extractRecommendedAddOnItems
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
-import com.tonyxlab.lazypizza.domain.model.CartItem
+import com.tonyxlab.lazypizza.domain.model.MenuItem
 import com.tonyxlab.lazypizza.domain.model.toCartItem
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
@@ -47,9 +47,9 @@ class CheckoutViewModel(
             CheckoutUiEvent.ExpandOrder -> expandOrderDetails()
             CheckoutUiEvent.CollapseOrder -> collapseOrderDetails()
 
-            is CheckoutUiEvent.IncrementQuantity -> incrementQuantity(event.cartItem)
-            is CheckoutUiEvent.DecrementQuantity -> decrementQuantity(event.cartItem)
-            is CheckoutUiEvent.RemoveItem -> removeCartItem(event.cartItem)
+            is CheckoutUiEvent.IncrementQuantity -> incrementQuantity(event.menuItem)
+            is CheckoutUiEvent.DecrementQuantity -> decrementQuantity(event.menuItem)
+            is CheckoutUiEvent.RemoveItem -> removeCartItem(event.menuItem)
 
             CheckoutUiEvent.OpenDatePicker -> openDatePicker()
             CheckoutUiEvent.OpenTimePicker -> openTimePicker()
@@ -77,11 +77,11 @@ class CheckoutViewModel(
     }
 
     private fun observeCart() {
-        repository.cartItems.onEach { cartItems ->
+        repository.menuItems.onEach { cartItems ->
             with(cartItems) {
                 updateState {
                     it.copy(
-                            cartItems = this,
+                            menuItems = this,
                             totalAmount = calculateTotal(),
                             suggestedAddOnItems = extractRecommendedAddOnItems()
                     )
@@ -99,21 +99,21 @@ class CheckoutViewModel(
         updateState { it.copy(expanded = false) }
     }
 
-    private fun incrementQuantity(cartItem: CartItem) {
+    private fun incrementQuantity(menuItem: MenuItem) {
         launch {
 
             repository.updateCount(
-                    cartItem = cartItem,
-                    newCount = cartItem.counter + 1
+                    menuItem = menuItem,
+                    newCount = menuItem.counter + 1
             )
         }
     }
 
-    private fun decrementQuantity(cartItem: CartItem) {
+    private fun decrementQuantity(menuItem: MenuItem) {
         launch {
             repository.updateCount(
-                    cartItem = cartItem,
-                    newCount = (cartItem.counter - 1)
+                    menuItem = menuItem,
+                    newCount = (menuItem.counter - 1)
                             .coerceAtLeast(minimumValue = 1)
             )
         }
@@ -121,13 +121,13 @@ class CheckoutViewModel(
 
     private fun addItem(addOnItem: AddOnItem) {
         launch {
-            repository.addItem(cartItem = addOnItem.toCartItem())
+            repository.addItem(menuItem = addOnItem.toCartItem())
         }
     }
 
-    private fun removeCartItem(cartItem: CartItem) {
+    private fun removeCartItem(menuItem: MenuItem) {
         launch {
-            repository.removeItem(cartItem)
+            repository.removeItem(menuItem)
         }
     }
 

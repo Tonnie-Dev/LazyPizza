@@ -22,7 +22,7 @@ import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.Checko
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiState
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
-import com.tonyxlab.lazypizza.utils.cartItemsMock
+import com.tonyxlab.lazypizza.utils.menuItemsMocks
 import com.tonyxlab.lazypizza.utils.rememberIsDeviceWide
 import org.koin.androidx.compose.koinViewModel
 
@@ -113,7 +113,7 @@ private fun CheckoutScreenContent_Preview() {
                     modifier = Modifier
                             .fillMaxSize(),
                     uiState = CheckoutUiState(
-                            cartItems = cartItemsMock,
+                            menuItems = menuItemsMocks,
                             expanded = true
                     ),
                     onEvent = {},

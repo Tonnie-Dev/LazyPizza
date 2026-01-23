@@ -6,7 +6,7 @@ import com.tonyxlab.lazypizza.data.local.database.LazyPizzaDatabase
 import com.tonyxlab.lazypizza.data.local.database.mappers.toEntity
 import com.tonyxlab.lazypizza.data.local.database.mappers.toModel
 import com.tonyxlab.lazypizza.data.local.database.mappers.toToppingEntities
-import com.tonyxlab.lazypizza.domain.model.CartItem
+import com.tonyxlab.lazypizza.domain.model.MenuItem
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -16,11 +16,11 @@ class CartRepositoryImpl(
     private val database: LazyPizzaDatabase,
 ) : CartRepository {
 
-    override val cartItems: Flow<List<CartItem>> = dao
+    override val menuItems: Flow<List<MenuItem>> = dao
             .getCartItemsFlow()
             .map { entities -> entities.map { it.toModel() } }
 
-    override suspend fun addItem(cartItem: CartItem) {
+    override suspend fun addItem(menuItem: MenuItem) {
 
         database.withTransaction {
 
@@ -31,13 +31,13 @@ class CartRepositoryImpl(
             val match = existingItems.firstOrNull { cartItemWithTopping ->
                 cartItemWithTopping
                         .toModel()
-                        .isSameAs(cartItem)
+                        .isSameAs(menuItem)
             }
 
             // 3. If item exists, update counter
             if (match != null) {
 
-                val safeCount = (match.cartItem.counter + cartItem.counter)
+                val safeCount = (match.cartItem.counter + menuItem.counter)
                         .coerceAtMost(5)
 
                 dao.upsertCartItem(
@@ -51,17 +51,17 @@ class CartRepositoryImpl(
 
                 // 5. First insert the Cart Items
                 val insertedEntityId = dao.upsertCartItem(
-                        cartItemEntity = cartItem.toEntity()
+                        cartItemEntity = menuItem.toEntity()
                 )
 
                 // 6. Insert the Toppings
-                cartItem.toppings.ifEmpty { return@withTransaction }
-                dao.upsertToppings(cartItem.toToppingEntities(insertedEntityId))
+                menuItem.toppings.ifEmpty { return@withTransaction }
+                dao.upsertToppings(menuItem.toToppingEntities(insertedEntityId))
             }
         }
     }
 
-    override suspend fun updateCount(cartItem: CartItem, newCount: Int) {
+    override suspend fun updateCount(menuItem: MenuItem, newCount: Int) {
 
         val safeCount = newCount.coerceIn(1, 5)
         database.withTransaction {
@@ -69,7 +69,7 @@ class CartRepositoryImpl(
             val items = dao.getCartItemsList()
             val match = items.firstOrNull {
                 it.toModel()
-                        .isSameAs(cartItem)
+                        .isSameAs(menuItem)
             } ?: return@withTransaction
 
             if (newCount <= 0) {
@@ -80,13 +80,13 @@ class CartRepositoryImpl(
         }
     }
 
-    override suspend fun removeItem(cartItem: CartItem) {
+    override suspend fun removeItem(menuItem: MenuItem) {
 
         val items = dao.getCartItemsList()
 
         val match = items.firstOrNull {
             it.toModel()
-                    .isSameAs(cartItem)
+                    .isSameAs(menuItem)
         } ?: return
 
         dao.deleteCartItemById(match.cartItem)
@@ -98,7 +98,7 @@ class CartRepositoryImpl(
         }
     }
 
-    private fun CartItem.isSameAs(other: CartItem): Boolean {
+    private fun MenuItem.isSameAs(other: MenuItem): Boolean {
         if (this.id != other.id) return false
 
         val thisToppings =

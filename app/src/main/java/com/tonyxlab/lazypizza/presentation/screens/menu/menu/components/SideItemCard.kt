@@ -28,7 +28,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
-import com.tonyxlab.lazypizza.domain.model.CartItem
+import com.tonyxlab.lazypizza.domain.model.MenuItem
 import com.tonyxlab.lazypizza.presentation.core.components.AppButton
 import com.tonyxlab.lazypizza.presentation.core.components.CounterItem
 import com.tonyxlab.lazypizza.presentation.core.components.DisplayImage
@@ -51,8 +51,8 @@ fun SideItemCard(
     modifier: Modifier = Modifier
 ) {
 
-    val counter = uiState.cartItems.counterFor(addOnItem)
-    val selected = uiState.cartItems.isSelected(addOnItem)
+    val counter = uiState.menuItems.counterFor(addOnItem)
+    val selected = uiState.menuItems.isSelected(addOnItem)
 
     Card(
             modifier = modifier
@@ -245,10 +245,10 @@ private fun SideItemCard_Preview() {
     }
 }
 
-private fun List<CartItem>.counterFor(addOnItem: AddOnItem) =
+private fun List<MenuItem>.counterFor(addOnItem: AddOnItem) =
     find { it.id == addOnItem.id }?.counter ?: 0
 
-private fun List<CartItem>.isSelected(addOnItem: AddOnItem): Boolean =
+private fun List<MenuItem>.isSelected(addOnItem: AddOnItem): Boolean =
     any { it.id == addOnItem.id }
 
 

@@ -1,11 +1,11 @@
 package com.tonyxlab.lazypizza.domain.extensions
 
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
-import com.tonyxlab.lazypizza.domain.model.CartItem
+import com.tonyxlab.lazypizza.domain.model.MenuItem
 import com.tonyxlab.lazypizza.domain.model.ProductType
 import com.tonyxlab.lazypizza.utils.getMockAddOnItems
 
-fun List<CartItem>.calculateTotal(): Double {
+fun List<MenuItem>.calculateTotal(): Double {
     val baseAmountPlusToppingsAmount = sumOf { cartItem ->
         val toppingsTotal = cartItem.toppings.sumOf { topping ->
             topping.toppingPrice * topping.counter
@@ -16,7 +16,7 @@ fun List<CartItem>.calculateTotal(): Double {
     return baseAmountPlusToppingsAmount
 }
 
-fun List<CartItem>.extractRecommendedAddOnItems(): List<AddOnItem> {
+fun List<MenuItem>.extractRecommendedAddOnItems(): List<AddOnItem> {
     val selectableItemIds = filterNot { it.productType == ProductType.PIZZA }
             .map { it.id }
             .toSet()

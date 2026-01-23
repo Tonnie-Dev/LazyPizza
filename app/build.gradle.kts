@@ -45,11 +45,11 @@ android {
     }
 }
 
-    tasks.register("printVersionCodeAndName") {
-        doLast {
-            println("VERSION_CODE=${android.defaultConfig.versionCode}")
-            println("VERSION_NAME=${android.defaultConfig.versionName}")
-        }
+tasks.register("printVersionCodeAndName") {
+    doLast {
+        println("VERSION_CODE=${android.defaultConfig.versionCode}")
+        println("VERSION_NAME=${android.defaultConfig.versionName}")
+    }
 }
 
 dependencies {
@@ -104,15 +104,16 @@ dependencies {
     // Accompanist Permissions
     implementation(Google.accompanist.permissions)
 
-    // Coroutines Play Services
-    implementation(KotlinX.coroutines.playServices)
-
     // Logging
     implementation(JakeWharton.timber)
 
     // Firebase
     implementation(platform(Google.firebase.bom))
     implementation(Google.firebase.authentication)
+    implementation(Google.firebase.cloudFirestore)
+
+    // Coroutines Play Services
+    implementation(KotlinX.coroutines.playServices)
 
     // Play Services
     implementation(Google.android.playServices.auth.apiPhone)

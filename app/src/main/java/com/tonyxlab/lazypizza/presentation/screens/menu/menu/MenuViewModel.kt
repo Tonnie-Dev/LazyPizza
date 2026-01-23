@@ -61,13 +61,13 @@ class MenuViewModel(
 
     private fun observeCart() {
 
-        cartRepository.cartItems.map { items ->
+        cartRepository.menuItems.map { items ->
             val count = items.sumOf { it.counter }
             items to count
         }
                 .onEach { (items, count) ->
 
-                    updateState { it.copy(cartItems = items, badgeCount = count) }
+                    updateState { it.copy(menuItems = items, badgeCount = count) }
                 }
                 .launchIn(viewModelScope)
     }
@@ -164,25 +164,25 @@ class MenuViewModel(
 
     private fun incrementCount(addOnItem: AddOnItem) {
 
-        val currentCount = currentState.cartItems.find { it.id == addOnItem.id }?.counter ?: 0
+        val currentCount = currentState.menuItems.find { it.id == addOnItem.id }?.counter ?: 0
 
         val newCount = currentCount.plus(1)
                 .coerceAtMost(5)
         launch {
 
-            cartRepository.updateCount(cartItem = addOnItem.toCartItem(), newCount = newCount)
+            cartRepository.updateCount(menuItem = addOnItem.toCartItem(), newCount = newCount)
         }
     }
 
     private fun decrementCount(addOnItem: AddOnItem) {
 
-        val currentCount = currentState.cartItems.find { it.id == addOnItem.id }?.counter ?: 0
+        val currentCount = currentState.menuItems.find { it.id == addOnItem.id }?.counter ?: 0
 
         val newCount = currentCount.minus(1)
                 .coerceAtLeast(0)
         launch {
 
-            cartRepository.updateCount(cartItem = addOnItem.toCartItem(), newCount = newCount)
+            cartRepository.updateCount(menuItem = addOnItem.toCartItem(), newCount = newCount)
         }
 
     }

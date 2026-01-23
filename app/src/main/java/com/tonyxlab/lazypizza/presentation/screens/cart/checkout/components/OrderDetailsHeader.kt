@@ -35,7 +35,7 @@ import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.Checko
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiState
 import com.tonyxlab.lazypizza.presentation.theme.Label2SemiBold
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
-import com.tonyxlab.lazypizza.utils.cartItemsMock
+import com.tonyxlab.lazypizza.utils.menuItemsMocks
 
 @Composable
 fun OrderDetailsHeader(
@@ -111,7 +111,7 @@ private fun OrderDetailHeader_Preview() {
                         .padding(MaterialTheme.spacing.spaceMedium)
         ) {
             OrderDetailsHeader(
-                    uiState = CheckoutUiState(expanded = true, cartItems = cartItemsMock),
+                    uiState = CheckoutUiState(expanded = true, menuItems = menuItemsMocks),
                     onEvent = {},
             )
         }

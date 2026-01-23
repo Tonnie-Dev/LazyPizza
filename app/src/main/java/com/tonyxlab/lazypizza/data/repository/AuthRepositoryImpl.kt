@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
 import com.tonyxlab.lazypizza.domain.firebase.AuthState
 import com.tonyxlab.lazypizza.domain.model.AuthUser
 import com.tonyxlab.lazypizza.domain.model.toAuthUser

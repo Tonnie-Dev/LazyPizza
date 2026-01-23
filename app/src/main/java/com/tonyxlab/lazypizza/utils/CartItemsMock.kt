@@ -1,15 +1,14 @@
 package com.tonyxlab.lazypizza.utils
 
-import com.tonyxlab.lazypizza.domain.model.CartItem
-import com.tonyxlab.lazypizza.domain.model.Category
+import com.tonyxlab.lazypizza.domain.model.MenuItem
 import com.tonyxlab.lazypizza.domain.model.ProductType
 import com.tonyxlab.lazypizza.domain.model.Topping
 
-val cartItemsMock = listOf(
+val menuItemsMocks = listOf(
 
         // -------------------- PIZZAS --------------------
 
-        CartItem(
+        MenuItem(
                 id = 1L,
                 name = "Margherita",
                 imageUrl = "margherita.png",
@@ -25,7 +24,7 @@ val cartItemsMock = listOf(
 
         ),
 
-        CartItem(
+        MenuItem(
                 id = 2L,
                 name = "Pepperoni",
                 imageUrl = "pepperoni.png",
@@ -39,7 +38,7 @@ val cartItemsMock = listOf(
 
         ),
 
-        CartItem(
+        MenuItem(
                 id = 6L,
                 name = "Four Cheese",
                 imageUrl = "four-cheese.png",
@@ -50,7 +49,7 @@ val cartItemsMock = listOf(
 
         ),
 
-        CartItem(
+        MenuItem(
                 id = 8L,
                 name = "Truffle Mushroom",
                 imageUrl = "truffle-mushroom.png",
@@ -65,7 +64,7 @@ val cartItemsMock = listOf(
 
         // -------------------- DRINKS --------------------
 
-        CartItem(
+        MenuItem(
                 id = 11L,
                 name = "Pepsi",
                 imageUrl = "pepsi.png",
@@ -76,7 +75,7 @@ val cartItemsMock = listOf(
 
         ),
 
-        CartItem(
+        MenuItem(
                 id = 12L,
                 name = "Orange Juice",
                 imageUrl = "orange_juice.png",
@@ -89,7 +88,7 @@ val cartItemsMock = listOf(
 
         // -------------------- SAUCES --------------------
 
-        CartItem(
+        MenuItem(
                 id = 15L,
                 name = "Garlic Sauce",
                 imageUrl = "garlic_sauce.png",
@@ -100,7 +99,7 @@ val cartItemsMock = listOf(
 
         ),
 
-        CartItem(
+        MenuItem(
                 id = 17L,
                 name = "Cheese Sauce",
                 imageUrl = "cheese_sauce.png",
@@ -113,7 +112,7 @@ val cartItemsMock = listOf(
 
         // -------------------- ICE CREAM --------------------
 
-        CartItem(
+        MenuItem(
                 id = 22L,
                 name = "Cookies Ice Cream",
                 imageUrl = "cookies_cream.png",
@@ -124,7 +123,7 @@ val cartItemsMock = listOf(
 
         ),
 
-        CartItem(
+        MenuItem(
                 id = 24L,
                 name = "Mango Sorbet",
                 imageUrl = "mango_sorbet.png",

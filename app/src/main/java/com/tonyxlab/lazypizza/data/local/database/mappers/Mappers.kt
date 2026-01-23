@@ -3,10 +3,10 @@ package com.tonyxlab.lazypizza.data.local.database.mappers
 import com.tonyxlab.lazypizza.data.local.database.entity.CartItemEntity
 import com.tonyxlab.lazypizza.data.local.database.entity.CartItemWithTopping
 import com.tonyxlab.lazypizza.data.local.database.entity.ToppingEntity
-import com.tonyxlab.lazypizza.domain.model.CartItem
+import com.tonyxlab.lazypizza.domain.model.MenuItem
 import com.tonyxlab.lazypizza.domain.model.Topping
 
-fun CartItem.toEntity(): CartItemEntity =
+fun MenuItem.toEntity(): CartItemEntity =
     CartItemEntity(
             productType = productType,
             productId = id,
@@ -16,7 +16,7 @@ fun CartItem.toEntity(): CartItemEntity =
             counter = counter,
     )
 
-fun CartItem.toToppingEntities(cartItemId: Long): List<ToppingEntity> =
+fun MenuItem.toToppingEntities(cartItemId: Long): List<ToppingEntity> =
     toppings.map { topping ->
 
         with(topping) {
@@ -40,8 +40,8 @@ fun ToppingEntity.toModel(): Topping =
             counter = counter
     )
 
-fun CartItemWithTopping.toModel(): CartItem =
-    CartItem(
+fun CartItemWithTopping.toModel(): MenuItem =
+    MenuItem(
             id = cartItem.productId,
             name = cartItem.name,
             imageUrl = cartItem.imageUrl,

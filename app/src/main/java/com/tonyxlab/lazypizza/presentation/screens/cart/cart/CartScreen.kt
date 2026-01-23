@@ -207,7 +207,7 @@ private fun CartScreenContentNarrow(
             finishedListener = {hasAnimated = true}
     )
 
-    if (uiState.cartItems.isEmpty()) {
+    if (uiState.menuItems.isEmpty()) {
 
         EmptyScreenContent(
                 modifier = Modifier
@@ -237,15 +237,15 @@ private fun CartScreenContentNarrow(
         ) {
 
             items(
-                    items = uiState.cartItems,
+                    items = uiState.menuItems,
                     key = { it.uniqueKey }
             ) { item ->
                 CartItemCard(
                         modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = MaterialTheme.spacing.spaceSmall),
-                        cartItem = item,
-                        cartItems = uiState.cartItems,
+                        menuItem = item,
+                        menuItems = uiState.menuItems,
                         cartItemActions = cartItemActions
                 )
             }
@@ -287,7 +287,7 @@ private fun CartScreenContentWide(
             label = "CheckoutTotalAnimation"
     )
 
-    if (uiState.cartItems.isEmpty()) {
+    if (uiState.menuItems.isEmpty()) {
 
         EmptyScreenContent(
                 modifier = Modifier
@@ -318,15 +318,15 @@ private fun CartScreenContentWide(
         ) {
 
             items(
-                    items = uiState.cartItems,
+                    items = uiState.menuItems,
                     key = { it.uniqueKey }
             ) { item ->
                 CartItemCard(
                         modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = MaterialTheme.spacing.spaceSmall),
-                        cartItem = item,
-                        cartItems = uiState.cartItems,
+                        menuItem = item,
+                        menuItems = uiState.menuItems,
                         cartItemActions = cartItemActions
                 )
             }
