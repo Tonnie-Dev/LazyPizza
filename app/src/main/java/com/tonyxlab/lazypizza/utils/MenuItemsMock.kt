@@ -17,12 +17,11 @@ val menuItemsMocks = listOf(
                 toppings = listOf(
                         Topping(1L, "Extra Cheese", 1.49, "cheese.png", 1),
                         Topping(2L, "Pepperoni", 1.99, "pepperoni.png", 2),
-                        //  Topping(3L, "Olive", 2.99, "pepperoni.png", 3),
-
-                ),
+                        Topping(3L, "Olive", 2.99, "pepperoni.png", 3),
+                        ),
                 productType = ProductType.PIZZA,
 
-        ),
+                ),
 
         MenuItem(
                 id = 2L,
@@ -35,8 +34,7 @@ val menuItemsMocks = listOf(
                 ),
                 productType = ProductType.PIZZA,
 
-
-        ),
+                ),
 
         MenuItem(
                 id = 6L,
@@ -47,7 +45,7 @@ val menuItemsMocks = listOf(
                 toppings = emptyList(),
                 productType = ProductType.PIZZA,
 
-        ),
+                ),
 
         MenuItem(
                 id = 8L,
@@ -60,7 +58,7 @@ val menuItemsMocks = listOf(
                 ),
                 productType = ProductType.PIZZA,
 
-        ),
+                ),
 
         // -------------------- DRINKS --------------------
 
@@ -73,7 +71,7 @@ val menuItemsMocks = listOf(
                 toppings = emptyList(),
                 productType = ProductType.ADD_ON_ITEM,
 
-        ),
+                ),
 
         MenuItem(
                 id = 12L,
@@ -84,7 +82,7 @@ val menuItemsMocks = listOf(
                 toppings = emptyList(),
                 productType = ProductType.ADD_ON_ITEM,
 
-        ),
+                ),
 
         // -------------------- SAUCES --------------------
 
@@ -97,7 +95,7 @@ val menuItemsMocks = listOf(
                 toppings = emptyList(),
                 productType = ProductType.ADD_ON_ITEM,
 
-        ),
+                ),
 
         MenuItem(
                 id = 17L,
@@ -108,7 +106,7 @@ val menuItemsMocks = listOf(
                 toppings = emptyList(),
                 productType = ProductType.ADD_ON_ITEM,
 
-        ),
+                ),
 
         // -------------------- ICE CREAM --------------------
 
@@ -121,7 +119,7 @@ val menuItemsMocks = listOf(
                 toppings = emptyList(),
                 productType = ProductType.ADD_ON_ITEM,
 
-        ),
+                ),
 
         MenuItem(
                 id = 24L,
@@ -132,5 +130,5 @@ val menuItemsMocks = listOf(
                 toppings = emptyList(),
                 productType = ProductType.ADD_ON_ITEM,
 
-        )
+                )
 )

@@ -2,7 +2,7 @@ package com.tonyxlab.lazypizza.presentation.screens.menu.details
 
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.Topping
-import com.tonyxlab.lazypizza.domain.model.toCartItem
+import com.tonyxlab.lazypizza.domain.model.toMenuItem
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.menu.details.handling.DetailsActionEvent
@@ -55,7 +55,7 @@ class DetailsViewModel(
 
     private fun addPizzaToCart() {
 
-        val cartItem = currentState.pizzaStateItem!!.toCartItem()
+        val cartItem = currentState.pizzaStateItem!!.toMenuItem()
                 .copy(toppings = currentState.selectedToppings.toList())
 
         launch {

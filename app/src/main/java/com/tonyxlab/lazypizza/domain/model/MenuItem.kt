@@ -10,9 +10,17 @@ data class MenuItem(
     val productType: ProductType,
 )
 
-enum class ProductType { PIZZA, ADD_ON_ITEM }
+enum class ProductType { PIZZA, ADD_ON_ITEM;
 
-fun Pizza.toCartItem(): MenuItem {
+    override fun toString(): String {
+        return when{
+
+            this == PIZZA -> "PIZZA"
+            else ->"ADD_ON_ITEM"
+        }
+    }}
+
+fun Pizza.toMenuItem(): MenuItem {
 
     return MenuItem(
             id = id,
@@ -25,7 +33,7 @@ fun Pizza.toCartItem(): MenuItem {
     )
 }
 
-fun AddOnItem.toCartItem(): MenuItem {
+fun AddOnItem.toMenuItem(): MenuItem {
 
     return MenuItem(
             id = id,

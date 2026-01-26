@@ -5,7 +5,7 @@ import com.tonyxlab.lazypizza.domain.extensions.calculateTotal
 import com.tonyxlab.lazypizza.domain.extensions.extractRecommendedAddOnItems
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
 import com.tonyxlab.lazypizza.domain.model.MenuItem
-import com.tonyxlab.lazypizza.domain.model.toCartItem
+import com.tonyxlab.lazypizza.domain.model.toMenuItem
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.handling.CartActionEvent
@@ -103,7 +103,7 @@ class CartViewModel(private val repository: CartRepository) : CartBaseViewModel(
 
     private fun selectAddOn(addOnItem: AddOnItem) {
         launch {
-            repository.addItem(menuItem = addOnItem.toCartItem())
+            repository.addItem(menuItem = addOnItem.toMenuItem())
         }
     }
 

@@ -1,7 +1,10 @@
 package com.tonyxlab.lazypizza.utils
 
+import com.google.firebase.firestore.FirebaseFirestore
+import com.tonyxlab.lazypizza.data.remote.firebase.dto.toDto
 import com.tonyxlab.lazypizza.domain.model.Category
 import com.tonyxlab.lazypizza.domain.model.Pizza
+import kotlinx.coroutines.tasks.await
 
 /**
  * Mock Pizza data for development & preview purposes.
@@ -103,3 +106,17 @@ val mockPizzas = listOf(
  */
 fun Pizza.fullImageUrl(): String =
     "https://pl-coding.com/wp-content/uploads/lazypizza/${category.folderPath}/${imageUrl}"
+
+
+suspend fun seedPizzas(
+    firestore: FirebaseFirestore,
+    pizzas: List<Pizza>
+) {
+    pizzas.forEach { pizza ->
+        firestore
+                .collection("pizzas")
+                .document(pizza.id.toString())
+                .set(pizza.toDto())
+                .await()
+    }
+}

@@ -16,4 +16,6 @@ sealed interface MenuUiEvent : UiEvent {
     data class ResetOrderStatus(val addOnItem: AddOnItem) : MenuUiEvent
     data class IncrementQuantity(val addOnItem: AddOnItem) : MenuUiEvent
     data class DecrementQuantity(val addOnItem: AddOnItem) : MenuUiEvent
+    data object SeedFirestore : MenuUiEvent
+    data object ClearFirestore : MenuUiEvent
 }

@@ -4,10 +4,11 @@ package com.tonyxlab.lazypizza.presentation.screens.menu.menu
 
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.viewModelScope
+import com.tonyxlab.lazypizza.data.remote.firebase.seeder.FirestoreSeeder
 import com.tonyxlab.lazypizza.domain.firebase.AuthState
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
 import com.tonyxlab.lazypizza.domain.model.Category
-import com.tonyxlab.lazypizza.domain.model.toCartItem
+import com.tonyxlab.lazypizza.domain.model.toMenuItem
 import com.tonyxlab.lazypizza.domain.repository.AuthRepository
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
@@ -16,6 +17,7 @@ import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuAction
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuActionEvent.NavigateToDetailsScreen
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuUiState
+import com.tonyxlab.lazypizza.utils.mockPizzas
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -27,7 +29,8 @@ typealias HomeBaseViewModel = BaseViewModel<MenuUiState, MenuUiEvent, MenuAction
 
 class MenuViewModel(
     private val cartRepository: CartRepository,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val firestoreSeeder: FirestoreSeeder
 ) : HomeBaseViewModel() {
 
     init {
@@ -113,6 +116,8 @@ class MenuViewModel(
             MenuUiEvent.ShowLogoutDialog -> showLogoutDialog()
             MenuUiEvent.DismissLogoutDialog -> dismissLogoutDialog()
             MenuUiEvent.ConfirmLogoutDialog -> confirmLogout()
+            MenuUiEvent.SeedFirestore -> seedFirestoreDevSwitch()
+            MenuUiEvent.ClearFirestore -> clearFirestoreDevSwitch()
         }
     }
 
@@ -153,7 +158,7 @@ class MenuViewModel(
 
     private fun addSideItemToCart(addOnItem: AddOnItem) {
 
-        val cartItem = addOnItem.toCartItem()
+        val cartItem = addOnItem.toMenuItem()
 
         launch {
 
@@ -170,7 +175,7 @@ class MenuViewModel(
                 .coerceAtMost(5)
         launch {
 
-            cartRepository.updateCount(menuItem = addOnItem.toCartItem(), newCount = newCount)
+            cartRepository.updateCount(menuItem = addOnItem.toMenuItem(), newCount = newCount)
         }
     }
 
@@ -182,16 +187,16 @@ class MenuViewModel(
                 .coerceAtLeast(0)
         launch {
 
-            cartRepository.updateCount(menuItem = addOnItem.toCartItem(), newCount = newCount)
+            cartRepository.updateCount(menuItem = addOnItem.toMenuItem(), newCount = newCount)
         }
 
     }
 
     private fun removeItemFromCart(addOnItem: AddOnItem) {
-       launch {
+        launch {
 
-           cartRepository.removeItem(addOnItem.toCartItem())
-       }
+            cartRepository.removeItem(addOnItem.toMenuItem())
+        }
     }
 
     private fun dismissLogoutDialog() {
@@ -207,5 +212,17 @@ class MenuViewModel(
     private fun confirmLogout() {
         authRepository.logout()
         updateState { it.copy(showLogoutDialog = false) }
+    }
+
+
+ private fun seedFirestoreDevSwitch() {
+
+     launch { firestoreSeeder.seedPizzas(mockPizzas) }
+ }
+
+
+    private fun clearFirestoreDevSwitch() {
+
+        launch { firestoreSeeder.clearPizzas() }
     }
 }

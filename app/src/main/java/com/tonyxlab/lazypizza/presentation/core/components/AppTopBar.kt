@@ -3,6 +3,7 @@ package com.tonyxlab.lazypizza.presentation.core.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import com.tonyxlab.lazypizza.BuildConfig
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuUiEvent
@@ -57,7 +59,20 @@ fun AppTopBarOne(
             verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
-                modifier = Modifier,
+                modifier = Modifier.combinedClickable(
+
+                        onDoubleClick = {
+                            if (BuildConfig.DEBUG) {
+                                onEvent(MenuUiEvent.SeedFirestore)
+                            }
+                        },
+                        onLongClick = {
+                            if (BuildConfig.DEBUG) {
+                                onEvent(MenuUiEvent.ClearFirestore)
+                            }
+                        },
+                        onClick = {}
+                ),
                 horizontalArrangement = Arrangement.spacedBy(
                         space = MaterialTheme.spacing.spaceDoubleDp * 3
                 )
@@ -241,7 +256,8 @@ fun AppTopBarFour(
                 text = stringResource(id = R.string.topbar_text_order_checkout),
                 style = MaterialTheme.typography.Body1Medium.copy(
                         color = MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.Center)
+                        textAlign = TextAlign.Center
+                )
         )
     }
 }

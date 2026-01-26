@@ -1,9 +1,16 @@
+
+@file:RequiresApi(Build.VERSION_CODES.O)
+
 package com.tonyxlab.lazypizza.di
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.room.Room
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.tonyxlab.lazypizza.data.local.database.LazyPizzaDatabase
 import com.tonyxlab.lazypizza.data.local.datastore.DataStore
+import com.tonyxlab.lazypizza.data.remote.firebase.seeder.FirestoreSeeder
 import com.tonyxlab.lazypizza.data.repository.AuthRepositoryImpl
 import com.tonyxlab.lazypizza.data.repository.CartRepositoryImpl
 import com.tonyxlab.lazypizza.domain.repository.AuthRepository
@@ -11,8 +18,8 @@ import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import com.tonyxlab.lazypizza.presentation.screens.auth.AuthViewModel
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.CartViewModel
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.CheckoutViewModel
-import com.tonyxlab.lazypizza.presentation.screens.menu.details.DetailsViewModel
 import com.tonyxlab.lazypizza.presentation.screens.history.HistoryViewModel
+import com.tonyxlab.lazypizza.presentation.screens.menu.details.DetailsViewModel
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.MenuViewModel
 import com.tonyxlab.lazypizza.utils.Constants
 import kotlinx.coroutines.CoroutineScope
@@ -33,6 +40,8 @@ val viewModelModule = module {
 
 val firebaseModule = module {
     single { FirebaseAuth.getInstance() }
+    single { FirebaseFirestore.getInstance() }
+    single { FirestoreSeeder(get()) }
 }
 
 val dataStoreModule = module {
@@ -44,6 +53,7 @@ val coroutineModule = module {
         CoroutineScope(SupervisorJob() + Dispatchers.IO)
     }
 }
+
 val repositoryModule = module {
     single<CartRepository> {
         CartRepositoryImpl(
