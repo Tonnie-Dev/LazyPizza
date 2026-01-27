@@ -17,7 +17,10 @@ import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuAction
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuActionEvent.NavigateToDetailsScreen
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuUiState
+import com.tonyxlab.lazypizza.utils.drinksMock
+import com.tonyxlab.lazypizza.utils.iceCreamsMock
 import com.tonyxlab.lazypizza.utils.mockPizzas
+import com.tonyxlab.lazypizza.utils.saucesMock
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -214,15 +217,24 @@ class MenuViewModel(
         updateState { it.copy(showLogoutDialog = false) }
     }
 
+    private fun seedFirestoreDevSwitch() {
 
- private fun seedFirestoreDevSwitch() {
+        launch {
+            firestoreSeeder.seedPizzas(mockPizzas)
+            firestoreSeeder.seedAddOnItem(items = drinksMock, collectionPath = "drinks")
+            firestoreSeeder.seedAddOnItem(items = iceCreamsMock, collectionPath = "ice_creams")
+            firestoreSeeder.seedAddOnItem(items = saucesMock, collectionPath = "sauces")
 
-     launch { firestoreSeeder.seedPizzas(mockPizzas) }
- }
-
+        }
+    }
 
     private fun clearFirestoreDevSwitch() {
 
-        launch { firestoreSeeder.clearPizzas() }
+        launch {
+            firestoreSeeder.clearPizzas()
+            firestoreSeeder.clearAddOnItem(collectionPath = "drinks")
+            firestoreSeeder.clearAddOnItem(collectionPath = "ice_creams")
+            firestoreSeeder.clearAddOnItem(collectionPath = "sauces")
+        }
     }
 }
