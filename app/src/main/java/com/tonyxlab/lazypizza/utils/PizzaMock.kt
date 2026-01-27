@@ -24,7 +24,7 @@ val mockPizzas = listOf(
                         "Olive oil"
                 ),
                 price = 8.99,
-                imageUrl = "margherita.png",
+                imageUrl = "Margherita.png",
                 category = Category.PIZZA
         ),
 
@@ -37,7 +37,7 @@ val mockPizzas = listOf(
                         "Pepperoni"
                 ),
                 price = 9.99,
-                imageUrl = "pepperoni.png",
+                imageUrl = "Pepperoni.png",
                 category = Category.PIZZA
         ),
 
@@ -51,7 +51,7 @@ val mockPizzas = listOf(
                         "Pineapple"
                 ),
                 price = 10.49,
-                imageUrl = "hawaiian.png",
+                imageUrl = "Hawaiian.png",
                 category = Category.PIZZA
         ),
 
@@ -66,7 +66,7 @@ val mockPizzas = listOf(
                         "Corn"
                 ),
                 price = 11.49,
-                imageUrl = "bbq-chicken.png",
+                imageUrl = "BBQ%20Chicken.png",
                 category = Category.PIZZA
         ),
 
@@ -80,7 +80,7 @@ val mockPizzas = listOf(
                         "Ricotta"
                 ),
                 price = 11.99,
-                imageUrl = "four-cheese.png",
+                imageUrl = "Four%20Cheese.png",
                 category = Category.PIZZA
         ),
 
@@ -97,7 +97,7 @@ val mockPizzas = listOf(
                         "Corn"
                 ),
                 price = 9.79,
-                imageUrl = "veggie-delight.png",
+                imageUrl = "Veggie%20Delight.png",
                 category = Category.PIZZA
         ),
 
@@ -113,7 +113,7 @@ val mockPizzas = listOf(
                         "Sausage"
                 ),
                 price = 12.49,
-                imageUrl = "meat-lovers.png",
+                imageUrl = "Meat%20Lovers.png",
                 category = Category.PIZZA
         ),
 
@@ -129,7 +129,7 @@ val mockPizzas = listOf(
                         "Garlic"
                 ),
                 price = 11.29,
-                imageUrl = "spicy-inferno.png",
+                imageUrl = "Spicy%20Inferno.png",
                 category = Category.PIZZA
         ),
 
@@ -145,7 +145,7 @@ val mockPizzas = listOf(
                         "Parsley"
                 ),
                 price = 13.99,
-                imageUrl = "seafood-special.png",
+                imageUrl = "Seafood%20Special.png",
                 category = Category.PIZZA
         ),
 
@@ -160,7 +160,7 @@ val mockPizzas = listOf(
                         "Parmesan"
                 ),
                 price = 12.99,
-                imageUrl = "truffle-mushroom.png",
+                imageUrl = "Truffle%20Mushroom.png",
                 category = Category.PIZZA
         )
 )

@@ -72,7 +72,7 @@ fun DisplayImage(
                         }
                         .aspectRatio(1f),
                 model = ImageRequest.Builder(context = context)
-                        .data(getDrawableResId(imageName = imageUrl, prefix = prefix))
+                        .data(imageUrl)
                         .crossfade(true)
                         .fallback(fallbackDrawableRes)
                         .error(errorDrawableRes)

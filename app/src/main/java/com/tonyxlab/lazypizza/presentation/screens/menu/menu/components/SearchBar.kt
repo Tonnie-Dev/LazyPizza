@@ -112,7 +112,7 @@ fun SearchComponent_Preview() {
         ) {
 
             SearchComponent(
-                    uiState = MenuUiState(allPizzaItems = mockPizzas)
+                    uiState = MenuUiState(pizzaCatalog = mockPizzas)
             )
         }
     }

@@ -1,6 +1,7 @@
 package com.tonyxlab.lazypizza.data.remote.firebase.dto
 
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
+import com.tonyxlab.lazypizza.domain.model.Category
 import com.tonyxlab.lazypizza.domain.model.fullImageUrl
 
 data class AddOnItemDto(
@@ -18,4 +19,14 @@ fun AddOnItem.toDto() =
             price = price,
             imageUrl = fullImageUrl(),
             category = category.name
+    )
+
+
+fun AddOnItemDto.toModel() =
+    AddOnItem(
+            id = id,
+            name = name,
+            price = price,
+            imageUrl = imageUrl,
+            category = Category.valueOf(category)
     )

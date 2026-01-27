@@ -11,6 +11,7 @@ import com.tonyxlab.lazypizza.domain.model.Category
 import com.tonyxlab.lazypizza.domain.model.toMenuItem
 import com.tonyxlab.lazypizza.domain.repository.AuthRepository
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
+import com.tonyxlab.lazypizza.domain.repository.CatalogRepository
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuActionEvent.LaunchDialingPad
@@ -22,6 +23,7 @@ import com.tonyxlab.lazypizza.utils.iceCreamsMock
 import com.tonyxlab.lazypizza.utils.mockPizzas
 import com.tonyxlab.lazypizza.utils.saucesMock
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
@@ -31,13 +33,15 @@ import kotlinx.coroutines.flow.onEach
 typealias HomeBaseViewModel = BaseViewModel<MenuUiState, MenuUiEvent, MenuActionEvent>
 
 class MenuViewModel(
-    private val cartRepository: CartRepository,
     private val authRepository: AuthRepository,
+    private val catalogRepository: CatalogRepository,
+    private val cartRepository: CartRepository,
     private val firestoreSeeder: FirestoreSeeder
 ) : HomeBaseViewModel() {
 
     init {
         observeSearchBarState()
+        observeCatalog()
         observeCart()
         observeAuthState()
     }
@@ -52,6 +56,34 @@ class MenuViewModel(
 
         }
                 .launchIn(viewModelScope)
+    }
+
+    private fun observeCatalog() {
+        val pizzaCatalogFlow = catalogRepository.observePizzas()
+        val drinksCatalogFlow = catalogRepository
+                .observeAddOnItems(collectionPath = "drinks")
+
+        val iceCreamsCatalogFlow = catalogRepository
+                .observeAddOnItems(collectionPath = "ice_creams")
+
+        val saucesCatalogFlow = catalogRepository
+                .observeAddOnItems(collectionPath = "sauces")
+
+
+        combine(
+                pizzaCatalogFlow,
+                drinksCatalogFlow,
+                iceCreamsCatalogFlow,
+                saucesCatalogFlow
+        ){ pizzas, drinks, iceCreams, sauces ->
+
+            updateState { it.copy(
+
+                    pizzaCatalog = pizzas,
+                    addOnItemsCatalog = drinks + iceCreams + sauces
+            ) }
+
+        }.launchIn(viewModelScope)
     }
 
     private fun observeSearchBarState() {
@@ -129,9 +161,9 @@ class MenuViewModel(
         val query = newQuery.trim()
 
         val pizzaSearchResults =
-            currentState.allPizzaItems.filter { it.name.contains(query, ignoreCase = true) }
+            currentState.pizzaCatalog.filter { it.name.contains(query, ignoreCase = true) }
 
-        val sideItemSearchResults = currentState.allAddOnItems.filter {
+        val sideItemSearchResults = currentState.addOnItemsCatalog.filter {
             it.name.contains(query, ignoreCase = true)
         }
         updateState { it.copy(searchResults = pizzaSearchResults + sideItemSearchResults) }
@@ -151,7 +183,7 @@ class MenuViewModel(
                 Category.DRINKS, Category.SAUCE, Category.ICE_CREAM -> it.copy(
                         selectedCategory = category,
 
-                        filteredAddOnItems = it.allAddOnItems.filter { side ->
+                        filteredAddOnItems = it.addOnItemsCatalog.filter { side ->
                             side.category == category
                         }
                 )

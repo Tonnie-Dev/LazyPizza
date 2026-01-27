@@ -22,14 +22,14 @@ val drinksMock = listOf(
                 id = 9L,
                 name = "Mineral Water",
                 price = 1.49,
-                imageUrl = "mineral-water.png",
+                imageUrl = "mineral%20water.png",
                 category = Category.DRINKS
         ),
         AddOnItem(
                 id = 10L,
                 name = "7-Up",
                 price = 1.89,
-                imageUrl = "seven-up.png",
+                imageUrl = "7-up.png",
                 category = Category.DRINKS
         ),
         AddOnItem(
@@ -41,23 +41,23 @@ val drinksMock = listOf(
         ),
         AddOnItem(
                 id = 12L,
-                name = "Orange Juice",
+                name = "Orange juice",
                 price = 2.49,
-                imageUrl = "orange-juice.png",
+                imageUrl = "orange%20juice.png",
                 category = Category.DRINKS
         ),
         AddOnItem(
                 id = 13L,
                 name = "Apple Juice",
                 price = 2.29,
-                imageUrl = "apple-juice.png",
+                imageUrl = "apple juice.png",
                 category = Category.DRINKS
         ),
         AddOnItem(
                 id = 14L,
                 name = "Iced Tea (Lemon)",
                 price = 2.19,
-                imageUrl = "iced-tea-lemon.png",
+                imageUrl = "iced%20tea.png",
                 category = Category.DRINKS
         )
 )
@@ -69,28 +69,28 @@ val saucesMock = listOf(
                 id = 15L,
                 name = "Garlic Sauce",
                 price = 0.59,
-                imageUrl = "garlic-sauce.png",
+                imageUrl = "Garlic%20Sauce.png",
                 category = Category.SAUCE
         ),
         AddOnItem(
                 id = 16L,
                 name = "BBQ Sauce",
                 price = 0.59,
-                imageUrl = "bbq-sauce.png",
+                imageUrl = "BBQ%20Sauce.png",
                 category = Category.SAUCE
         ),
         AddOnItem(
                 id = 17L,
                 name = "Cheese Sauce",
                 price = 0.89,
-                imageUrl = "cheese-sauce.png",
+                imageUrl = "Cheese%20Sauce.png",
                 category = Category.SAUCE
         ),
         AddOnItem(
                 id = 18L,
                 name = "Spicy Chili Sauce",
                 price = 0.59,
-                imageUrl = "spicy-chili-sauce.png",
+                imageUrl = "Spicy%20Chili%20Sauce.png",
                 category = Category.SAUCE
         )
 )
@@ -123,7 +123,7 @@ val iceCreamsMock = listOf(
                 id = 22L,
                 name = "Cookies Ice Cream",
                 price = 2.79,
-                imageUrl = "cookies-cream.png",
+                imageUrl = "cookies.png",
                 category = Category.ICE_CREAM
         ),
         AddOnItem(
@@ -137,7 +137,7 @@ val iceCreamsMock = listOf(
                 id = 24L,
                 name = "Mango Sorbet",
                 price = 2.69,
-                imageUrl = "mango-sorbet.png",
+                imageUrl = "mango sorbet.png",
                 category = Category.ICE_CREAM
         )
 )

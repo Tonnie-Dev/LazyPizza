@@ -37,9 +37,9 @@ enum class Category(
     val folderPath: String
 ) {
     PIZZA(categoryName = "Pizza", folderPath = "pizza"),
-    DRINKS(categoryName = "Drinks", folderPath = "drinks"),
+    DRINKS(categoryName = "Drinks", folderPath = "drink"),
     SAUCE(categoryName = "Sauces", folderPath = "sauce"),
-    ICE_CREAM(categoryName = "Ice Cream", folderPath = "icecream")
+    ICE_CREAM(categoryName = "Ice Cream", folderPath = "ice cream")
 }
 
 

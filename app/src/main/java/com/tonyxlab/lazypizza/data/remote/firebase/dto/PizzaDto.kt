@@ -23,7 +23,7 @@ fun Pizza.toDto(): PizzaDto {
     )
 }
 
-fun PizzaDto.toDomain(): Pizza {
+fun PizzaDto.toModel(): Pizza {
     return Pizza(
             id = id,
             name = name,

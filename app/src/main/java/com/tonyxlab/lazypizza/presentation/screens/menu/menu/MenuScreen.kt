@@ -175,7 +175,7 @@ private fun MenuScreenContent(
     modifier: Modifier = Modifier
 ) {
 
-    val pizzasList = uiState.allPizzaItems
+    val pizzasList = uiState.pizzaCatalog
     val sideItemsList = uiState.filteredAddOnItems
     val header = uiState.selectedCategory.categoryName
     if (uiState.showLogoutDialog) {
