@@ -44,6 +44,7 @@ import com.tonyxlab.lazypizza.presentation.theme.Title1SemiBold
 import com.tonyxlab.lazypizza.presentation.theme.Title2
 import com.tonyxlab.lazypizza.presentation.theme.TopLeftShape16
 import com.tonyxlab.lazypizza.presentation.theme.ToppingCircleBackground
+import com.tonyxlab.lazypizza.utils.fullImageUrl
 import com.tonyxlab.lazypizza.utils.toPrice
 
 @Composable
@@ -158,12 +159,11 @@ private fun ToppingsCard(
         ) {
 
             DisplayImage(
-                    imageUrl = topping.imageUrl,
+                    imageUrl = topping.fullImageUrl(),
                     containerSize = MaterialTheme.spacing.spaceSmall * 8,
                     shape = CircleShape,
                     backgroundColor = ToppingCircleBackground,
                     padding = PaddingValues(MaterialTheme.spacing.spaceExtraSmall),
-                    prefix = "topping_",
                     fallbackDrawableRes = R.drawable.topping_cheese,
                     errorDrawableRes = R.drawable.topping_bacon
             )

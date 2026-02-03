@@ -30,7 +30,7 @@ import com.tonyxlab.lazypizza.presentation.theme.Body3Regular
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.presentation.theme.Title1SemiBold
 import com.tonyxlab.lazypizza.presentation.theme.VerticalRoundedCornerShape12
-import com.tonyxlab.lazypizza.utils.mockPizzas
+import com.tonyxlab.lazypizza.utils.pizzasMock
 
 @Composable
 fun PizzaCard(
@@ -110,7 +110,7 @@ fun PizzaCard(
 @Composable
 private fun PizzaCard_Preview() {
 
-    val pizzas = mockPizzas
+    val pizzas = pizzasMock
 
     LazyPizzaTheme {
 

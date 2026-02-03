@@ -30,6 +30,8 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
+import com.tonyxlab.lazypizza.domain.model.fullImageUrl
+import com.tonyxlab.lazypizza.domain.model.toMenuItem
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.theme.Body1Regular
 import com.tonyxlab.lazypizza.presentation.theme.HorizontalRoundedCornerShape12
@@ -37,6 +39,7 @@ import com.tonyxlab.lazypizza.presentation.theme.Label2SemiBold
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.presentation.theme.Title1SemiBold
 import com.tonyxlab.lazypizza.utils.getMockSideItems
+import timber.log.Timber
 
 @Composable
 fun AddOnsSection(
@@ -91,7 +94,7 @@ private fun AddOnItem(
             elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Column(modifier = Modifier.width(MaterialTheme.spacing.spaceMedium * 10)) {
-
+Timber.tag("AddOnsSection").i("Url is ${addOnItem.imageUrl}")
             DisplayImage(
                     imageUrl = addOnItem.imageUrl,
                     imageSize = MaterialTheme.spacing.spaceTwelve * 9,

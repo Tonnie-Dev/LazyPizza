@@ -4,6 +4,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.tonyxlab.lazypizza.data.remote.firebase.dto.toDto
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
 import com.tonyxlab.lazypizza.domain.model.Pizza
+import com.tonyxlab.lazypizza.domain.model.Topping
 import kotlinx.coroutines.tasks.await
 
 class FirestoreSeeder(private val firestore: FirebaseFirestore) {
@@ -66,6 +67,41 @@ class FirestoreSeeder(private val firestore: FirebaseFirestore) {
         snapshot.documents.forEach { doc ->
             doc.reference.delete()
                     .await()
+        }
+    }
+
+    suspend fun seedToppings(toppings: List<Topping>) {
+
+        val snapshot = firestore.collection("toppings")
+                .limit(1)
+                .get()
+                .await()
+
+        if (!snapshot.isEmpty) return
+
+        toppings.forEach { topping ->
+
+            firestore.collection("toppings")
+                    .document("${topping.id}")
+                    .set(topping)
+                    .await()
+        }
+
+    }
+
+    suspend fun clearToppings() {
+
+        val snapshot = firestore.collection("toppings")
+                .get()
+                .await()
+
+        if (snapshot.isEmpty) return
+
+        snapshot.documents.forEach { doc ->
+
+            doc.reference.delete()
+                    .await()
+
         }
     }
 }

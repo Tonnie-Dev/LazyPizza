@@ -28,7 +28,7 @@ import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuUiState
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.utils.InvisibleSpacer
-import com.tonyxlab.lazypizza.utils.mockPizzas
+import com.tonyxlab.lazypizza.utils.pizzasMock
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -112,7 +112,7 @@ fun SearchComponent_Preview() {
         ) {
 
             SearchComponent(
-                    uiState = MenuUiState(pizzaCatalog = mockPizzas)
+                    uiState = MenuUiState(pizzaCatalog = pizzasMock)
             )
         }
     }

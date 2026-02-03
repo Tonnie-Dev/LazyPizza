@@ -1,10 +1,7 @@
 package com.tonyxlab.lazypizza.utils
 
-import com.google.firebase.firestore.FirebaseFirestore
-import com.tonyxlab.lazypizza.data.remote.firebase.dto.toDto
 import com.tonyxlab.lazypizza.domain.model.Category
 import com.tonyxlab.lazypizza.domain.model.Pizza
-import kotlinx.coroutines.tasks.await
 
 /**
  * Mock Pizza data for development & preview purposes.
@@ -12,7 +9,7 @@ import kotlinx.coroutines.tasks.await
  * https://pl-coding.com/wp-content/uploads/lazypizza/{category.folderPath}/{imageUrl}
  */
 
-val mockPizzas = listOf(
+val pizzasMock = listOf(
 
         Pizza(
                 id = 1L,

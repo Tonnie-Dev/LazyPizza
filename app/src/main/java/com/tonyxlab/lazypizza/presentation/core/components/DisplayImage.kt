@@ -39,7 +39,6 @@ fun DisplayImage(
     backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     contentDescription: String = stringResource(id = R.string.cds_text_image),
     padding: PaddingValues = PaddingValues(0.dp),
-    prefix: String = "pizza_",
     @DrawableRes
     fallbackDrawableRes: Int = R.drawable.pizza_margherita,
     @DrawableRes

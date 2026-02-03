@@ -52,6 +52,7 @@ import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.utils.SetStatusBarIconsColor
 import com.tonyxlab.lazypizza.utils.rememberIsDeviceWide
 import org.koin.androidx.compose.koinViewModel
+import timber.log.Timber
 
 @Composable
 fun CartScreen(
@@ -240,6 +241,8 @@ private fun CartScreenContentNarrow(
                     items = uiState.menuItems,
                     key = { it.uniqueKey }
             ) { item ->
+
+                Timber.tag("CartScreen").i("Screen Url is: ${item.imageUrl}")
                 CartItemCard(
                         modifier = Modifier
                                 .fillMaxWidth()

@@ -52,4 +52,8 @@ fun AddOnItem.fullImageUrl():String =
     "https://pl-coding.com/wp-content/uploads/lazypizza/${category.folderPath}/$imageUrl"
 
 
+fun Topping.fullImageUrl(): String =
+    "https://pl-coding.com/wp-content/uploads/lazypizza/toppings/$imageUrl"
+
+
 

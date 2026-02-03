@@ -21,7 +21,6 @@ fun AddOnItem.toDto() =
             category = category.name
     )
 
-
 fun AddOnItemDto.toModel() =
     AddOnItem(
             id = id,

@@ -8,7 +8,7 @@ import com.tonyxlab.lazypizza.domain.model.Topping
  * https://pl-coding.com/wp-content/uploads/lazypizza/toppings/{imageUrl}
  */
 
-val mockToppings = listOf(
+val toppingsMock = listOf(
 
         Topping(
                 id = 25L,
@@ -22,7 +22,7 @@ val mockToppings = listOf(
                 id =26L,
                 toppingName = "Extra Cheese",
                 toppingPrice = 1.0,
-                imageUrl = "extra_cheese.png",
+                imageUrl = "cheese.png",
                 counter = 0
         ),
 
@@ -46,7 +46,7 @@ val mockToppings = listOf(
                 id = 29L,
                 toppingName = "Olives",
                 toppingPrice = 0.50,
-                imageUrl = "olives.png",
+                imageUrl = "olive.png",
                 counter = 0
         ),
 
@@ -62,7 +62,7 @@ val mockToppings = listOf(
                 id = 31L,
                 toppingName = "Mushrooms",
                 toppingPrice = 0.50,
-                imageUrl = "mushrooms.png",
+                imageUrl = "mashroom.png",
                 counter = 0
         ),
 
@@ -94,7 +94,7 @@ val mockToppings = listOf(
                 id = 35L,
                 toppingName = "Chili Peppers",
                 toppingPrice = 0.50,
-                imageUrl = "chili_peppers.png",
+                imageUrl = "chilli.png",
                 counter = 0
         ),
 

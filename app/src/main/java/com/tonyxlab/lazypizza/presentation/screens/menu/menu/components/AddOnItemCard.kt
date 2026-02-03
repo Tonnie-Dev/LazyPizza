@@ -44,7 +44,7 @@ import com.tonyxlab.lazypizza.presentation.theme.VerticalRoundedCornerShape12
 import com.tonyxlab.lazypizza.utils.drinksMock
 
 @Composable
-fun SideItemCard(
+fun AddOnItemCard(
     addOnItem: AddOnItem,
     uiState: MenuUiState,
     onEvent: (MenuUiEvent) -> Unit,
@@ -216,7 +216,7 @@ private fun SideItemCardContent(
 
 @PreviewLightDark
 @Composable
-private fun SideItemCard_Preview() {
+private fun AddOnItemCard_Preview() {
 
     val sideItems = drinksMock
 
@@ -234,7 +234,7 @@ private fun SideItemCard_Preview() {
                     isDeviceWide = false
             ) { item ->
 
-                SideItemCard(
+                AddOnItemCard(
                         modifier = Modifier,
                         addOnItem = item,
                         uiState = MenuUiState(),

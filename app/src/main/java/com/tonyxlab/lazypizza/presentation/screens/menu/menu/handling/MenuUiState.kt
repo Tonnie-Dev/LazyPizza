@@ -8,8 +8,6 @@ import com.tonyxlab.lazypizza.domain.model.Category
 import com.tonyxlab.lazypizza.domain.model.Pizza
 import com.tonyxlab.lazypizza.domain.model.SearchItem
 import com.tonyxlab.lazypizza.presentation.core.base.handling.UiState
-import com.tonyxlab.lazypizza.utils.getMockSideItems
-import com.tonyxlab.lazypizza.utils.mockPizzas
 
 @Stable
 data class MenuUiState(

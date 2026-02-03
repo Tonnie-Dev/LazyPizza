@@ -44,7 +44,7 @@ import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.components.CategoryTabs
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.components.PizzaCard
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.components.SearchComponent
-import com.tonyxlab.lazypizza.presentation.screens.menu.menu.components.SideItemCard
+import com.tonyxlab.lazypizza.presentation.screens.menu.menu.components.AddOnItemCard
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuUiState
@@ -252,10 +252,10 @@ private fun MenuScreenContent(
                                     items = sideItemsList,
                                     key = { item -> item.id },
                                     isDeviceWide = true
-                            ) { sideItem ->
+                            ) { addOnItem ->
 
-                                SideItemCard(
-                                        addOnItem = sideItem,
+                                AddOnItemCard(
+                                        addOnItem = addOnItem,
                                         uiState = uiState,
                                         onEvent = onEvent
                                 )
@@ -321,7 +321,7 @@ private fun MenuScreenContent(
                                 key = { item -> item.id },
                                 isDeviceWide = false
                         ) { sideItem ->
-                            SideItemCard(
+                            AddOnItemCard(
                                     addOnItem = sideItem,
                                     uiState = uiState,
                                     onEvent = onEvent

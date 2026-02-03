@@ -83,7 +83,7 @@ class CheckoutViewModel(
                     it.copy(
                             menuItems = this,
                             totalAmount = calculateTotal(),
-                            suggestedAddOnItems = extractRecommendedAddOnItems()
+//                            suggestedAddOnItems = extractRecommendedAddOnItems()
                     )
                 }
             }

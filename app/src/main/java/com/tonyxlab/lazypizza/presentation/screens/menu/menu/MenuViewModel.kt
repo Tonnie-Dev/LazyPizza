@@ -20,8 +20,9 @@ import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuUiEven
 import com.tonyxlab.lazypizza.presentation.screens.menu.menu.handling.MenuUiState
 import com.tonyxlab.lazypizza.utils.drinksMock
 import com.tonyxlab.lazypizza.utils.iceCreamsMock
-import com.tonyxlab.lazypizza.utils.mockPizzas
+import com.tonyxlab.lazypizza.utils.pizzasMock
 import com.tonyxlab.lazypizza.utils.saucesMock
+import com.tonyxlab.lazypizza.utils.toppingsMock
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
@@ -75,13 +76,14 @@ class MenuViewModel(
                 drinksCatalogFlow,
                 iceCreamsCatalogFlow,
                 saucesCatalogFlow
-        ){ pizzas, drinks, iceCreams, sauces ->
+        ) { pizzas, drinks, iceCreams, sauces ->
 
-            updateState { it.copy(
-
-                    pizzaCatalog = pizzas,
-                    addOnItemsCatalog = drinks + iceCreams + sauces
-            ) }
+            updateState {
+                it.copy(
+                        pizzaCatalog = pizzas,
+                        addOnItemsCatalog = drinks + iceCreams + sauces
+                )
+            }
 
         }.launchIn(viewModelScope)
     }
@@ -210,7 +212,10 @@ class MenuViewModel(
                 .coerceAtMost(5)
         launch {
 
-            cartRepository.updateCount(menuItem = addOnItem.toMenuItem(), newCount = newCount)
+            cartRepository.updateCount(
+                    menuItem = addOnItem.toMenuItem(),
+                    newCount = newCount
+            )
         }
     }
 
@@ -252,7 +257,8 @@ class MenuViewModel(
     private fun seedFirestoreDevSwitch() {
 
         launch {
-            firestoreSeeder.seedPizzas(mockPizzas)
+            firestoreSeeder.seedPizzas(pizzasMock)
+            firestoreSeeder.seedToppings(toppingsMock)
             firestoreSeeder.seedAddOnItem(items = drinksMock, collectionPath = "drinks")
             firestoreSeeder.seedAddOnItem(items = iceCreamsMock, collectionPath = "ice_creams")
             firestoreSeeder.seedAddOnItem(items = saucesMock, collectionPath = "sauces")
@@ -264,6 +270,7 @@ class MenuViewModel(
 
         launch {
             firestoreSeeder.clearPizzas()
+            firestoreSeeder.clearToppings()
             firestoreSeeder.clearAddOnItem(collectionPath = "drinks")
             firestoreSeeder.clearAddOnItem(collectionPath = "ice_creams")
             firestoreSeeder.clearAddOnItem(collectionPath = "sauces")

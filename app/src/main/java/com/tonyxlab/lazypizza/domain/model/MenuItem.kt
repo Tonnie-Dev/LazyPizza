@@ -1,5 +1,7 @@
 package com.tonyxlab.lazypizza.domain.model
 
+import timber.log.Timber
+
 data class MenuItem(
     val id: Long,
     val name: String,
@@ -18,10 +20,11 @@ enum class ProductType { PIZZA, ADD_ON_ITEM;
             this == PIZZA -> "PIZZA"
             else ->"ADD_ON_ITEM"
         }
-    }}
+    }
+}
 
 fun Pizza.toMenuItem(): MenuItem {
-
+    Timber.tag("MenuItem").i("The Pizza Url is ${this.imageUrl}")
     return MenuItem(
             id = id,
             name = name,
@@ -35,6 +38,7 @@ fun Pizza.toMenuItem(): MenuItem {
 
 fun AddOnItem.toMenuItem(): MenuItem {
 
+    Timber.tag("MenuItem").i("The AddOnItem Url is ${this.imageUrl}")
     return MenuItem(
             id = id,
             name = this.name,

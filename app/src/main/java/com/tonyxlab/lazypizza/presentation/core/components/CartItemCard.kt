@@ -39,6 +39,7 @@ import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.presentation.theme.Title1SemiBold
 import com.tonyxlab.lazypizza.presentation.theme.VerticalRoundedCornerShape12
 import com.tonyxlab.lazypizza.utils.menuItemsMocks
+import timber.log.Timber
 
 @Composable
 fun CartItemCard(
@@ -61,7 +62,7 @@ fun CartItemCard(
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-
+Timber.tag("CartItemCard").i("Menu Item Type: ${menuItem.productType}, url: ${menuItem.imageUrl}")
         Row(
                 modifier = Modifier
                         .fillMaxWidth()

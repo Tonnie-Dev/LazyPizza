@@ -10,8 +10,10 @@ import com.tonyxlab.lazypizza.domain.model.MenuItem
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 
-class CartRepositoryImpl(
+class
+CartRepositoryImpl(
     private val dao: CartDao,
     private val database: LazyPizzaDatabase,
 ) : CartRepository {
