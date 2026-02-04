@@ -21,15 +21,26 @@ typealias CartBaseViewModel = BaseViewModel<CartUiState, CartUiEvent, CartAction
 
 class CartViewModel(
     private val cartRepository: CartRepository,
-    private val catalogRepository: CatalogRepository
+    catalogRepository: CatalogRepository
 ) : CartBaseViewModel() {
 
     override val initialState: CartUiState
         get() = CartUiState()
 
+    private val cartItemsFlow = cartRepository.menuItems
+
+    private val addOnCatalogFlow =
+        combine(
+                catalogRepository.observeAddOnItems("drinks"),
+                catalogRepository.observeAddOnItems("ice_creams"),
+                catalogRepository.observeAddOnItems("sauces")
+        ) { drinks, creams, sauces ->
+            drinks + creams + sauces
+        }
+
     init {
         observeCart()
-        observeAddOnItemsCatalog()
+        observeSuggestedAddOns()
     }
 
     private fun observeCart() {
@@ -57,25 +68,21 @@ class CartViewModel(
                 .launchIn(viewModelScope)
     }
 
-    private fun observeAddOnItemsCatalog() {
+    private fun observeSuggestedAddOns() {
+        combine(cartItemsFlow, addOnCatalogFlow) {
 
-        val drinksCatalogFlow = catalogRepository
-                .observeAddOnItems(collectionPath = "drinks")
+            cartItems, addOnItems ->
 
-        val iceCreamsCatalogFlow = catalogRepository
-                .observeAddOnItems(collectionPath = "ice_creams")
+            val cartIds = cartItems.map { it.id }
+                    .toSet()
 
-        val saucesCatalogFlow = catalogRepository
-                .observeAddOnItems(collectionPath = "sauces")
+            addOnItems.filterNot { it.id in cartIds }
+                    .shuffled()
 
-        combine(drinksCatalogFlow, iceCreamsCatalogFlow, saucesCatalogFlow){
-            drinks, creams, sauces ->
-
-            val suggestedItems = (drinks + creams + sauces).shuffled()
-            updateState { it.copy(suggestedAddOnItems = suggestedItems) }
-
-        }.launchIn(viewModelScope)
-
+        }.onEach { suggested ->
+            updateState { it.copy(suggestedAddOnItems = suggested) }
+        }
+                .launchIn(viewModelScope)
     }
 
     override fun onEvent(event: CartUiEvent) {
@@ -130,11 +137,11 @@ class CartViewModel(
 
             cartRepository.removeItem(menuItem = menuItem)
         }
-        observeAddOnItemsCatalog()
+
     }
 
     private fun selectAddOn(addOnItem: AddOnItem) {
-        observeAddOnItemsCatalog()
+
         launch {
             cartRepository.addItem(menuItem = addOnItem.toMenuItem())
         }
