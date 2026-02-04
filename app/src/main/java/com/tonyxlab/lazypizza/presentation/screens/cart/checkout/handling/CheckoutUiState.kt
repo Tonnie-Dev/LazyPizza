@@ -16,7 +16,7 @@ import java.time.LocalTime
 
 data class CheckoutUiState(
     val menuItems: List<MenuItem> = emptyList(),
-    val suggestedAddOnItems: List<AddOnItem> = getMockAddOnItems().shuffled(),
+    val suggestedAddOnItems: List<AddOnItem> =emptyList(),
     val textFieldState: TextFieldState = TextFieldState(),
     val expanded: Boolean = false,
     val totalAmount: Double = 0.0,

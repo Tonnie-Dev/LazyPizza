@@ -48,8 +48,8 @@ import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.Checko
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiState
 import com.tonyxlab.lazypizza.presentation.theme.HorizontalRoundedCornerShape24
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
-import com.tonyxlab.lazypizza.utils.menuItemsMocks
 import com.tonyxlab.lazypizza.utils.ifThen
+import com.tonyxlab.lazypizza.utils.menuItemsMocks
 import com.tonyxlab.lazypizza.utils.rememberIsDeviceWide
 
 @Composable
@@ -119,10 +119,7 @@ fun CheckoutFormContent(
 
         ) {
             item {
-
-                AppTopBarFour(
-                        onClick = { onEvent(CheckoutUiEvent.GoBack) }
-                )
+                AppTopBarFour(onClick = { onEvent(CheckoutUiEvent.GoBack) })
             }
 
             item {
@@ -142,6 +139,7 @@ fun CheckoutFormContent(
             }
 
             if (uiState.expanded) {
+
                 items(
                         items = uiState.menuItems,
                         key = { it.uniqueKey }
@@ -152,6 +150,10 @@ fun CheckoutFormContent(
                             cartItemActions = cartItemActions
                     )
                 }
+                item {
+                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceMedium))
+                }
+
             }
 
             item {
@@ -168,17 +170,18 @@ fun CheckoutFormContent(
             }
 
             item {
-                Spacer(modifier = Modifier.ifThen(uiState.expanded){
+                Spacer(
+                        modifier = Modifier
+                                .ifThen(uiState.expanded) {
 
-                    height(MaterialTheme.spacing.spaceOneHundredFifty)
-                }.ifThen(uiState.expanded.not()){
+                                    height(MaterialTheme.spacing.spaceOneHundredFifty)
+                                }
+                                .ifThen(uiState.expanded.not()) {
 
-
-                    height(MaterialTheme.spacing.spaceOneHundred)
-                })
-
+                                    height(MaterialTheme.spacing.spaceOneHundred)
+                                }
+                )
             }
-
         }
 
         OrderButtonSection(
@@ -196,7 +199,6 @@ fun CheckoutFormContent(
                 onDismiss = { onEvent(CheckoutUiEvent.DismissPicker) }
         )
 
-
         TimePickerComponent(
                 uiState = uiState,
                 onTimeSelected = { onEvent(CheckoutUiEvent.SelectTime(time = it)) },
@@ -204,9 +206,7 @@ fun CheckoutFormContent(
                 isDeviceWide = isDeviceWide
         )
     }
-
 }
-
 
 @PreviewLightDark
 @Composable

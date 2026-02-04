@@ -94,7 +94,7 @@ private fun AddOnItem(
             elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Column(modifier = Modifier.width(MaterialTheme.spacing.spaceMedium * 10)) {
-Timber.tag("AddOnsSection").i("Url is ${addOnItem.imageUrl}")
+
             DisplayImage(
                     imageUrl = addOnItem.imageUrl,
                     imageSize = MaterialTheme.spacing.spaceTwelve * 9,

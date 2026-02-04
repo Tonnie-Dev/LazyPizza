@@ -7,11 +7,11 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.extensions.calculateTotal
-import com.tonyxlab.lazypizza.domain.extensions.extractRecommendedAddOnItems
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
 import com.tonyxlab.lazypizza.domain.model.MenuItem
 import com.tonyxlab.lazypizza.domain.model.toMenuItem
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
+import com.tonyxlab.lazypizza.domain.repository.CatalogRepository
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutStep
@@ -20,6 +20,7 @@ import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.Checko
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.PickupTimeOption
 import com.tonyxlab.lazypizza.utils.generateOrderNumber
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.time.LocalDate
@@ -30,15 +31,45 @@ typealias CheckoutBaseViewModel =
         BaseViewModel<CheckoutUiState, CheckoutUiEvent, CheckoutActionEvent>
 
 class CheckoutViewModel(
-    private val repository: CartRepository
+    private val cartRepository: CartRepository,
+    private val catalogRepository: CatalogRepository
 ) : CheckoutBaseViewModel() {
 
     override val initialState: CheckoutUiState
         get() = CheckoutUiState()
 
+    private val cartItemsFlow = cartRepository.menuItems
+
+    private val addOnItemsCatalogFlow = combine(
+            catalogRepository.observeAddOnItems("drinks"),
+            catalogRepository.observeAddOnItems("sauces"),
+            catalogRepository.observeAddOnItems("ice_creams")
+    ) { drinks, sauces, creams ->
+
+        drinks + sauces + creams
+    }
+
     init {
         observeCart()
+        observeAddOnItems()
         updateEarliestPickupTime()
+    }
+
+    private fun observeAddOnItems() {
+
+        combine(cartItemsFlow, addOnItemsCatalogFlow) {
+
+            cartItems, addOnItems ->
+
+            val cartItemsIds = cartItems.map { it.id }
+                    .toSet()
+            addOnItems.filterNot { it.id in cartItemsIds }
+                    .shuffled()
+        }.onEach { suggested ->
+
+            updateState { it.copy(suggestedAddOnItems = suggested) }
+        }
+                .launchIn(viewModelScope)
     }
 
     override fun onEvent(event: CheckoutUiEvent) {
@@ -77,13 +108,12 @@ class CheckoutViewModel(
     }
 
     private fun observeCart() {
-        repository.menuItems.onEach { cartItems ->
+        cartRepository.menuItems.onEach { cartItems ->
             with(cartItems) {
                 updateState {
                     it.copy(
                             menuItems = this,
-                            totalAmount = calculateTotal(),
-//                            suggestedAddOnItems = extractRecommendedAddOnItems()
+                            totalAmount = calculateTotal()
                     )
                 }
             }
@@ -102,7 +132,7 @@ class CheckoutViewModel(
     private fun incrementQuantity(menuItem: MenuItem) {
         launch {
 
-            repository.updateCount(
+            cartRepository.updateCount(
                     menuItem = menuItem,
                     newCount = menuItem.counter + 1
             )
@@ -111,7 +141,7 @@ class CheckoutViewModel(
 
     private fun decrementQuantity(menuItem: MenuItem) {
         launch {
-            repository.updateCount(
+            cartRepository.updateCount(
                     menuItem = menuItem,
                     newCount = (menuItem.counter - 1)
                             .coerceAtLeast(minimumValue = 1)
@@ -121,13 +151,13 @@ class CheckoutViewModel(
 
     private fun addItem(addOnItem: AddOnItem) {
         launch {
-            repository.addItem(menuItem = addOnItem.toMenuItem())
+            cartRepository.addItem(menuItem = addOnItem.toMenuItem())
         }
     }
 
     private fun removeCartItem(menuItem: MenuItem) {
         launch {
-            repository.removeItem(menuItem)
+            cartRepository.removeItem(menuItem)
         }
     }
 
