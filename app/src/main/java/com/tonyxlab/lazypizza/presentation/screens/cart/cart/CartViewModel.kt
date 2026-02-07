@@ -2,7 +2,6 @@ package com.tonyxlab.lazypizza.presentation.screens.cart.cart
 
 import androidx.lifecycle.viewModelScope
 import com.tonyxlab.lazypizza.domain.extensions.calculateTotal
-import com.tonyxlab.lazypizza.domain.extensions.extractRecommendedAddOnItems
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
 import com.tonyxlab.lazypizza.domain.model.MenuItem
 import com.tonyxlab.lazypizza.domain.model.toMenuItem
@@ -58,10 +57,8 @@ class CartViewModel(
                         it.copy(
                                 menuItems = items,
                                 badgeCount = count,
-                                aggregateCartAmount = total,
-                                suggestedAddOnItems = items.extractRecommendedAddOnItems(
-                                        addOnItems = suggestedAddOnItems
-                                )
+                                aggregateCartAmount = total
+
                         )
                     }
                 }

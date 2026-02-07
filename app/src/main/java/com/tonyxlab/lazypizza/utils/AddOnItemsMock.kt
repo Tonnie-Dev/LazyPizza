@@ -5,14 +5,8 @@ import com.tonyxlab.lazypizza.domain.model.AddOnItem
 
 // ------------------------ ALL ITEMS ------------------------
 
-fun getMockSideItems(): List<AddOnItem> {
+fun addOnItemsMock(): List<AddOnItem> {
     return drinksMock + saucesMock + iceCreamsMock
-}
-
-// ------------------------ ADD-ON ITEMS ------------------------
-
-fun getMockAddOnItems(): List<AddOnItem> {
-    return drinksMock + saucesMock
 }
 
 // ------------------------ DRINKS ------------------------

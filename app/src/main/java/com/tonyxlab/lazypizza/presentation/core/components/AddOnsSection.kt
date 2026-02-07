@@ -30,16 +30,13 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
-import com.tonyxlab.lazypizza.domain.model.fullImageUrl
-import com.tonyxlab.lazypizza.domain.model.toMenuItem
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.theme.Body1Regular
 import com.tonyxlab.lazypizza.presentation.theme.HorizontalRoundedCornerShape12
 import com.tonyxlab.lazypizza.presentation.theme.Label2SemiBold
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
 import com.tonyxlab.lazypizza.presentation.theme.Title1SemiBold
-import com.tonyxlab.lazypizza.utils.getMockSideItems
-import timber.log.Timber
+import com.tonyxlab.lazypizza.utils.addOnItemsMock
 
 @Composable
 fun AddOnsSection(
@@ -162,7 +159,7 @@ private fun AddOnItem(
 @Composable
 private fun AddOnsRow_PreviewSection() {
 
-    val sideItems = getMockSideItems()
+    val sideItems = addOnItemsMock()
 
     LazyPizzaTheme {
         Column(

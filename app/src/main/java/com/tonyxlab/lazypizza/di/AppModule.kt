@@ -11,12 +11,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.tonyxlab.lazypizza.data.local.database.LazyPizzaDatabase
 import com.tonyxlab.lazypizza.data.local.datastore.DataStore
 import com.tonyxlab.lazypizza.data.remote.firebase.repository.CatalogRepositoryImpl
+import com.tonyxlab.lazypizza.data.remote.firebase.repository.OrderRepositoryImpl
 import com.tonyxlab.lazypizza.data.remote.firebase.seeder.FirestoreSeeder
 import com.tonyxlab.lazypizza.data.repository.AuthRepositoryImpl
 import com.tonyxlab.lazypizza.data.repository.CartRepositoryImpl
 import com.tonyxlab.lazypizza.domain.repository.AuthRepository
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import com.tonyxlab.lazypizza.domain.repository.CatalogRepository
+import com.tonyxlab.lazypizza.domain.repository.OrderRepository
 import com.tonyxlab.lazypizza.presentation.screens.auth.AuthViewModel
 import com.tonyxlab.lazypizza.presentation.screens.cart.cart.CartViewModel
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.CheckoutViewModel
@@ -72,6 +74,8 @@ val repositoryModule = module {
     }
 
     single <CatalogRepository>{ CatalogRepositoryImpl(get()) }
+
+    single <OrderRepository>{ OrderRepositoryImpl(get()) }
 }
 
 val databaseModule = module {

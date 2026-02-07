@@ -9,9 +9,13 @@ import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.extensions.calculateTotal
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
 import com.tonyxlab.lazypizza.domain.model.MenuItem
+import com.tonyxlab.lazypizza.domain.model.Order
+import com.tonyxlab.lazypizza.domain.model.OrderStatus
 import com.tonyxlab.lazypizza.domain.model.toMenuItem
+import com.tonyxlab.lazypizza.domain.repository.AuthRepository
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import com.tonyxlab.lazypizza.domain.repository.CatalogRepository
+import com.tonyxlab.lazypizza.domain.repository.OrderRepository
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutStep
@@ -32,7 +36,9 @@ typealias CheckoutBaseViewModel =
 
 class CheckoutViewModel(
     private val cartRepository: CartRepository,
-    private val catalogRepository: CatalogRepository
+    private val orderRepository: OrderRepository,
+    private val authReposiory: AuthRepository,
+    catalogRepository: CatalogRepository
 ) : CheckoutBaseViewModel() {
 
     override val initialState: CheckoutUiState
@@ -310,6 +316,22 @@ class CheckoutViewModel(
     }
 
     private fun placeOrder() {
+
+        val order = Order(
+                id ="" ,
+                userId = authRepository.currentUser?.userId ?: "",
+                orderNumber = generateOrderNumber(),
+                pickupTime = currentState.dateTimePickerState.earliestPickupTime,
+                items = currentState.menuItems.map { "${it.counter} x ${it.name}" },
+                totalAmount = currentState.menuItems.calculateTotal(),
+                status = OrderStatus.IN_PROGRESS,
+                timestamp = LocalDateTime.now()
+        )
+
+        launch {
+
+            orderRepository.saveOrder(order)
+        }
 
         updateState {
             it.copy(

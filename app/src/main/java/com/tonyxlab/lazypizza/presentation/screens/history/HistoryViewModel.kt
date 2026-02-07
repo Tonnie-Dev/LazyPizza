@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.tonyxlab.lazypizza.domain.firebase.AuthState
 import com.tonyxlab.lazypizza.domain.repository.AuthRepository
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
+import com.tonyxlab.lazypizza.domain.repository.OrderRepository
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.history.handling.HistoryActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.history.handling.HistoryUiEvent
@@ -16,29 +17,42 @@ typealias HistoryBaseViewModel = BaseViewModel<HistoryUiState, HistoryUiEvent, H
 
 class HistoryViewModel(
     private val cartRepository: CartRepository,
+    private val orderRepository: OrderRepository,
     private val authRepository: AuthRepository
 ) : HistoryBaseViewModel() {
 
-    val cartItems = cartRepository.menuItems
+
 
     init {
         observeCount()
         observerAuthState()
+        observeOrders()
     }
 
     override val initialState: HistoryUiState
         get() = HistoryUiState()
 
-    override fun onEvent(event: HistoryUiEvent) {
-      when(event){
-          HistoryUiEvent.SignIn -> {
-              sendActionEvent(actionEvent = HistoryActionEvent.NavigateToAuth)
-          }
+    private fun observeOrders() {
 
-          HistoryUiEvent.GoToMenu -> {
-              sendActionEvent(actionEvent = HistoryActionEvent.NavigateToMenu)
-          }
-      }
+        val userId = authRepository.currentUser?.userId ?: return
+
+        orderRepository.getOrders(userId = userId)
+                .onEach { orders ->
+                    updateState { it.copy(orderItems = orders) }
+                }
+                .launchIn(viewModelScope)
+    }
+
+    override fun onEvent(event: HistoryUiEvent) {
+        when (event) {
+            HistoryUiEvent.SignIn -> {
+                sendActionEvent(actionEvent = HistoryActionEvent.NavigateToAuth)
+            }
+
+            HistoryUiEvent.GoToMenu -> {
+                sendActionEvent(actionEvent = HistoryActionEvent.NavigateToMenu)
+            }
+        }
     }
 
     private fun observeCount() {
@@ -49,13 +63,15 @@ class HistoryViewModel(
                 }
                 .launchIn(viewModelScope)
     }
+
     private fun observerAuthState() {
         authRepository.authState
                 .onEach { authState ->
 
-                  updateState { it.copy(isSignedIn = authState is AuthState.Authenticated) }
+                    updateState { it.copy(isSignedIn = authState is AuthState.Authenticated) }
 
-        }.launchIn(viewModelScope)
+                }
+                .launchIn(viewModelScope)
     }
 
 }

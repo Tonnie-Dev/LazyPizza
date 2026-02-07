@@ -15,13 +15,3 @@ fun List<MenuItem>.calculateTotal(): Double {
     return baseAmountPlusToppingsAmount
 }
 
-fun List<MenuItem>.extractRecommendedAddOnItems(addOnItems: List<AddOnItem>): List<AddOnItem> {
-    val selectableItemIds = filterNot { it.productType == ProductType.PIZZA }
-            .map { it.id }
-            .toSet()
-
-    val unSelectedItems = addOnItems
-            .filterNot { it.id in selectableItemIds }
-            .shuffled()
-    return unSelectedItems
-}

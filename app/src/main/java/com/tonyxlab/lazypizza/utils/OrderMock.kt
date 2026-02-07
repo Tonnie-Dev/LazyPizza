@@ -4,11 +4,16 @@ package com.tonyxlab.lazypizza.utils
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.google.firebase.Timestamp
+import com.tonyxlab.lazypizza.domain.model.MenuItem
 import com.tonyxlab.lazypizza.domain.model.Order
-import com.tonyxlab.lazypizza.domain.model.OrderItem
+
 import com.tonyxlab.lazypizza.domain.model.OrderStatus
+import com.tonyxlab.lazypizza.domain.model.toMenuItem
 import java.time.LocalDateTime
 import kotlin.random.Random
+
+
 
 object OrderMock {
     private val itemPool = listOf(
@@ -27,34 +32,27 @@ object OrderMock {
 
             repeat(count) { index ->
                 val items = randomOrderItems()
-                val total = items.sumOf { it.quantity * randomPriceFor(it.name) }
+                val total = items.sumOf { it.counter * randomPriceFor(it.name) }
 
                 add(
                 Order(
-                        id = index.toLong(),
+                        id ="${index.toLong()}" ,
+                        userId = "Tonnie Xiii",
                         orderNumber = generateOrderNumber(index),
-                        placedAt = LocalDateTime.now()
-                                .minusDays(Random.nextLong(0, 10)),
-                        orderItems = items,
+                        timestamp = LocalDateTime.now(),
+                        items = listOf(),
                         totalAmount = total,
-                        orderStatus = OrderStatus.entries.toTypedArray()
-                                .random()
+                        status = OrderStatus.entries.toTypedArray()
+                                .random(),
+                        pickupTime = LocalDateTime.now().plusDays(Random.nextLong(0,10))
                 )
                 )
             }
         }
     }
 
-    private fun randomOrderItems(): List<OrderItem> {
-        return itemPool
-                .shuffled()
-                .take(Random.nextInt(1, 4))
-                .map {
-                    OrderItem(
-                            name = it,
-                            quantity = Random.nextInt(1, 3)
-                    )
-                }
+    private fun randomOrderItems(): List<MenuItem> {
+        return addOnItemsMock().map { it.toMenuItem() }
     }
 
     private fun randomPriceFor(itemName: String): Double =

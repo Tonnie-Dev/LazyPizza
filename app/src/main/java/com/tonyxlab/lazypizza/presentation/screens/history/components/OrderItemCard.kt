@@ -29,6 +29,7 @@ import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.Order
 import com.tonyxlab.lazypizza.domain.model.OrderStatus
 import com.tonyxlab.lazypizza.domain.model.itemsSummary
+
 import com.tonyxlab.lazypizza.presentation.core.components.LazyListComponent
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.theme.Body4Regular
@@ -47,7 +48,7 @@ fun OrderItemCard(
     modifier: Modifier = Modifier
 ) {
 
-    val (color, status) = when (order.orderStatus) {
+    val (color, status) = when (order.status) {
 
         OrderStatus.COMPLETED -> Success to
                 stringResource(id = R.string.cap_text_order_completed)
@@ -94,7 +95,7 @@ fun OrderItemCard(
                     )
 
                     Text(
-                            text = order.placedAt.toFormattedDate(),
+                            text = order.timestamp.toFormattedDate(),
                             style = MaterialTheme.typography.Body4Regular.copy(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                             )

@@ -1,22 +1,27 @@
 package com.tonyxlab.lazypizza.domain.model
 
 import java.time.LocalDateTime
+import kotlin.collections.joinToString
 
 enum class OrderStatus { COMPLETED, IN_PROGRESS, CANCELLED }
 
-data class OrderItem(val name: String, val quantity: Int)
+
 
 data class Order(
-    val id: Long,
+    val id: String,
+    val userId: String,
     val orderNumber: String,
-    val placedAt: LocalDateTime,
-    val orderItems: List<OrderItem>,
+    val pickupTime: LocalDateTime,
+    val items: List<String>,
     val totalAmount: Double,
-    val orderStatus: OrderStatus
+    val status: OrderStatus,
+    val timestamp: LocalDateTime,
 )
 
 fun Order.formattedOrderNumber() = "Order #$orderNumber"
 
-fun Order.itemsSummary() = orderItems.joinToString("\n") {
-    "${it.quantity} x ${it.name}"
+fun Order.itemsSummary() = items.joinToString("\n") {
+
+
+    it
 }

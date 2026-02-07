@@ -9,7 +9,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
 import com.tonyxlab.lazypizza.domain.model.MenuItem
 import com.tonyxlab.lazypizza.presentation.core.base.handling.UiState
-import com.tonyxlab.lazypizza.utils.getMockAddOnItems
+
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime

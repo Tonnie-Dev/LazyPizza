@@ -4,15 +4,29 @@ package com.tonyxlab.lazypizza.utils
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.google.firebase.Timestamp
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 fun LocalDateTime.toFormattedDate(): String {
     val pattern = "MMMM d, HH:mm"
     val formatter = DateTimeFormatter.ofPattern(pattern)
     return formatter.format(this)
+}
+
+fun LocalDateTime.toTimestamp(): Timestamp {
+    val instant = atZone(ZoneId.systemDefault()).toInstant()
+    return Timestamp(instant.epochSecond, instant.nano)
+}
+
+fun Timestamp.toLocalDateTime(): LocalDateTime {
+    return Instant.ofEpochSecond(seconds, nanoseconds.toLong())
+            .atZone(ZoneId.systemDefault())
+            .toLocalDateTime()
 }
 
 fun LocalDateTime.toPickupTimeDisplayString(isFullDate: Boolean = false): String {

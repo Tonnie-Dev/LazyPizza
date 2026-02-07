@@ -1,15 +1,18 @@
 @file:OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 
+@file:RequiresApi(Build.VERSION_CODES.O)
+
 package com.tonyxlab.lazypizza.presentation.screens.history
 
+import android.os.Build
 import androidx.activity.compose.LocalActivity
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,12 +29,13 @@ import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarThree
 import com.tonyxlab.lazypizza.presentation.core.components.EmptyScreenContent
+import com.tonyxlab.lazypizza.presentation.core.components.LazyListComponent
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
+import com.tonyxlab.lazypizza.presentation.screens.history.components.OrderItemCard
 import com.tonyxlab.lazypizza.presentation.screens.history.handling.HistoryActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.history.handling.HistoryUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.history.handling.HistoryUiState
 import com.tonyxlab.lazypizza.presentation.theme.LazyPizzaTheme
-import com.tonyxlab.lazypizza.utils.DeviceType
 import com.tonyxlab.lazypizza.utils.SetStatusBarIconsColor
 import com.tonyxlab.lazypizza.utils.rememberIsDeviceWide
 import org.koin.androidx.compose.koinViewModel
@@ -137,26 +141,36 @@ private fun HistoryScreenContent(
 ) {
     Column(
             modifier = modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .padding(MaterialTheme.spacing.spaceMedium),
             horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (uiState.isSignedIn) {
+
+            uiState.orderItems.ifEmpty {
+                EmptyScreenContent(
+                        modifier = Modifier.padding(top = MaterialTheme.spacing.spaceTwelve * 10),
+                        title = stringResource(id = R.string.cap_text_no_orders_yet),
+                        subTitle = stringResource(id = R.string.cap_text_orders_will_appear_here),
+                        buttonText = stringResource(id = R.string.btn_text_go_to_menu),
+                        onEvent = { onEvent(HistoryUiEvent.GoToMenu) }
+                )
+            }
+
+            LazyListComponent(items = uiState.orderItems, key = { it.id }) { order ->
+
+                OrderItemCard(order = order)
+
+            }
+        } else {
             EmptyScreenContent(
                     modifier = Modifier.padding(top = MaterialTheme.spacing.spaceTwelve * 10),
-                    title = stringResource(id = R.string.cap_text_no_orders_yet),
-                    subTitle = stringResource(id = R.string.cap_text_orders_will_appear_here),
-                    buttonText = stringResource(id = R.string.btn_text_go_to_menu),
-                    onEvent = { onEvent(HistoryUiEvent.GoToMenu) }
+                    title = stringResource(id = R.string.cap_text_not_signed_in),
+                    subTitle = stringResource(id = R.string.cap_text_please_sign_in),
+                    buttonText = stringResource(id = R.string.btn_text_sign_in),
+                    onEvent = { onEvent(HistoryUiEvent.SignIn) }
             )
-            return
         }
-        EmptyScreenContent(
-                modifier = Modifier.padding(top = MaterialTheme.spacing.spaceTwelve * 10),
-                title = stringResource(id = R.string.cap_text_not_signed_in),
-                subTitle = stringResource(id = R.string.cap_text_please_sign_in),
-                buttonText = stringResource(id = R.string.btn_text_sign_in),
-                onEvent = { onEvent(HistoryUiEvent.SignIn) }
-        )
     }
 }
 
