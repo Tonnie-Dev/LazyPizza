@@ -37,7 +37,7 @@ typealias CheckoutBaseViewModel =
 class CheckoutViewModel(
     private val cartRepository: CartRepository,
     private val orderRepository: OrderRepository,
-    private val authReposiory: AuthRepository,
+    private val authRepository: AuthRepository,
     catalogRepository: CatalogRepository
 ) : CheckoutBaseViewModel() {
 
@@ -317,9 +317,11 @@ class CheckoutViewModel(
 
     private fun placeOrder() {
 
+        val userId = authRepository.currentUser?.userId ?: return
+
         val order = Order(
-                id ="" ,
-                userId = authRepository.currentUser?.userId ?: "",
+                id = "",
+                userId = userId,
                 orderNumber = generateOrderNumber(),
                 pickupTime = currentState.dateTimePickerState.earliestPickupTime,
                 items = currentState.menuItems.map { "${it.counter} x ${it.name}" },

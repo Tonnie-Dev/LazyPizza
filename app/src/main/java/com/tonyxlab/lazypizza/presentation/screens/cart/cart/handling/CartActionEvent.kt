@@ -6,4 +6,5 @@ sealed interface CartActionEvent: ActionEvent{
 
     object NavigateBackToMenu: CartActionEvent
     object NavigateToCheckout: CartActionEvent
+    object NavigateToAuth: CartActionEvent
 }

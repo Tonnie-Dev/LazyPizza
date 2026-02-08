@@ -5,6 +5,7 @@ import com.tonyxlab.lazypizza.domain.extensions.calculateTotal
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
 import com.tonyxlab.lazypizza.domain.model.MenuItem
 import com.tonyxlab.lazypizza.domain.model.toMenuItem
+import com.tonyxlab.lazypizza.domain.repository.AuthRepository
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
 import com.tonyxlab.lazypizza.domain.repository.CatalogRepository
 import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
@@ -20,6 +21,7 @@ typealias CartBaseViewModel = BaseViewModel<CartUiState, CartUiEvent, CartAction
 
 class CartViewModel(
     private val cartRepository: CartRepository,
+    private val authRepository: AuthRepository,
     catalogRepository: CatalogRepository
 ) : CartBaseViewModel() {
 
@@ -51,8 +53,6 @@ class CartViewModel(
             Triple(items, count, items.calculateTotal())
         }
                 .onEach { (items, count, total) ->
-
-                    val suggestedAddOnItems = currentState.suggestedAddOnItems
                     updateState {
                         it.copy(
                                 menuItems = items,
@@ -103,9 +103,7 @@ class CartViewModel(
 
             is CartUiEvent.SelectAddOn -> selectAddOn(event.addOnItem)
 
-            CartUiEvent.Checkout -> {
-                sendActionEvent(CartActionEvent.NavigateToCheckout)
-            }
+            CartUiEvent.Checkout -> checkout()
         }
     }
 
@@ -142,6 +140,15 @@ class CartViewModel(
         launch {
             cartRepository.addItem(menuItem = addOnItem.toMenuItem())
         }
+    }
+
+    private fun checkout() {
+       if (authRepository.currentUser == null){
+           sendActionEvent(CartActionEvent.NavigateToAuth)
+       }else {
+
+           sendActionEvent(CartActionEvent.NavigateToCheckout)
+       }
     }
 }
 

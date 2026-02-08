@@ -9,6 +9,7 @@ import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.history.handling.HistoryActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.history.handling.HistoryUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.history.handling.HistoryUiState
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -21,22 +22,47 @@ class HistoryViewModel(
     private val authRepository: AuthRepository
 ) : HistoryBaseViewModel() {
 
-
+    private var ordersJob: Job? = null
 
     init {
         observeCount()
-        observerAuthState()
-        observeOrders()
+        observeAuthState()
     }
 
     override val initialState: HistoryUiState
         get() = HistoryUiState()
 
-    private fun observeOrders() {
+    private fun observeAuthState() {
 
-        val userId = authRepository.currentUser?.userId ?: return
+        authRepository.authState.onEach { state ->
 
-        orderRepository.getOrders(userId = userId)
+            when (state) {
+
+                AuthState.Authenticated -> {
+
+                    val userId = authRepository.currentUser?.userId ?: return@onEach
+                    updateState { it.copy(isSignedIn = true) }
+                    startObservingOrders(userId = userId)
+                }
+
+                else -> {
+                    ordersJob?.cancel()
+                    updateState {
+                        it.copy(
+                                isSignedIn = false,
+                                orderItems = emptyList()
+                        )
+                    }
+                }
+            }
+        }
+                .launchIn(viewModelScope)
+    }
+
+    private fun startObservingOrders(userId: String) {
+        ordersJob?.cancel()
+
+        ordersJob = orderRepository.getOrders(userId = userId)
                 .onEach { orders ->
                     updateState { it.copy(orderItems = orders) }
                 }
@@ -63,15 +89,4 @@ class HistoryViewModel(
                 }
                 .launchIn(viewModelScope)
     }
-
-    private fun observerAuthState() {
-        authRepository.authState
-                .onEach { authState ->
-
-                    updateState { it.copy(isSignedIn = authState is AuthState.Authenticated) }
-
-                }
-                .launchIn(viewModelScope)
-    }
-
 }

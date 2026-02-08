@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.navigation.AppNavigationRail
+import com.tonyxlab.lazypizza.navigation.AuthScreenDestination
 import com.tonyxlab.lazypizza.navigation.BottomNavBar
 import com.tonyxlab.lazypizza.navigation.CheckoutScreenDestination
 import com.tonyxlab.lazypizza.navigation.MenuScreenDestination
@@ -96,6 +97,10 @@ fun CartScreen(
                             CartActionEvent.NavigateToCheckout -> {
                                 navigator.navigate(CheckoutScreenDestination)
                             }
+
+                            CartActionEvent.NavigateToAuth -> {
+                                navigator.navigate(AuthScreenDestination)
+                            }
                         }
                     },
                     onBackPressed = { activity.finish() },
@@ -152,6 +157,8 @@ fun CartScreen(
                         CartActionEvent.NavigateToCheckout -> {
                             navigator.navigate(CheckoutScreenDestination)
                         }
+
+                        CartActionEvent.NavigateToAuth -> { navigator.navigate(AuthScreenDestination)}
                     }
 
                 },
