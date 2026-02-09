@@ -29,7 +29,8 @@
     <string name="cap_text_item_count">%d</string>
     <string name="cap_text_not_signed_in">Not Signed In</string>
     <string name="cap_text_no_orders_yet">No Order Yet</string>
-    <string name="cap_text_please_sign_in">Please sign in to view your order history.</string>
+    <string name="cap_text_login_for_history">Please sign in to view your order history.</string>
+    <string name="cap_text_login_for_checkout">Please sign in to Checkout</string>
     <string name="cap_text_orders_will_appear_here">Your orders will appear here after your first purchase</string>
 
     <string name="cap_text_welcome">Welcome to LazyPizza</string>

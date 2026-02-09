@@ -124,9 +124,7 @@ private fun AuthScreenContent_Preview() {
                 modifier = Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.background)
-
         ) {
-
             AuthScreenContent(
                     uiState = AuthUiState(),
                     onEvent = {}

@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.extensions.calculateTotal
+import com.tonyxlab.lazypizza.domain.firebase.AuthState
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
 import com.tonyxlab.lazypizza.domain.model.MenuItem
 import com.tonyxlab.lazypizza.domain.model.Order
@@ -58,7 +59,22 @@ class CheckoutViewModel(
     init {
         observeCart()
         observeAddOnItems()
+        observeAuthState()
         updateEarliestPickupTime()
+    }
+
+    private fun observeCart() {
+        cartRepository.menuItems.onEach { cartItems ->
+            with(cartItems) {
+                updateState {
+                    it.copy(
+                            menuItems = this,
+                            totalAmount = calculateTotal()
+                    )
+                }
+            }
+        }
+                .launchIn(viewModelScope)
     }
 
     private fun observeAddOnItems() {
@@ -76,6 +92,16 @@ class CheckoutViewModel(
             updateState { it.copy(suggestedAddOnItems = suggested) }
         }
                 .launchIn(viewModelScope)
+    }
+
+    private fun observeAuthState() {
+
+        authRepository.authState.onEach { authState ->
+
+            updateState { it.copy(isAuthenticated = authState is AuthState.Authenticated) }
+        }
+                .launchIn(viewModelScope)
+
     }
 
     override fun onEvent(event: CheckoutUiEvent) {
@@ -110,21 +136,11 @@ class CheckoutViewModel(
             CheckoutUiEvent.ExitCheckout -> {
                 sendActionEvent(CheckoutActionEvent.ExitCheckout)
             }
-        }
-    }
 
-    private fun observeCart() {
-        cartRepository.menuItems.onEach { cartItems ->
-            with(cartItems) {
-                updateState {
-                    it.copy(
-                            menuItems = this,
-                            totalAmount = calculateTotal()
-                    )
-                }
+            CheckoutUiEvent.SignIn -> {
+                sendActionEvent(CheckoutActionEvent.NavigateToAuthScreen)
             }
         }
-                .launchIn(viewModelScope)
     }
 
     private fun expandOrderDetails() {
@@ -341,6 +357,12 @@ class CheckoutViewModel(
                     orderNumber = generateOrderNumber()
             )
         }
+
+        launch {
+            cartRepository.clearAuthenticatedCart()
+
+        }
+
     }
 
     private fun validatePickupTime(date: LocalDate, time: LocalTime): Int? {

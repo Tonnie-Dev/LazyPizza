@@ -166,7 +166,7 @@ private fun HistoryScreenContent(
             EmptyScreenContent(
                     modifier = Modifier.padding(top = MaterialTheme.spacing.spaceTwelve * 10),
                     title = stringResource(id = R.string.cap_text_not_signed_in),
-                    subTitle = stringResource(id = R.string.cap_text_please_sign_in),
+                    subTitle = stringResource(id = R.string.cap_text_login_for_history),
                     buttonText = stringResource(id = R.string.btn_text_sign_in),
                     onEvent = { onEvent(HistoryUiEvent.SignIn) }
             )

@@ -154,11 +154,13 @@ fun CartScreen(
                             navigator.navigate(MenuScreenDestination)
                         }
 
-                        CartActionEvent.NavigateToCheckout -> {
+                        is CartActionEvent.NavigateToCheckout -> {
                             navigator.navigate(CheckoutScreenDestination)
                         }
 
-                        CartActionEvent.NavigateToAuth -> { navigator.navigate(AuthScreenDestination)}
+                        CartActionEvent.NavigateToAuth -> {
+                            navigator.navigate(AuthScreenDestination)
+                        }
                     }
 
                 },
@@ -212,7 +214,7 @@ private fun CartScreenContentNarrow(
                 snap()
             },
             label = "CheckoutTotalAnimation",
-            finishedListener = {hasAnimated = true}
+            finishedListener = { hasAnimated = true }
     )
 
     if (uiState.menuItems.isEmpty()) {
@@ -249,7 +251,8 @@ private fun CartScreenContentNarrow(
                     key = { it.uniqueKey }
             ) { item ->
 
-                Timber.tag("CartScreen").i("Screen Url is: ${item.imageUrl}")
+                Timber.tag("CartScreen")
+                        .i("Screen Url is: ${item.imageUrl}")
                 CartItemCard(
                         modifier = Modifier
                                 .fillMaxWidth()

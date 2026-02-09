@@ -19,6 +19,7 @@ data class CheckoutUiState(
     val suggestedAddOnItems: List<AddOnItem> =emptyList(),
     val textFieldState: TextFieldState = TextFieldState(),
     val expanded: Boolean = false,
+    val isAuthenticated: Boolean = false,
     val totalAmount: Double = 0.0,
     val dateTimePickerState: DateTimePickerState = DateTimePickerState(),
     val checkoutStep: CheckoutStep = CheckoutStep.STEP_CHECKOUT,

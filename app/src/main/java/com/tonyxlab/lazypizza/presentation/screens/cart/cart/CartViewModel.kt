@@ -2,6 +2,7 @@ package com.tonyxlab.lazypizza.presentation.screens.cart.cart
 
 import androidx.lifecycle.viewModelScope
 import com.tonyxlab.lazypizza.domain.extensions.calculateTotal
+import com.tonyxlab.lazypizza.domain.firebase.AuthState
 import com.tonyxlab.lazypizza.domain.model.AddOnItem
 import com.tonyxlab.lazypizza.domain.model.MenuItem
 import com.tonyxlab.lazypizza.domain.model.toMenuItem
@@ -42,6 +43,25 @@ class CartViewModel(
     init {
         observeCart()
         observeSuggestedAddOns()
+        observeAuthState()
+    }
+
+    private fun observeAuthState() {
+
+        authRepository.authState.onEach { state ->
+
+            when (state) {
+
+                AuthState.Authenticated -> {
+                    updateState { it.copy(isSignedIn = true) }
+                }
+
+                else -> {
+                    updateState { it.copy(isSignedIn = false) }
+                }
+            }
+        }
+                .launchIn(viewModelScope)
     }
 
     private fun observeCart() {
@@ -58,7 +78,6 @@ class CartViewModel(
                                 menuItems = items,
                                 badgeCount = count,
                                 aggregateCartAmount = total
-
                         )
                     }
                 }
@@ -103,7 +122,9 @@ class CartViewModel(
 
             is CartUiEvent.SelectAddOn -> selectAddOn(event.addOnItem)
 
-            CartUiEvent.Checkout -> checkout()
+            CartUiEvent.Checkout -> {
+                sendActionEvent(CartActionEvent.NavigateToCheckout)
+            }
         }
     }
 
@@ -132,7 +153,6 @@ class CartViewModel(
 
             cartRepository.removeItem(menuItem = menuItem)
         }
-
     }
 
     private fun selectAddOn(addOnItem: AddOnItem) {
@@ -142,14 +162,7 @@ class CartViewModel(
         }
     }
 
-    private fun checkout() {
-       if (authRepository.currentUser == null){
-           sendActionEvent(CartActionEvent.NavigateToAuth)
-       }else {
 
-           sendActionEvent(CartActionEvent.NavigateToCheckout)
-       }
-    }
 }
 
 

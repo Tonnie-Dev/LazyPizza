@@ -69,8 +69,6 @@ fun OtpInputSection(
         val message =
             result.data?.getStringExtra(SmsRetriever.EXTRA_SMS_MESSAGE)
 
-        Timber.tag("SmsConsentReceiver")
-                .i("Result Code is ${result.resultCode}")
         val otp = extractOtp(message)
 
         if (otp != null) {
@@ -104,7 +102,7 @@ fun OtpInputSection(
     LaunchedEffect(uiState.otpRequestId) {
 
         if (uiState.otpRequestId == 0) return@LaunchedEffect
-        // delay(5000)
+
         SmsRetriever.getClient(context)
                 .startSmsUserConsent(null)
     }
