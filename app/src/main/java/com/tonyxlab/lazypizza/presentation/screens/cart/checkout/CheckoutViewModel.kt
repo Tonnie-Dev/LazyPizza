@@ -360,9 +360,7 @@ class CheckoutViewModel(
 
         launch {
             cartRepository.clearAuthenticatedCart()
-
         }
-
     }
 
     private fun validatePickupTime(date: LocalDate, time: LocalTime): Int? {

@@ -32,9 +32,6 @@ class OrderRepositoryImpl(private val firestore: FirebaseFirestore) : OrderRepos
 
             doc.toObject(OrderDto::class.java)
                     ?.toDomain()
-
-
-
         }
 
 
