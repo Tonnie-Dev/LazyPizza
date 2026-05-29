@@ -2,12 +2,6 @@ package com.tonyxlab.lazypizza.utils
 
 import com.tonyxlab.lazypizza.domain.model.Topping
 
-/**
- * Mock Topping data for development & preview purposes.
- * Image URLs follow the hosted asset structure:
- * https://pl-coding.com/wp-content/uploads/lazypizza/toppings/{imageUrl}
- */
-
 val toppingsMock = listOf(
 
         Topping(
@@ -62,7 +56,7 @@ val toppingsMock = listOf(
                 id = 31L,
                 toppingName = "Mushrooms",
                 toppingPrice = 0.50,
-                imageUrl = "mashroom.png",
+                imageUrl = "mushroom.png",
                 counter = 0
         ),
 
@@ -107,8 +101,4 @@ val toppingsMock = listOf(
         ),
 )
 
-/**
- * Helper to build the full hosted URL for each topping image.
- */
-fun Topping.fullImageUrl(): String =
-    "https://pl-coding.com/wp-content/uploads/lazypizza/toppings/${imageUrl}"
+

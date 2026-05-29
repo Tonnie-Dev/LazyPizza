@@ -3,12 +3,6 @@ package com.tonyxlab.lazypizza.utils
 import com.tonyxlab.lazypizza.domain.model.Category
 import com.tonyxlab.lazypizza.domain.model.Pizza
 
-/**
- * Mock Pizza data for development & preview purposes.
- * Image URLs follow the hosted asset structure provided by the campus:
- * https://pl-coding.com/wp-content/uploads/lazypizza/{category.folderPath}/{imageUrl}
- */
-
 val pizzasMock = listOf(
 
         Pizza(
@@ -21,7 +15,7 @@ val pizzasMock = listOf(
                         "Olive oil"
                 ),
                 price = 8.99,
-                imageUrl = "Margherita.png",
+                imageUrl = "bbq_chicken.png",
                 category = Category.PIZZA
         ),
 
@@ -34,7 +28,7 @@ val pizzasMock = listOf(
                         "Pepperoni"
                 ),
                 price = 9.99,
-                imageUrl = "Pepperoni.png",
+                imageUrl ="peperoni.png",
                 category = Category.PIZZA
         ),
 
@@ -48,7 +42,7 @@ val pizzasMock = listOf(
                         "Pineapple"
                 ),
                 price = 10.49,
-                imageUrl = "Hawaiian.png",
+                imageUrl ="hawaiian.png",
                 category = Category.PIZZA
         ),
 
@@ -63,7 +57,7 @@ val pizzasMock = listOf(
                         "Corn"
                 ),
                 price = 11.49,
-                imageUrl = "BBQ%20Chicken.png",
+                imageUrl ="bbq_chicken.png",
                 category = Category.PIZZA
         ),
 
@@ -77,7 +71,7 @@ val pizzasMock = listOf(
                         "Ricotta"
                 ),
                 price = 11.99,
-                imageUrl = "Four%20Cheese.png",
+                imageUrl ="four_cheese.png",
                 category = Category.PIZZA
         ),
 
@@ -94,7 +88,7 @@ val pizzasMock = listOf(
                         "Corn"
                 ),
                 price = 9.79,
-                imageUrl = "Veggie%20Delight.png",
+                imageUrl ="veggie_delight.png",
                 category = Category.PIZZA
         ),
 
@@ -110,7 +104,7 @@ val pizzasMock = listOf(
                         "Sausage"
                 ),
                 price = 12.49,
-                imageUrl = "Meat%20Lovers.png",
+                imageUrl ="meat_lovers.png",
                 category = Category.PIZZA
         ),
 
@@ -126,7 +120,7 @@ val pizzasMock = listOf(
                         "Garlic"
                 ),
                 price = 11.29,
-                imageUrl = "Spicy%20Inferno.png",
+                imageUrl ="spicy_inferno.png",
                 category = Category.PIZZA
         ),
 
@@ -142,7 +136,7 @@ val pizzasMock = listOf(
                         "Parsley"
                 ),
                 price = 13.99,
-                imageUrl = "Seafood%20Special.png",
+                imageUrl ="seafood_special.png",
                 category = Category.PIZZA
         ),
 
@@ -157,7 +151,7 @@ val pizzasMock = listOf(
                         "Parmesan"
                 ),
                 price = 12.99,
-                imageUrl = "Truffle%20Mushroom.png",
+                imageUrl ="truffle_mushroom.png",
                 category = Category.PIZZA
         )
 )
