@@ -1,20 +1,31 @@
 package com.tonyxlab.lazypizza.presentation.core.components
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
@@ -28,6 +39,7 @@ import coil.request.ImageRequest
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.utils.ifThen
+import timber.log.Timber
 
 @Composable
 fun DisplayImage(
@@ -46,6 +58,7 @@ fun DisplayImage(
 ) {
 
     val context = LocalContext.current
+    var isLoading by remember { mutableStateOf(true) }
 
     Box(
             modifier = modifier
@@ -60,6 +73,14 @@ fun DisplayImage(
                     .padding(padding),
             contentAlignment = Alignment.Center
     ) {
+
+        if (isLoading) {
+            Box(
+                    modifier = Modifier
+                            .matchParentSize()
+                            .shimmerEffect()
+            )
+        }
 
         AsyncImage(
                 modifier = Modifier
@@ -78,21 +99,49 @@ fun DisplayImage(
                         .build(),
                 contentDescription = contentDescription,
                 contentScale = ContentScale.Crop,
-                placeholder = painterResource(R.drawable.pizza_pepperoni)
+                onLoading = { isLoading = true },
+                onSuccess = { isLoading = false },
+                onError = { error ->
+                    isLoading = false
+                    Timber.tag("CoilError")
+                            .e(error.result.throwable)
+
+                }
         )
     }
 }
 
 @Composable
-fun getDrawableResId(
-    prefix: String,
-    imageName: String
-): Int? {
-    val context = LocalContext.current
-    val cleanName = imageName.substringBeforeLast('.') // remove .png or .jpg
-    val id = context.resources.getIdentifier(
-            "$prefix$cleanName", "drawable", context.packageName
+fun Modifier.shimmerEffect(): Modifier = composed {
+    val transition = rememberInfiniteTransition(label = "shimmerTransition")
+
+    val translateAnim by transition.animateFloat(
+            initialValue = 0f,
+            targetValue = 1000f,
+            animationSpec = infiniteRepeatable(
+                    animation = tween(
+                            durationMillis = 1000,
+                            easing = LinearEasing
+                    ),
+                    repeatMode = RepeatMode.Restart
+            ),
+            label = "shimmerTranslate"
     )
-    return id.takeIf { it != 0 }
+
+    val shimmerColors = listOf(
+            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+            MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
+            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+    )
+
+    background(
+            brush = Brush.linearGradient(
+                    colors = shimmerColors,
+                    start = Offset.Zero,
+                    end = Offset(x = translateAnim, y = translateAnim)
+            )
+    )
 }
+
+
 
