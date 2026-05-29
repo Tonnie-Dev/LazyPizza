@@ -7,13 +7,12 @@ import com.tonyxlab.lazypizza.presentation.core.base.handling.UiEvent
 
 sealed interface DetailsActionEvent : ActionEvent {
 
-    data object NavigateBackToMenu : DetailsActionEvent
+    data object NavigateBackToCart : DetailsActionEvent
     data class ShowSnackbar(
         @StringRes
         val messageRes: Int,
         @StringRes
         val actionLabelRes: Int = R.string.blank_text,
         val event: UiEvent? = null
-
     ) : DetailsActionEvent
 }

@@ -1,7 +1,6 @@
 package com.tonyxlab.lazypizza.presentation.screens.menu.details
 
 import androidx.lifecycle.viewModelScope
-import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.Topping
 import com.tonyxlab.lazypizza.domain.model.toMenuItem
 import com.tonyxlab.lazypizza.domain.repository.CartRepository
@@ -10,7 +9,6 @@ import com.tonyxlab.lazypizza.presentation.core.base.BaseViewModel
 import com.tonyxlab.lazypizza.presentation.screens.menu.details.handling.DetailsActionEvent
 import com.tonyxlab.lazypizza.presentation.screens.menu.details.handling.DetailsUiEvent
 import com.tonyxlab.lazypizza.presentation.screens.menu.details.handling.DetailsUiState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -73,15 +71,8 @@ class DetailsViewModel(
 
         }
 
-        sendActionEvent(
-                actionEvent = DetailsActionEvent.ShowSnackbar(
-                        messageRes = R.string.snack_text_item_added_to_cart
-                )
-        )
-
         launch {
-            delay(750)
-            sendActionEvent(actionEvent = DetailsActionEvent.NavigateBackToMenu)
+            sendActionEvent(actionEvent = DetailsActionEvent.NavigateBackToCart)
         }
     }
 

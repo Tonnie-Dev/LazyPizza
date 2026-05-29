@@ -32,7 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.R
-import com.tonyxlab.lazypizza.domain.model.fullImageUrl
+import com.tonyxlab.lazypizza.navigation.CartScreenDestination
 import com.tonyxlab.lazypizza.navigation.Navigator
 import com.tonyxlab.lazypizza.presentation.core.base.BaseContentLayout
 import com.tonyxlab.lazypizza.presentation.core.components.AppSnackbarHost
@@ -53,7 +53,6 @@ import com.tonyxlab.lazypizza.presentation.theme.VerticalRoundedCornerShape16
 import com.tonyxlab.lazypizza.utils.rememberIsDeviceWide
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import timber.log.Timber
 
 @Composable
 fun DetailsScreen(
@@ -90,7 +89,7 @@ fun DetailsScreen(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
             actionEventHandler = { _, action ->
                 when (action) {
-                    DetailsActionEvent.NavigateBackToMenu -> navigator.goBack()
+                    DetailsActionEvent.NavigateBackToCart ->navigator.navigate(CartScreenDestination)
                     is DetailsActionEvent.ShowSnackbar -> {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         snackbarController.showSnackbar(
