@@ -15,11 +15,11 @@ class FirestoreSeeder(private val firestore: FirebaseFirestore) {
                 .get()
                 .await()
 
-        if (!snapshot.isEmpty) return // already seeded
+       if (!snapshot.isEmpty) return // already seeded
 
         pizzas.forEach { pizza ->
             firestore
-                    .collection("pizzas")
+                    .collection(pizza.category.folderPath)
                     .document(pizza.id.toString())
                     .set(pizza.toDto())
                     .await()

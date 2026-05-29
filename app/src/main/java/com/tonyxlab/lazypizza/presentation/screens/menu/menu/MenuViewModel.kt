@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import timber.log.Timber
 
 typealias HomeBaseViewModel = BaseViewModel<MenuUiState, MenuUiEvent, MenuActionEvent>
 

@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.tonyxlab.lazypizza.R
 import com.tonyxlab.lazypizza.domain.model.Topping
+import com.tonyxlab.lazypizza.domain.model.fullImageUrl
 import com.tonyxlab.lazypizza.presentation.core.components.CounterItem
 import com.tonyxlab.lazypizza.presentation.core.components.DisplayImage
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
@@ -44,7 +45,6 @@ import com.tonyxlab.lazypizza.presentation.theme.Title1SemiBold
 import com.tonyxlab.lazypizza.presentation.theme.Title2
 import com.tonyxlab.lazypizza.presentation.theme.TopLeftShape16
 import com.tonyxlab.lazypizza.presentation.theme.ToppingCircleBackground
-import com.tonyxlab.lazypizza.utils.fullImageUrl
 import com.tonyxlab.lazypizza.utils.toPrice
 
 @Composable
