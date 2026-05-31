@@ -55,7 +55,7 @@ class DetailsViewModel(
 
                     val pizzaItem = pizzas.first { it.id == this.id }
                     updateState { it.copy(pizzaStateItem = pizzaItem) }
-
+calculateTotalPrice()
                 }
                 .launchIn(viewModelScope)
     }

@@ -8,6 +8,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +20,9 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
@@ -42,6 +46,8 @@ import com.tonyxlab.lazypizza.presentation.core.components.AddOnsSection
 import com.tonyxlab.lazypizza.presentation.core.components.AppTopBarFour
 import com.tonyxlab.lazypizza.presentation.core.components.CartItemActions
 import com.tonyxlab.lazypizza.presentation.core.components.CartItemCard
+import androidx.compose.foundation.lazy.items as lazyColumnItems
+import androidx.compose.foundation.lazy.grid.items as lazyGridItems
 import com.tonyxlab.lazypizza.presentation.core.components.uniqueKey
 import com.tonyxlab.lazypizza.presentation.core.utils.spacing
 import com.tonyxlab.lazypizza.presentation.screens.cart.checkout.handling.CheckoutUiEvent
@@ -139,23 +145,51 @@ fun CheckoutFormContent(
             }
 
             if (uiState.expanded) {
+                if (isDeviceWide) {
 
-                items(
-                        items = uiState.menuItems,
-                        key = { it.uniqueKey }
-                ) { cartItem ->
-                    CartItemCard(
-                            menuItem = cartItem,
-                            menuItems = uiState.menuItems,
-                            cartItemActions = cartItemActions
-                    )
-                }
-                item {
-                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceMedium))
-                }
 
+                        item {
+                            LazyVerticalGrid(
+                                 modifier = Modifier.height(400.dp), // important inside LazyColumn
+                                    columns = GridCells.Fixed(2),
+                                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceSmall),
+                                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceSmall),
+                                    userScrollEnabled = false
+                            ) {
+
+                                this.items(
+
+                                        items = uiState.menuItems,
+                                        key = { it.uniqueKey }
+                                ) { cartItem ->
+                                    CartItemCard(
+                                            menuItem = cartItem,
+                                            menuItems = uiState.menuItems,
+                                            cartItemActions = cartItemActions
+                                    )
+                                }
+                            }
+                        }
+
+
+                }
+                 else {
+                    items(
+                            items = uiState.menuItems,
+                            key = { it.uniqueKey }
+                    ) { cartItem ->
+                        CartItemCard(
+                                menuItem = cartItem,
+                                menuItems = uiState.menuItems,
+                                cartItemActions = cartItemActions
+                        )
+                    }
+                    item {
+                        Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceMedium))
+                    }
+
+                }
             }
-
             item {
                 AddOnsSection(
                         items = uiState.suggestedAddOnItems,
